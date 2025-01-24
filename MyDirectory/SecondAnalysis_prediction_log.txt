@@ -1,0 +1,58 @@
+########################
+###### reference  ######
+########################
+Please, site GitHub (https://github.com/Nicolas-Radomski/GenomicBasedRegression) and/or Docker Hub (https://hub.docker.com/r/nicolasradomski/genomicbasedregression)
+########################
+####### versions #######
+########################
+python: 3.12
+argparse: 1.1
+pandas: 2.2.2
+pickle: 4.0
+sklearn: 1.6.1
+########################
+####### settings #######
+########################
+subcommand='prediction'
+inputpath_mutations='genomic-profils-for-prediction.tsv'
+inputpath_labels='MyDirectory/FirstAnalysis_labels.obj'
+inputpath_encoded_categories='MyDirectory/FirstAnalysis_encoded_categories.obj'
+inputpath_model='MyDirectory/FirstAnalysis_model.sav'
+outputpath='MyDirectory'
+prefix='SecondAnalysis'
+debug=4
+nocheck=False
+########################
+######## checks ########
+########################
+The recommended versions of Python and packages were properly controlled
+The output directory already exists
+########################
+##### output files #####
+########################
+MyDirectory/SecondAnalysis_prediction.tsv
+MyDirectory/SecondAnalysis_prediction_log.txt
+########################
+## prediction dataset ##
+########################
+ sample  prediction
+S2.1.01   23.840727
+S2.1.02   19.799411
+S2.1.03   16.871680
+S2.1.04   41.563688
+S2.1.05   15.743359
+S2.1.06   16.871680
+S2.1.07   33.283019
+S2.1.08   16.493532
+S2.1.09   41.468397
+S2.1.10   45.375678
+S2.1.11   24.762863
+S2.1.12   41.870374
+S2.1.13   12.840727
+S2.1.14    8.268915
+S2.1.15    7.128839
+S2.1.16   13.378558
+S2.1.17   11.268915
+S2.1.18    6.128839
+S2.1.19    5.268915
+S2.1.20    7.128839
