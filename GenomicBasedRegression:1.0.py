@@ -94,7 +94,7 @@ parser_training.add_argument(
 	help='do not check versions of Python and packages (DEFAULT: False)'
 	)
 
-# create the parser for the "testing" subcommand
+# create the parser for the "prediction" subcommand
 ## get parser arguments
 parser_prediction = subparsers.add_parser('prediction', help='Help of the model-based prediction')
 ## define parser arguments
