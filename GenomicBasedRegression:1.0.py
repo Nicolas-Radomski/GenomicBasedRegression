@@ -226,7 +226,7 @@ if args.subcommand == 'training':
 	## phenotypes
 	df_phenotypes = pd.read_csv(INPUTPATH_PHENOTYPES, sep='\t')
 
-	# replace missing genomic data by a sting
+	# replace missing genomic data by a string
 	df_mutations = df_mutations.fillna('missing')
 
 	# rename labels of headers
