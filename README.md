@@ -1,62 +1,62 @@
 # Usage
-The repository GenomicBasedRegression provides a Python (recommended version 3.12) script called GenomicBasedRegression:1.0.py to perform linear regression-based training or prediction from categorical genomic data.
+The repository GenomicBasedRegression provides a Python (recommended version 3.12) script called GenomicBasedRegression:1.0.py to perform linear regression-based modeling or prediction from categorical genomic data.
 # Dependencies
 The Python script GenomicBasedRegression:1.0.py was prepared and tested with the Python version 3.12 and Ubuntu 20.04 LTS Focal Fossa.
 - pandas # version 2.2.2
-- sklearn # version 1.6.1
+- sklearn # version 1.5.2
 # Recommended environments
 ## install python libraries
 ```
 # pip3.12 install pandas==2.2.2
-# pip3.12 install -U scikit-learn==1.6.1
+# pip3.12 install -U scikit-learn==1.5.2
 ```
 ## install docker image
 ```
 docker pull nicolasradomski/genomicbasedregression:1.0
 ```
 # Helps
-## training
+## modeling
 ```
-usage: GenomicBasedLinearRegression:1.0.py training [-h] -m INPUTPATH_MUTATIONS -p INPUTPATH_PHENOTYPES [-s SPLITTING] [-o OUTPUTPATH] [-x PREFIX]
-                                                    [-d DEBUG] [-nc]
+usage: GenomicBasedLinearRegression:1.0.py modeling [-h] -m INPUTPATH_MUTATIONS -p INPUTPATH_PHENOTYPES [-s SPLITTING] [-o OUTPUTPATH] [-x PREFIX] [-d DEBUG] [-nc]
 options:
   -h, --help            show this help message and exit
   -m INPUTPATH_MUTATIONS, --mutations INPUTPATH_MUTATIONS
-                        path of tab-separated values (tsv) file including profiles of mutations (REQUIRED)
+                        Absolute or relative input path of tab-separated values (tsv) file including profiles of mutations. First column: sample identifiers identical to those in the input file of phenotypes
+                        (header: e.g. sample). Other columns: profiles of mutations (header: labels of mutations). (REQUIRED)
   -p INPUTPATH_PHENOTYPES, --phenotypes INPUTPATH_PHENOTYPES
-                        path of tab-separated values (tsv) file including profiles of phenotypes (REQUIRED)
+                        Absolute or relative input path of tab-separated values (tsv) file including profiles of phenotypes. First column: sample identifiers identical to those in the input file of mutations
+                        (header: e.g. sample). Second column: continuous phenotype (header: e.g. phenotype). (REQUIRED)
   -s SPLITTING, --split SPLITTING
-                        percentage of splitting to prepare the training dataset (DEFAULT: 80)
+                        Percentage of random splitting to prepare the training dataset through the holdout method. (DEFAULT: 80)
   -o OUTPUTPATH, --output OUTPUTPATH
-                        output path (DEFAULT: .)
+                        Output path. (DEFAULT: .)
   -x PREFIX, --prefix PREFIX
-                        prefix of output files (DEFAULT: output)
+                        Prefix of output files. (DEFAULT: output)
   -d DEBUG, --debug DEBUG
-                        limit of the traceback (DEFAULT: 0)
-  -nc, --no-check       do not check versions of Python and packages (DEFAULT: False)
+                        Traceback level when an error occurs. (DEFAULT: 0)
+  -nc, --no-check       Do not check versions of Python and packages. (DEFAULT: False)
 ```
 ## prediction
 ```
-usage: GenomicBasedLinearRegression:1.0.py prediction [-h] -m INPUTPATH_MUTATIONS -l INPUTPATH_LABELS -e INPUTPATH_ENCODED_CATEGORIES -t INPUTPATH_MODEL
-                                                      [-o OUTPUTPATH] [-x PREFIX] [-d DEBUG] [-nc]
-
+usage: GenomicBasedLinearRegression:1.0.py prediction [-h] -m INPUTPATH_MUTATIONS -t INPUTPATH_MODEL -f INPUTPATH_FEATURES -ef INPUTPATH_ENCODED_FEATURES [-o OUTPUTPATH] [-x PREFIX] [-d DEBUG] [-nc]
 options:
   -h, --help            show this help message and exit
   -m INPUTPATH_MUTATIONS, --mutations INPUTPATH_MUTATIONS
-                        path of tab-separated values (tsv) file including profiles of mutations (REQUIRED)
-  -l INPUTPATH_LABELS, --labels INPUTPATH_LABELS
-                        path of object (obj) file including trained sci-kit learn labels (REQUIRED)
-  -e INPUTPATH_ENCODED_CATEGORIES, --encoded INPUTPATH_ENCODED_CATEGORIES
-                        path of object (obj) file including trained sci-kit learn encoded categories (REQUIRED)
+                        Absolute or relative input path of tab-separated values (tsv) file including profiles of mutations. First column: sample identifiers identical to those in the input file of phenotypes
+                        (header: e.g. sample). Other columns: profiles of mutations (header: labels of mutations). (REQUIRED)
   -t INPUTPATH_MODEL, --model INPUTPATH_MODEL
-                        path of saved (sav) file including a trained sci-kit learn model (REQUIRED)
+                        Absolute or relative input path of an object (obj) file including a trained scikit-learn model. (REQUIRED)
+  -f INPUTPATH_FEATURES, --features INPUTPATH_FEATURES
+                        Absolute or relative input path of an object (obj) file including trained scikit-learn features (i.e. mutations). (REQUIRED)
+  -ef INPUTPATH_ENCODED_FEATURES, --encodedfeatures INPUTPATH_ENCODED_FEATURES
+                        Absolute or relative input path of an object (obj) file including trained scikit-learn encoded features (i.e. mutations). (REQUIRED)
   -o OUTPUTPATH, --output OUTPUTPATH
-                        output path (DEFAULT: .)
+                        Absolute or relative output path. (DEFAULT: .)
   -x PREFIX, --prefix PREFIX
-                        prefix of output files (DEFAULT: output_)
+                        Prefix of output files. (DEFAULT: output_)
   -d DEBUG, --debug DEBUG
-                        limit of the traceback (DEFAULT: 0)
-  -nc, --no-check       do not check versions of Python and packages (DEFAULT: False)
+                        Traceback level when an error occurs. (DEFAULT: 0)
+  -nc, --no-check       Do not check versions of Python and packages. (DEFAULT: False)
 ```
 # Expected input files
 ## phenotypes for training (e.g. phenotypes.tsv)
@@ -141,31 +141,31 @@ cd GenomicBasedRegression
 ### call help
 ```
 python3.12 GenomicBasedRegression:1.0.py -h
-python3.12 GenomicBasedRegression:1.0.py training -h
+python3.12 GenomicBasedRegression:1.0.py modeling -h
 python3.12 GenomicBasedRegression:1.0.py prediction -h
 ```
-### train a model
+### build a model
 ```
-python3.12 GenomicBasedRegression:1.0.py training -m genomic-profils-for-training.tsv -p phenotypes.tsv -o MyDirectory -x FirstAnalysis -s 80 -d 4
+python3.12 GenomicBasedRegression:1.0.py modeling -m genomic-profils-for-modeling.tsv -p phenotypes.tsv -o MyDirectory -x FirstAnalysis -s 80 -d 4
 ```
-### predict with a model
+### predict with a pre-built model
 ```
-python3.12 GenomicBasedRegression:1.0.py prediction -m genomic-profils-for-prediction.tsv -l MyDirectory/FirstAnalysis_labels.obj -e MyDirectory/FirstAnalysis_encoded_categories.obj -t MyDirectory/FirstAnalysis_model.sav -o MyDirectory -x SecondAnalysis -d 4
+python3.12 GenomicBasedRegression:1.0.py prediction -m genomic-profils-for-prediction.tsv -t MyDirectory/FirstAnalysis_model.obj -f MyDirectory/FirstAnalysis_features.obj -ef MyDirectory/FirstAnalysis_encoded_features.obj -o MyDirectory -x SecondAnalysis -d 4
 ```
 ## with Docker
 ### call help
 ```
 docker run --rm --name nicolas -u $(id -u):$(id -g) nicolasradomski/genomicbasedregression:1.0 -h
-docker run --rm --name nicolas -u $(id -u):$(id -g) nicolasradomski/genomicbasedregression:1.0 training -h
+docker run --rm --name nicolas -u $(id -u):$(id -g) nicolasradomski/genomicbasedregression:1.0 modeling -h
 docker run --rm --name nicolas -u $(id -u):$(id -g) nicolasradomski/genomicbasedregression:1.0 prediction -h
 ```
-### train a model
+### build a model
 ```
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.0 training -m genomic-profils-for-training.tsv -p phenotypes.tsv -o MyDirectoryDockerHub -x FirstAnalysis -s 80
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd genomicbasedregression:1.0 modeling -m genomic-profils-for-modeling.tsv -p phenotypes.tsv -o MyDirectoryDockerHub -x FirstAnalysis -s 80 -d 4
 ```
-### predict with a model
+### predict with a pre-built model
 ```
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.0 prediction -m genomic-profils-for-prediction.tsv -l MyDirectoryDockerHub/FirstAnalysis_labels.obj -e MyDirectoryDockerHub/FirstAnalysis_encoded_categories.obj -t MyDirectoryDockerHub/FirstAnalysis_model.sav -o MyDirectoryDockerHub -x SecondAnalysis
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd genomicbasedregression:1.0 prediction -m genomic-profils-for-prediction.tsv -t MyDirectoryDockerHub/FirstAnalysis_model.obj -f MyDirectoryDockerHub/FirstAnalysis_features.obj -ef MyDirectoryDockerHub/FirstAnalysis_encoded_features.obj -o MyDirectoryDockerHub -x SecondAnalysis -d 4
 ```
 # Expected output files (see corresponding output directory)
 ## training

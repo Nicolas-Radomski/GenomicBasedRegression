@@ -1,0 +1,71 @@
+########################
+###### reference  ######
+########################
+Please, site GitHub (https://github.com/Nicolas-Radomski/GenomicBasedRegression) and/or Docker Hub (https://hub.docker.com/r/nicolasradomski/genomicbasedregression)
+########################
+####### versions #######
+########################
+python: 3.12
+argparse: 1.1
+pandas: 2.2.2
+pickle: 4.0
+sklearn: 1.5.2
+########################
+####### settings #######
+########################
+subcommand='modeling'
+inputpath_mutations='genomic-profils-for-modeling.tsv'
+inputpath_phenotypes='phenotypes.tsv'
+splitting=80
+outputpath='MyDirectoryDockerHub'
+prefix='FirstAnalysis'
+debug=4
+nocheck=False
+########################
+######## checks ########
+########################
+The recommended versions of Python and packages were properly controlled
+The samples identifiers are identical
+The output directory already exists
+########################
+##### output files #####
+########################
+MyDirectoryDockerHub/FirstAnalysis_training_prediction.tsv
+MyDirectoryDockerHub/FirstAnalysis_testing_prediction.tsv
+MyDirectoryDockerHub/FirstAnalysis_features.obj
+MyDirectoryDockerHub/FirstAnalysis_encoded_features.obj
+MyDirectoryDockerHub/FirstAnalysis_model.obj
+MyDirectoryDockerHub/FirstAnalysis_training_log.txt
+########################
+## mean squared error ##
+########################
+from the training dataset: 0.125 
+from the testing dataset: 18.035646365683014 
+########################
+### training dataset ###
+########################
+ sample  expectation  prediction
+S1.1.02           25        25.0
+S1.1.19            2         2.0
+S1.1.03           16        16.0
+S1.1.11           15        15.0
+S1.1.20            4         5.0
+S1.1.08           17        17.0
+S1.1.17            8         8.0
+S1.1.13           13        13.0
+S1.1.07           43        43.0
+S1.1.04           48        48.0
+S1.1.10           46        46.0
+S1.1.01           24        24.0
+S1.1.15            6         5.0
+S1.1.05           14        14.0
+S1.1.06           16        16.0
+S1.1.09           58        58.0
+########################
+### testing  dataset ###
+########################
+ sample  expectation  prediction
+S1.1.14            5   10.311555
+S1.1.12           46   42.839235
+S1.1.18            4    9.805514
+S1.1.16            7    6.514681
