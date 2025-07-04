@@ -1,0 +1,65 @@
+{
+# when combined with any model or pipeline, minimizing the number of hyperparameter combinations helps reduce overall search time
+
+# --- Feature selection (SelectKBest) ---
+# used only to modify selected SKB behavior
+'feature_selection__k': [25, 50], # number of top features to keep
+'feature_selection__score_func': [mutual_info_regression], # score function (avoid chi2 in a context of regression and f_regression it captures only linear dependancies)
+
+# --- Feature selection (SelectFromModel with lasso) ---
+# used only to modify laSFM behavior
+#'feature_selection__threshold': [-float('inf')], # disable thresholding to rely solely on max_features
+#'feature_selection__max_features': [25, 50], # select exactly this number of top features
+#'feature_selection__estimator__alpha': [0.01, 0.1, 1.0], # increase regularization to speed up convergence
+#'feature_selection__estimator__max_iter': [500], # reduce iterations for faster training
+#'feature_selection__estimator__tol': [1e-2], # relax convergence criteria to save time
+#'feature_selection__estimator__fit_intercept': [True], # whether to estimate the intercept
+
+# --- Feature selection (SelectFromModel with elasticnet) ---
+# used only to modify enSFM behavior
+#'feature_selection__threshold': [-float('inf')], # rank features by importance
+#'feature_selection__max_features': [25, 50], # number of top features to keep
+#'feature_selection__estimator__alpha': [0.1], # moderate regularization strength
+#'feature_selection__estimator__l1_ratio': [0.5], # balanced L1/L2 penalty
+#'feature_selection__estimator__max_iter': [300], # max iterations for convergence
+#'feature_selection__estimator__tol': [1e-2], # relaxed convergence tolerance
+
+# --- Feature selection (SelectFromModel with random forest) ---
+# used only to modify rfSFM behavior
+#'feature_selection__threshold': [-float('inf')], # rank all features by importance
+#'feature_selection__max_features': [25, 50], # number of top features to keep
+#'feature_selection__estimator__n_estimators': [100], # number of trees
+#'feature_selection__estimator__max_depth': [10], # shallow trees for speed
+
+# --- Feature selection (Boruta) ---
+# used only to modify BO behavior
+#'feature_selection__estimator__n_estimators': [5], # use a very small forest to reduce training time
+#'feature_selection__estimator__max_depth': [2], # limit tree depth to make fitting faster
+#'feature_selection__n_estimators': ['auto'], # use Boruta's default estimator parameter
+#'feature_selection__max_iter': [5], # reduced number of iterations to speed up the selection process
+#'feature_selection__perc': [90], # retain only the most important features (90th percentile)
+#'feature_selection__two_step': [False], # disable the optional second refinement step to reduce computation
+
+# --- Model tuning (CatBoostRegressor) ---
+# used only to modify CatBoostRegressor behavior
+# simplified tuning used together with SKB
+'model__learning_rate': [0.03, 0.05], # stable and moderately fast learning
+'model__iterations': [300], # fixed; early stopping avoids overfitting
+'model__depth': [6], # typical moderate tree complexity (drop 8 to reduce grid size)
+'model__l2_leaf_reg': [1, 5], # preserve regularization extremes (drop middle value)
+'model__bagging_temperature': [0.0, 0.5], # randomness in sampling, helps generalization
+'model__grow_policy': ['SymmetricTree', 'Lossguide'], # balanced tree-growing strategies
+'model__verbose': [0], # avoids verbose from the non-sklearn library
+
+# --- Model tuning (CatBoostRegressor) ---
+# used only to modify CatBoostRegressor behavior
+#'model__learning_rate': [0.01, 0.03, 0.05, 0.1], # from slow to moderately fast learning rates
+#'model__iterations': [300, 500, 1000], # wider range to balance training length and performance
+#'model__depth': [4, 6, 8, 10], # shallow to deep trees to control complexity
+#'model__l2_leaf_reg': [1, 3, 5, 7, 9], # finer granularity for L2 regularization strength
+#'model__bagging_temperature': [0.0, 0.3, 0.5, 1.0], # various sampling randomness levels for generalization
+#'model__grow_policy': ['SymmetricTree', 'Lossguide', 'Depthwise'], # added third policy for varied tree growth
+#'model__border_count': [32, 50, 100], # number of splits for numerical features, affects granularity
+#'model__random_strength': [0.0, 1.0, 2.0], # randomness in score calculation for regularization
+#'model__verbose': [0], # quiet mode to suppress output
+}

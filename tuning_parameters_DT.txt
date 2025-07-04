@@ -1,0 +1,64 @@
+{
+# when combined with any model or pipeline, minimizing the number of hyperparameter combinations helps reduce overall search time
+
+# --- Feature selection (SelectKBest) ---
+# used only to modify selected SKB behavior
+#'feature_selection__k': [25, 50], # number of top features to keep
+#'feature_selection__score_func': [mutual_info_regression], # score function (avoid chi2 in a context of regression and f_regression it captures only linear dependancies)
+
+# --- Feature selection (SelectFromModel with lasso) ---
+# used only to modify laSFM behavior
+'feature_selection__threshold': [-float('inf')], # disable thresholding to rely solely on max_features
+'feature_selection__max_features': [25, 50], # select exactly this number of top features
+'feature_selection__estimator__alpha': [0.01, 0.1, 1.0], # increase regularization to speed up convergence
+'feature_selection__estimator__max_iter': [500], # reduce iterations for faster training
+'feature_selection__estimator__tol': [1e-2], # relax convergence criteria to save time
+'feature_selection__estimator__fit_intercept': [True], # whether to estimate the intercept
+
+# --- Feature selection (SelectFromModel with elasticnet) ---
+# used only to modify enSFM behavior
+#'feature_selection__threshold': [-float('inf')], # rank features by importance
+#'feature_selection__max_features': [25, 50], # number of top features to keep
+#'feature_selection__estimator__alpha': [0.1], # moderate regularization strength
+#'feature_selection__estimator__l1_ratio': [0.5], # balanced L1/L2 penalty
+#'feature_selection__estimator__max_iter': [300], # max iterations for convergence
+#'feature_selection__estimator__tol': [1e-2], # relaxed convergence tolerance
+
+# --- Feature selection (SelectFromModel with random forest) ---
+# used only to modify rfSFM behavior
+#'feature_selection__threshold': [-float('inf')], # rank all features by importance
+#'feature_selection__max_features': [25, 50], # number of top features to keep
+#'feature_selection__estimator__n_estimators': [100], # number of trees
+#'feature_selection__estimator__max_depth': [10], # shallow trees for speed
+
+# --- Feature selection (Boruta) ---
+# used only to modify BO behavior
+#'feature_selection__estimator__n_estimators': [5], # use a very small forest to reduce training time
+#'feature_selection__estimator__max_depth': [2], # limit tree depth to make fitting faster
+#'feature_selection__n_estimators': ['auto'], # use Boruta's default estimator parameter
+#'feature_selection__max_iter': [5], # reduced number of iterations to speed up the selection process
+#'feature_selection__perc': [90], # retain only the most important features (90th percentile)
+#'feature_selection__two_step': [False], # disable the optional second refinement step to reduce computation
+
+# --- Model tuning (DecisionTreeRegressor) ---
+# used only to modify DecisionTreeRegressor behavior
+# simplified tuning used together with laSFM
+'model__criterion': ['squared_error', 'absolute_error'], # common loss functions balancing speed and robustness
+'model__splitter': ['best'], # deterministic split, generally faster and reliable
+'model__max_depth': [None, 10, 20], # control tree complexity, allowing full and moderate depths
+'model__min_samples_split': [2, 10], # default and stricter split to reduce overfitting
+'model__min_samples_split': [2, 5, 10], # default and stricter split to reduce overfitting
+'model__min_samples_leaf': [1, 5], # allow small leaves or enforce some minimum size
+'model__max_features': ['sqrt', None], # common strategies for feature selection at splits
+'model__max_leaf_nodes': [None, 20], # no limit or moderate cap to control model size
+
+# --- Model tuning (DecisionTreeRegressor) ---
+# used only to modify DecisionTreeRegressor behavior
+#'model__criterion': ['squared_error', 'friedman_mse', 'absolute_error', 'poisson'], # various valid criteria including Poisson for count data
+#'model__splitter': ['best', 'random'], # how to choose split at each node
+#'model__max_depth': [None, 5, 10, 15, 20, 25], # control tree growth to balance bias-variance
+#'model__min_samples_split': [2, 5, 10], # minimum number of samples to split a node
+#'model__min_samples_leaf': [1, 3, 5, 10], # controls minimum samples required at leaf
+#'model__max_features': ['sqrt', 'log2', None], # feature selection strategy per split
+#'model__max_leaf_nodes': [None, 10, 20], # limits the number of terminal nodes
+}

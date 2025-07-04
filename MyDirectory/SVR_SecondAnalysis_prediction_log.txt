@@ -1,0 +1,106 @@
+########################
+####### context  #######
+########################
+The scikit-learn (sklearn)-based Python workflow independently supports both modeling (i.e., training and testing) and prediction (i.e., using a pre-built model), and implements 5 feature selection methods, 17 model regressors, hyperparameter tuning, performance metric computation, feature and permutation importance analyses, prediction interval estimation, execution monitoring via progress bars, and parallel processing.
+########################
+###### reference  ######
+########################
+An article might potentially be published in the future.
+########################
+##### repositories #####
+########################
+Please cite:
+ GitHub (https://github.com/Nicolas-Radomski/GenomicBasedRegression),
+ Docker Hub (https://hub.docker.com/r/nicolasradomski/genomicbasedregression),
+ and/or Anaconda Hub (https://anaconda.org/nicolasradomski/genomicbasedregression).
+########################
+### acknowledgements ###
+########################
+Many thanks to Andrea De Ruvo, Adriano Di Pasquale and ChatGPT for the insightful discussions that helped improve the algorithm.
+########################
+####### versions #######
+########################
+GenomicBasedRegression: 1.1.0 (released in July 2025)
+python: 3.12
+argparse: 1.1
+boruta: 0.4.3
+catboost: 1.2.8
+joblib: 1.5.1
+lightgbm: 4.6.0
+numpy: 1.26.4
+pandas: 2.2.2
+pickle: 4.0
+re: 2.2.1
+scipy: 1.16.0
+sklearn: 1.5.2
+tqdm: 4.67.1
+tqdm-joblib: 0.0.4
+xgboost: 2.1.3
+########################
+####### arguments ######
+########################
+subcommand: prediction
+inputpath_mutations: genomic_profils_for_prediction.tsv
+inputpath_features: MyDirectory/SVR_FirstAnalysis_features.obj
+inputpath_feature_encoder: MyDirectory/SVR_FirstAnalysis_feature_encoder.obj
+inputpath_calibration_features: MyDirectory/SVR_FirstAnalysis_calibration_features.obj
+inputpath_calibration_targets: MyDirectory/SVR_FirstAnalysis_calibration_targets.obj
+inputpath_model: MyDirectory/SVR_FirstAnalysis_model.obj
+alpha: 0.05
+outputpath: MyDirectory
+prefix: SVR_SecondAnalysis
+debug: 20
+warnings: True
+nocheck: False
+########################
+######## checks ########
+########################
+The warnings were not ignored
+The traceback level was set to 20
+The recommended versions of Python and packages were properly controlled
+The prediction subcommand was used
+The minimum required number of samples in the dataset (i.e., >= 1) and the expected number of columns (i.e., >= 3) in the input file of mutations were properly controlled (i.e., 20 and 12, respectively)
+The input tested mutations include all features required by the trained one-hot encoder
+The following unexpected features in the input tested mutations will be ignored for one-hot encoding: ['Locus_11']
+The 10 provided features were one-hot encoded into 80 encoded features
+The pipeline expected 50 one-hot encoded features to perform prediction
+The pipeline components of the provided best model were properly recognized: Pipeline(steps=[('feature_selection', SelectKBest(k=50, score_func=<function mutual_info_regression at 0x7f3675c78c20>)), ('model', SVR(C=10, gamma=0.01, kernel='linear', tol=0.0001))])
+The prediction intervals (i.e., 95.0%) were calculated using a significance level of α = 0.05
+The output directory already existed
+########################
+###### execution #######
+########################
+The script started on 2025-07-04 10:58:35.512916
+The script stoped on 2025-07-04 10:58:35.538323
+The script lasted 0 days, 0 hrs, 0 mins and 0.03 secs (i.e., 0.03 secs in total)
+########################
+##### output files #####
+########################
+MyDirectory/SVR_SecondAnalysis_prediction.tsv
+MyDirectory/SVR_SecondAnalysis_prediction_log.txt
+########################
+## prediction dataset ##
+########################
+ sample  prediction     lower     upper
+S2.1.01   25.012013 16.062006 33.962021
+S2.1.02   26.012058 17.062050 34.962065
+S2.1.03   15.210938  6.260931 24.160946
+S2.1.04   43.735800 34.785793 52.685808
+S2.1.05   12.321856  3.371849 21.271864
+S2.1.06   15.210992  6.260984 24.160999
+S2.1.07   35.386437 26.436430 44.336444
+S2.1.08   16.010969  7.060962 24.960977
+S2.1.09   55.531394 46.581386 64.481401
+S2.1.10   46.100009 37.150001 55.050016
+S2.1.11   14.210913  5.260906 23.160921
+S2.1.12   48.215539 39.265531 57.165546
+S2.1.13   14.012059  5.062052 22.962067
+S2.1.14   13.135318  4.185311 22.085325
+S2.1.15    9.835063  0.885056 18.785071
+S2.1.16   13.935344  4.985337 22.885351
+S2.1.17   14.935359  5.985351 23.885366
+S2.1.18    8.900047 -0.049960 17.850054
+S2.1.19    2.099985 -6.850022 11.049993
+S2.1.20    3.899962 -5.050046 12.849969
+Note: Up to 20 results are displayed in the log for monitoring purposes, while the full set of results is available in the output files. 
+Lower and upper correspond to the range of the prediction intervals. 

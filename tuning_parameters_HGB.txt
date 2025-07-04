@@ -1,0 +1,69 @@
+{
+# when combined with any model or pipeline, minimizing the number of hyperparameter combinations helps reduce overall search time
+
+# --- Feature selection (SelectKBest) ---
+# used only to modify selected SKB behavior
+#'feature_selection__k': [25, 50], # number of top features to keep
+#'feature_selection__score_func': [mutual_info_regression], # score function (avoid chi2 in a context of regression and f_regression it captures only linear dependancies)
+
+# --- Feature selection (SelectFromModel with lasso) ---
+# used only to modify laSFM behavior
+#'feature_selection__threshold': [-float('inf')], # disable thresholding to rely solely on max_features
+#'feature_selection__max_features': [25, 50], # select exactly this number of top features
+#'feature_selection__estimator__alpha': [0.01, 0.1, 1.0], # increase regularization to speed up convergence
+#'feature_selection__estimator__max_iter': [500], # reduce iterations for faster training
+#'feature_selection__estimator__tol': [1e-2], # relax convergence criteria to save time
+#'feature_selection__estimator__fit_intercept': [True], # whether to estimate the intercept
+
+# --- Feature selection (SelectFromModel with elasticnet) ---
+# used only to modify enSFM behavior
+#'feature_selection__threshold': [-float('inf')], # rank features by importance
+#'feature_selection__max_features': [25, 50], # number of top features to keep
+#'feature_selection__estimator__alpha': [0.1], # moderate regularization strength
+#'feature_selection__estimator__l1_ratio': [0.5], # balanced L1/L2 penalty
+#'feature_selection__estimator__max_iter': [300], # max iterations for convergence
+#'feature_selection__estimator__tol': [1e-2], # relaxed convergence tolerance
+
+# --- Feature selection (SelectFromModel with random forest) ---
+# used only to modify rfSFM behavior
+#'feature_selection__threshold': [-float('inf')], # rank all features by importance
+#'feature_selection__max_features': [25, 50], # number of top features to keep
+#'feature_selection__estimator__n_estimators': [100], # number of trees
+#'feature_selection__estimator__max_depth': [10], # shallow trees for speed
+
+# --- Feature selection (Boruta) ---
+# used only to modify BO behavior
+'feature_selection__estimator__n_estimators': [5], # use a very small forest to reduce training time
+'feature_selection__estimator__max_depth': [2], # limit tree depth to make fitting faster
+'feature_selection__n_estimators': ['auto'], # use Boruta's default estimator parameter
+'feature_selection__max_iter': [5], # reduced number of iterations to speed up the selection process
+'feature_selection__perc': [90], # retain only the most important features (90th percentile)
+'feature_selection__two_step': [False], # disable the optional second refinement step to reduce computation
+
+# --- Model tuning (HistGradientBoostingRegressor) ---
+# used only to modify HistGradientBoostingRegressor behavior
+# simplified tuning used together with BO
+'model__learning_rate': [0.05], # safer learning rate for generalization
+'model__max_iter': [100], # enough iterations for convergence
+'model__max_depth': [3], # shallow trees for speed and simplicity
+'model__min_samples_leaf': [20], # stronger regularization to reduce overfitting
+'model__max_leaf_nodes': [20], # limit tree complexity
+'model__max_features': [0.5], # moderate feature subsampling
+'model__l2_regularization': [1.0], # moderate regularization strength
+'model__early_stopping': [True], # avoid overfitting with early stopping
+'model__validation_fraction': [0.1], # standard 10% for validation
+'model__tol': [1e-4], # relaxed tolerance for faster convergence
+
+# --- Model tuning (HistGradientBoostingRegressor) ---
+# used only to modify HistGradientBoostingRegressor behavior
+#'model__learning_rate': [0.05, 0.1], # 0.1 is default and faster; 0.05 is safer for generalization
+#'model__max_iter': [100, 200], # 100 is often enough; 200 if underfitting
+#'model__max_depth': [3, 5], # 3 is fast, 5 for more complex patterns
+#'model__min_samples_leaf': [10, 20], # higher values reduce overfitting and avoid edge cases
+#'model__max_leaf_nodes': [20, 31], # cap tree complexity; 31 is default
+#'model__max_features': [0.3, 0.5, 1.0], # must be float
+#'model__l2_regularization': [0.0, 1.0], # regularization strength; 0 = none, 1 = moderate
+#'model__early_stopping': [True], # use early stopping to avoid overfitting
+#'model__validation_fraction': [0.1], # default 10% of training set for validation
+#'model__tol': [1e-7, 1e-4], # stricter convergence tolerance might avoid noisy fits
+}

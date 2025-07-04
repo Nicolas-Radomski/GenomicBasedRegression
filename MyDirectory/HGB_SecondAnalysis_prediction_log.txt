@@ -1,0 +1,106 @@
+########################
+####### context  #######
+########################
+The scikit-learn (sklearn)-based Python workflow independently supports both modeling (i.e., training and testing) and prediction (i.e., using a pre-built model), and implements 5 feature selection methods, 17 model regressors, hyperparameter tuning, performance metric computation, feature and permutation importance analyses, prediction interval estimation, execution monitoring via progress bars, and parallel processing.
+########################
+###### reference  ######
+########################
+An article might potentially be published in the future.
+########################
+##### repositories #####
+########################
+Please cite:
+ GitHub (https://github.com/Nicolas-Radomski/GenomicBasedRegression),
+ Docker Hub (https://hub.docker.com/r/nicolasradomski/genomicbasedregression),
+ and/or Anaconda Hub (https://anaconda.org/nicolasradomski/genomicbasedregression).
+########################
+### acknowledgements ###
+########################
+Many thanks to Andrea De Ruvo, Adriano Di Pasquale and ChatGPT for the insightful discussions that helped improve the algorithm.
+########################
+####### versions #######
+########################
+GenomicBasedRegression: 1.1.0 (released in July 2025)
+python: 3.12
+argparse: 1.1
+boruta: 0.4.3
+catboost: 1.2.8
+joblib: 1.5.1
+lightgbm: 4.6.0
+numpy: 1.26.4
+pandas: 2.2.2
+pickle: 4.0
+re: 2.2.1
+scipy: 1.16.0
+sklearn: 1.5.2
+tqdm: 4.67.1
+tqdm-joblib: 0.0.4
+xgboost: 2.1.3
+########################
+####### arguments ######
+########################
+subcommand: prediction
+inputpath_mutations: genomic_profils_for_prediction.tsv
+inputpath_features: MyDirectory/HGB_FirstAnalysis_features.obj
+inputpath_feature_encoder: MyDirectory/HGB_FirstAnalysis_feature_encoder.obj
+inputpath_calibration_features: MyDirectory/HGB_FirstAnalysis_calibration_features.obj
+inputpath_calibration_targets: MyDirectory/HGB_FirstAnalysis_calibration_targets.obj
+inputpath_model: MyDirectory/HGB_FirstAnalysis_model.obj
+alpha: 0.05
+outputpath: MyDirectory
+prefix: HGB_SecondAnalysis
+debug: 20
+warnings: True
+nocheck: False
+########################
+######## checks ########
+########################
+The warnings were not ignored
+The traceback level was set to 20
+The recommended versions of Python and packages were properly controlled
+The prediction subcommand was used
+The minimum required number of samples in the dataset (i.e., >= 1) and the expected number of columns (i.e., >= 3) in the input file of mutations were properly controlled (i.e., 20 and 12, respectively)
+The input tested mutations include all features required by the trained one-hot encoder
+The following unexpected features in the input tested mutations will be ignored for one-hot encoding: ['Locus_11']
+The 10 provided features were one-hot encoded into 80 encoded features
+The pipeline expected 14 one-hot encoded features to perform prediction
+The pipeline components of the provided best model were properly recognized: Pipeline(steps=[('feature_selection', BorutaSelectorDF(estimator=RandomForestRegressor(max_depth=2, n_estimators=331, random_state=RandomState(MT19937) at 0x7F27ECFE7D40), max_iter=10, n_estimators='auto', perc=85, random_state=42, two_step=True, verbose=0)), ('model', HistGradientBoostingRegressor(early_stopping=True, l2_regularization=1.0, learning_rate=0.05, max_depth=3, max_features=0.5, max_leaf_nodes=20, random_state=42, tol=0.0001))])
+The prediction intervals (i.e., 95.0%) were calculated using a significance level of α = 0.05
+The output directory already existed
+########################
+###### execution #######
+########################
+The script started on 2025-07-04 10:50:13.656184
+The script stoped on 2025-07-04 10:50:13.718485
+The script lasted 0 days, 0 hrs, 0 mins and 0.06 secs (i.e., 0.06 secs in total)
+########################
+##### output files #####
+########################
+MyDirectory/HGB_SecondAnalysis_prediction.tsv
+MyDirectory/HGB_SecondAnalysis_prediction_log.txt
+########################
+## prediction dataset ##
+########################
+ sample  prediction      lower     upper
+S2.1.01   14.606435 -13.787130 43.000000
+S2.1.02   14.606435 -13.787130 43.000000
+S2.1.03   14.606435 -13.787130 43.000000
+S2.1.04   36.047177   7.653612 64.440742
+S2.1.05   14.606435 -13.787130 43.000000
+S2.1.06   14.606435 -13.787130 43.000000
+S2.1.07   14.606435 -13.787130 43.000000
+S2.1.08   14.606435 -13.787130 43.000000
+S2.1.09   49.999515  21.605950 78.393080
+S2.1.10   49.999515  21.605950 78.393080
+S2.1.11   14.606435 -13.787130 43.000000
+S2.1.12   49.999515  21.605950 78.393080
+S2.1.13   14.606435 -13.787130 43.000000
+S2.1.14   14.606435 -13.787130 43.000000
+S2.1.15   14.606435 -13.787130 43.000000
+S2.1.16   14.606435 -13.787130 43.000000
+S2.1.17   14.606435 -13.787130 43.000000
+S2.1.18   14.606435 -13.787130 43.000000
+S2.1.19   14.606435 -13.787130 43.000000
+S2.1.20   14.606435 -13.787130 43.000000
+Note: Up to 20 results are displayed in the log for monitoring purposes, while the full set of results is available in the output files. 
+Lower and upper correspond to the range of the prediction intervals. 

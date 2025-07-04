@@ -1,0 +1,69 @@
+{
+# when combined with any model or pipeline, minimizing the number of hyperparameter combinations helps reduce overall search time
+
+# --- Feature selection (SelectKBest) ---
+# used only to modify selected SKB behavior
+#'feature_selection__k': [25, 50], # number of top features to keep
+#'feature_selection__score_func': [mutual_info_regression], # score function (avoid chi2 in a context of regression and f_regression it captures only linear dependancies)
+
+# --- Feature selection (SelectFromModel with lasso) ---
+# used only to modify laSFM behavior
+#'feature_selection__threshold': [-float('inf')], # disable thresholding to rely solely on max_features
+#'feature_selection__max_features': [25, 50], # select exactly this number of top features
+#'feature_selection__estimator__alpha': [0.01, 0.1, 1.0], # increase regularization to speed up convergence
+#'feature_selection__estimator__max_iter': [500], # reduce iterations for faster training
+#'feature_selection__estimator__tol': [1e-2], # relax convergence criteria to save time
+#'feature_selection__estimator__fit_intercept': [True], # whether to estimate the intercept
+
+# --- Feature selection (SelectFromModel with elasticnet) ---
+# used only to modify enSFM behavior
+#'feature_selection__threshold': [-float('inf')], # rank features by importance
+#'feature_selection__max_features': [25, 50], # number of top features to keep
+#'feature_selection__estimator__alpha': [0.1], # moderate regularization strength
+#'feature_selection__estimator__l1_ratio': [0.5], # balanced L1/L2 penalty
+#'feature_selection__estimator__max_iter': [300], # max iterations for convergence
+#'feature_selection__estimator__tol': [1e-2], # relaxed convergence tolerance
+
+# --- Feature selection (SelectFromModel with random forest) ---
+# used only to modify rfSFM behavior
+'feature_selection__threshold': [-float('inf')], # rank all features by importance
+'feature_selection__max_features': [25, 50], # number of top features to keep
+'feature_selection__estimator__n_estimators': [100], # number of trees
+'feature_selection__estimator__max_depth': [10], # shallow trees for speed
+
+# --- Feature selection (Boruta) ---
+# used only to modify BO behavior
+#'feature_selection__estimator__n_estimators': [5], # use a very small forest to reduce training time
+#'feature_selection__estimator__max_depth': [2], # limit tree depth to make fitting faster
+#'feature_selection__n_estimators': ['auto'], # use Boruta's default estimator parameter
+#'feature_selection__max_iter': [5], # reduced number of iterations to speed up the selection process
+#'feature_selection__perc': [90], # retain only the most important features (90th percentile)
+#'feature_selection__two_step': [False], # disable the optional second refinement step to reduce computation
+
+# --- Model tuning (GradientBoostingRegressor) ---
+# used only to modify GradientBoostingRegressor behavior
+# simplified tuning used together with rfSFM
+'model__loss': ['squared_error'], # standard fast loss
+'model__learning_rate': [0.05, 0.1], # moderate learning rates
+'model__n_estimators': [100, 200], # 100 is usually sufficient; 200 for slightly more complex relationships
+'model__subsample': [0.6, 0.8], # stochastic boosting: speeds up and adds regularization
+'model__criterion': ['friedman_mse'], # stable criterion
+'model__max_depth': [3, 5], # shallow and moderate depth
+'model__min_samples_split': [5], # avoid very deep splits
+'model__min_samples_leaf': [5], # leaf regularization
+'model__max_features': ['sqrt'], # feature subsampling
+'model__alpha': [0.9], # relevant for 'huber' loss (ignored here)
+
+# --- Model tuning (GradientBoostingRegressor) ---
+# used only to modify GradientBoostingRegressor behavior
+#'model__loss': ['squared_error'], # 'squared_error' is fast and standard; 'huber' is slower but robust to outliers
+#'model__learning_rate': [0.05, 0.1], # 0.1 is default and fast; 0.05 offers finer learning with moderate extra cost
+#'model__n_estimators': [100, 200], # 100 is usually sufficient; 200 for slightly more complex relationships
+#'model__subsample': [0.6, 0.8], # stochastic boosting: speeds up and adds regularization
+#'model__criterion': ['friedman_mse'], # faster and more stable than 'squared_error'
+#'model__max_depth': [3, 5], # 3 is fast and robust; 5 is deeper trees for more complex relationships
+#'model__min_samples_split': [5], # avoids very deep trees; keeps training fast and generalization good
+#'model__min_samples_leaf': [5], # avoids tiny leaves; better regularization and speed
+#'model__max_features': ['sqrt', 'log2'],  # both are efficient and help prevent overfitting; faster than None
+#'model__alpha': [0.9, 0.95], # only used with 'huber' loss, quantile for robustness to outliers
+}

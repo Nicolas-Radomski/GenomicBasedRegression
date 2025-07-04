@@ -1,0 +1,106 @@
+########################
+####### context  #######
+########################
+The scikit-learn (sklearn)-based Python workflow independently supports both modeling (i.e., training and testing) and prediction (i.e., using a pre-built model), and implements 5 feature selection methods, 17 model regressors, hyperparameter tuning, performance metric computation, feature and permutation importance analyses, prediction interval estimation, execution monitoring via progress bars, and parallel processing.
+########################
+###### reference  ######
+########################
+An article might potentially be published in the future.
+########################
+##### repositories #####
+########################
+Please cite:
+ GitHub (https://github.com/Nicolas-Radomski/GenomicBasedRegression),
+ Docker Hub (https://hub.docker.com/r/nicolasradomski/genomicbasedregression),
+ and/or Anaconda Hub (https://anaconda.org/nicolasradomski/genomicbasedregression).
+########################
+### acknowledgements ###
+########################
+Many thanks to Andrea De Ruvo, Adriano Di Pasquale and ChatGPT for the insightful discussions that helped improve the algorithm.
+########################
+####### versions #######
+########################
+GenomicBasedRegression: 1.1.0 (released in July 2025)
+python: 3.12
+argparse: 1.1
+boruta: 0.4.3
+catboost: 1.2.8
+joblib: 1.5.1
+lightgbm: 4.6.0
+numpy: 1.26.4
+pandas: 2.2.2
+pickle: 4.0
+re: 2.2.1
+scipy: 1.16.0
+sklearn: 1.5.2
+tqdm: 4.67.1
+tqdm-joblib: 0.0.4
+xgboost: 2.1.3
+########################
+####### arguments ######
+########################
+subcommand: prediction
+inputpath_mutations: genomic_profils_for_prediction.tsv
+inputpath_features: MyDirectory/XGB_FirstAnalysis_features.obj
+inputpath_feature_encoder: MyDirectory/XGB_FirstAnalysis_feature_encoder.obj
+inputpath_calibration_features: MyDirectory/XGB_FirstAnalysis_calibration_features.obj
+inputpath_calibration_targets: MyDirectory/XGB_FirstAnalysis_calibration_targets.obj
+inputpath_model: MyDirectory/XGB_FirstAnalysis_model.obj
+alpha: 0.05
+outputpath: MyDirectory
+prefix: XGB_SecondAnalysis
+debug: 20
+warnings: True
+nocheck: False
+########################
+######## checks ########
+########################
+The warnings were not ignored
+The traceback level was set to 20
+The recommended versions of Python and packages were properly controlled
+The prediction subcommand was used
+The minimum required number of samples in the dataset (i.e., >= 1) and the expected number of columns (i.e., >= 3) in the input file of mutations were properly controlled (i.e., 20 and 12, respectively)
+The input tested mutations include all features required by the trained one-hot encoder
+The following unexpected features in the input tested mutations will be ignored for one-hot encoding: ['Locus_11']
+The 10 provided features were one-hot encoded into 80 encoded features
+The pipeline expected 50 one-hot encoded features to perform prediction
+The pipeline components of the provided best model were properly recognized: Pipeline(steps=[('feature_selection', SelectKBest(k=50, score_func=<function mutual_info_regression at 0x7ff9fb928c20>)), ('model', XGBRegressor(base_score=None, booster=None, callbacks=None, colsample_bylevel=None, colsample_bynode=None, colsample_bytree=0.7, device=None, early_stopping_rounds=None, enable_categorical=False, eval_metric=None, feature_types=None, ga...0, grow_policy=None, importance_type='gain', interaction_constraints=None, learning_rate=0.2, max_bin=None, max_cat_threshold=None, max_cat_to_onehot=None, max_delta_step=None, max_depth=5, max_leaves=None, min_child_weight=None, missing=nan, monotone_constraints=None, multi_strategy=None, n_estimators=50, n_jobs=None, num_parallel_tree=None, random_state=42, ...))])
+The prediction intervals (i.e., 95.0%) were calculated using a significance level of α = 0.05
+The output directory already existed
+########################
+###### execution #######
+########################
+The script started on 2025-07-04 10:59:17.667943
+The script stoped on 2025-07-04 10:59:17.751022
+The script lasted 0 days, 0 hrs, 0 mins and 0.08 secs (i.e., 0.08 secs in total)
+########################
+##### output files #####
+########################
+MyDirectory/XGB_SecondAnalysis_prediction.tsv
+MyDirectory/XGB_SecondAnalysis_prediction_log.txt
+########################
+## prediction dataset ##
+########################
+ sample  prediction     lower     upper
+S2.1.01   25.614120 17.916088 33.312153
+S2.1.02   25.334396 17.636364 33.032429
+S2.1.03   17.032244  9.334211 24.730276
+S2.1.04   21.946898 14.248865 29.644930
+S2.1.05   11.572505  3.874472 19.270538
+S2.1.06   16.867485  9.169455 24.565519
+S2.1.07   36.713543 29.015511 44.411575
+S2.1.08   17.058661  9.360628 24.756693
+S2.1.09   57.463535 49.765503 65.161568
+S2.1.10   46.147820 38.449787 53.845852
+S2.1.11   15.183303  7.485270 22.881336
+S2.1.12   53.588490 45.890457 61.286518
+S2.1.13   14.838223  7.140190 22.536255
+S2.1.14    5.021672 -2.676360 12.719706
+S2.1.15    3.586110 -4.111923 11.284143
+S2.1.16    6.117935 -1.580098 13.815968
+S2.1.17    7.357408 -0.340624 15.055441
+S2.1.18    5.169204 -2.528830 12.867236
+S2.1.19    2.679785 -5.018248 10.377818
+S2.1.20    3.586110 -4.111923 11.284143
+Note: Up to 20 results are displayed in the log for monitoring purposes, while the full set of results is available in the output files. 
+Lower and upper correspond to the range of the prediction intervals. 
