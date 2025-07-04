@@ -3,7 +3,7 @@ The repository GenomicBasedRegression provides a Python (recommended version 3.1
 # Context
 The scikit-learn (sklearn)-based Python workflow independently supports both modeling (i.e., training and testing) and prediction (i.e., using a pre-built model), and implements 5 feature selection methods, 17 model regressors, hyperparameter tuning, performance metric computation, feature and permutation importance analyses, prediction interval estimation, execution monitoring via progress bars, and parallel processing.
 # Version (release)
-1.1.0 (May 2025)
+1.1.0 (July 2025)
 # Dependencies
 The Python script GenomicBasedRegression.py was prepared and tested with the Python version 3.12 and Ubuntu 20.04 LTS Focal Fossa.
 - catboost==1.2.8
