@@ -17,36 +17,27 @@
 
 # --- Feature selection (SelectFromModel with elasticnet) ---
 # used only to modify enSFM behavior
-'feature_selection__threshold': [-float('inf')], # rank features by importance
-'feature_selection__max_features': [25, 50], # number of top features to keep
-'feature_selection__estimator__alpha': [0.1], # moderate regularization strength
-'feature_selection__estimator__l1_ratio': [0.5], # balanced L1/L2 penalty
-'feature_selection__estimator__max_iter': [300], # max iterations for convergence
-'feature_selection__estimator__tol': [1e-2], # relaxed convergence tolerance
+#'feature_selection__threshold': [-float('inf')], # rank features by importance
+#'feature_selection__max_features': [25, 50], # number of top features to keep
+#'feature_selection__estimator__alpha': [0.1], # moderate regularization strength
+#'feature_selection__estimator__l1_ratio': [0.5], # balanced L1/L2 penalty
+#'feature_selection__estimator__max_iter': [300], # max iterations for convergence
+#'feature_selection__estimator__tol': [1e-2], # relaxed convergence tolerance
 
 # --- Feature selection (SelectFromModel with random forest) ---
 # used only to modify rfSFM behavior
-#'feature_selection__threshold': [-float('inf')], # rank all features by importance
-#'feature_selection__max_features': [25, 50], # number of top features to keep
-#'feature_selection__estimator__n_estimators': [100], # number of trees
-#'feature_selection__estimator__max_depth': [10], # shallow trees for speed
-
-# --- Feature selection (Boruta) ---
-# used only to modify BO behavior
-#'feature_selection__estimator__n_estimators': [5], # use a very small forest to reduce training time
-#'feature_selection__estimator__max_depth': [2], # limit tree depth to make fitting faster
-#'feature_selection__n_estimators': ['auto'], # use Boruta's default estimator parameter
-#'feature_selection__max_iter': [5], # reduced number of iterations to speed up the selection process
-#'feature_selection__perc': [90], # retain only the most important features (90th percentile)
-#'feature_selection__two_step': [False], # disable the optional second refinement step to reduce computation
+'feature_selection__threshold': [-float('inf')], # rank all features by importance
+'feature_selection__max_features': [25, 50], # number of top features to keep
+'feature_selection__estimator__n_estimators': [100], # number of trees
+'feature_selection__estimator__max_depth': [10], # shallow trees for speed
 
 # --- Model tuning (ElasticNet) ---
 # used only to modify ElasticNet behavior
-# simplified tuning used together with enSFM
-'model__alpha': [0.0001, 0.001, 0.01, 0.1], # from light to moderate regularization
-'model__l1_ratio': [0.1, 0.3, 0.5, 0.7, 0.9], # wide range from mostly L2 to mostly L1
-'model__max_iter': [10000, 15000, 20000], # sufficient iterations for convergence
-'model__tol': [1e-6, 1e-5, 1e-4], # stricter to moderate tolerance for convergence
+# simplified tuning used together with rfSFM
+'model__alpha': [0.001, 0.01], # light to moderate regularization
+'model__l1_ratio': [0.2, 0.5, 0.8], # from mostly L2 to balanced to mostly L1
+'model__max_iter': [5000], # sufficient for convergence under typical conditions
+'model__tol': [1e-4], # moderate tolerance for faster convergence
 
 # --- Model tuning (ElasticNet) ---
 # used only to modify ElasticNet behavior

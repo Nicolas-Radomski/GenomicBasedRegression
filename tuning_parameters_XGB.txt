@@ -31,15 +31,6 @@
 #'feature_selection__estimator__n_estimators': [100], # number of trees
 #'feature_selection__estimator__max_depth': [10], # shallow trees for speed
 
-# --- Feature selection (Boruta) ---
-# used only to modify BO behavior
-#'feature_selection__estimator__n_estimators': [5], # use a very small forest to reduce training time
-#'feature_selection__estimator__max_depth': [2], # limit tree depth to make fitting faster
-#'feature_selection__n_estimators': ['auto'], # use Boruta's default estimator parameter
-#'feature_selection__max_iter': [5], # reduced number of iterations to speed up the selection process
-#'feature_selection__perc': [90], # retain only the most important features (90th percentile)
-#'feature_selection__two_step': [False], # disable the optional second refinement step to reduce computation
-
 # --- Model tuning (XGBRegressor) ---
 # used only to modify XGBRegressor behavior
 # simplified tuning used together with SKB
@@ -54,7 +45,7 @@
 # --- Model tuning (XGBRegressor) ---
 # used only to modify XGBRegressor behavior
 #'model__max_depth': [3, 4, 5], # shallow to moderate tree depth for speed and flexibility
-##'model__max_leaves': [8, 16, 32], # replaces 'max_depth' (theoretically: 2^(max_depth) = max_leaves)
+#'model__max_leaves': [8, 16, 32], # replaces 'max_depth' (theoretically: 2^(max_depth) = max_leaves)
 #'model__learning_rate': [0.05, 0.1, 0.2], # slower to moderate learning rates for stable training
 #'model__subsample': [0.7, 0.8], # moderate data subsampling to reduce overfitting
 #'model__colsample_bytree': [0.6, 0.7, 0.8], # feature subsampling to speed up training and add randomness

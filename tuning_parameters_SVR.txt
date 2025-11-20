@@ -31,15 +31,6 @@
 #'feature_selection__estimator__n_estimators': [100], # number of trees
 #'feature_selection__estimator__max_depth': [10], # shallow trees for speed
 
-# --- Feature selection (Boruta) ---
-# used only to modify BO behavior
-#'feature_selection__estimator__n_estimators': [5], # use a very small forest to reduce training time
-#'feature_selection__estimator__max_depth': [2], # limit tree depth to make fitting faster
-#'feature_selection__n_estimators': ['auto'], # use Boruta's default estimator parameter
-#'feature_selection__max_iter': [5], # reduced number of iterations to speed up the selection process
-#'feature_selection__perc': [90], # retain only the most important features (90th percentile)
-#'feature_selection__two_step': [False], # disable the optional second refinement step to reduce computation
-
 # --- Model tuning (SVR) ---
 # used only to modify SVR behavior
 # simplified tuning used together with SKB

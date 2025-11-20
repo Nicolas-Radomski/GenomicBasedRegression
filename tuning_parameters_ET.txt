@@ -1,0 +1,54 @@
+{
+# when combined with any model or pipeline, minimizing the number of hyperparameter combinations helps reduce overall search time
+
+# --- Feature selection (SelectKBest) ---
+# used only to modify selected SKB behavior
+'feature_selection__k': [25, 50], # number of top features to keep
+'feature_selection__score_func': [mutual_info_regression], # score function (avoid chi2 in a context of regression and f_regression it captures only linear dependancies)
+
+# --- Feature selection (SelectFromModel with lasso) ---
+# used only to modify laSFM behavior
+#'feature_selection__threshold': [-float('inf')], # disable thresholding to rely solely on max_features
+#'feature_selection__max_features': [25, 50], # select exactly this number of top features
+#'feature_selection__estimator__alpha': [0.01, 0.1, 1.0], # increase regularization to speed up convergence
+#'feature_selection__estimator__max_iter': [500], # reduce iterations for faster training
+#'feature_selection__estimator__tol': [1e-2], # relax convergence criteria to save time
+#'feature_selection__estimator__fit_intercept': [True], # whether to estimate the intercept
+
+# --- Feature selection (SelectFromModel with elasticnet) ---
+# used only to modify enSFM behavior
+#'feature_selection__threshold': [-float('inf')], # rank features by importance
+#'feature_selection__max_features': [25, 50], # number of top features to keep
+#'feature_selection__estimator__alpha': [0.1], # moderate regularization strength
+#'feature_selection__estimator__l1_ratio': [0.5], # balanced L1/L2 penalty
+#'feature_selection__estimator__max_iter': [300], # max iterations for convergence
+#'feature_selection__estimator__tol': [1e-2], # relaxed convergence tolerance
+
+# --- Feature selection (SelectFromModel with random forest) ---
+# used only to modify rfSFM behavior
+#'feature_selection__threshold': [-float('inf')], # rank all features by importance
+#'feature_selection__max_features': [25, 50], # number of top features to keep
+#'feature_selection__estimator__n_estimators': [100], # number of trees
+#'feature_selection__estimator__max_depth': [10], # shallow trees for speed
+
+# --- Model tuning (ExtraTreesRegressor) ---
+# used only to modify ExtraTreesRegressor behavior
+# simplified tuning used together with SKB
+'model__n_estimators': [100], # enough trees for stable variance reduction
+'model__max_depth': [None], # allow full depth; ET rarely overfits due to random splits
+'model__min_samples_split': [2], # default; deeper trees improve performance on noisy data
+'model__min_samples_leaf': [1], # default; ET handles variance well
+'model__max_features': ['sqrt'], # strong feature randomness, faster and robust
+'model__bootstrap': [False], # ET normally uses the entire dataset without bootstrapping
+'model__criterion': ['squared_error'], # consistent with regression task
+
+# --- Model tuning (ExtraTreesRegressor) ---
+# used only to modify ExtraTreesRegressor behavior
+#'model__n_estimators': [100, 300], # 100 fast; 300 improves stability on noisy data
+#'model__max_depth': [None, 20], # None = full depth; 20 = regularized shallow trees
+#'model__min_samples_split': [2, 5], # 5 reduces overfitting on small datasets
+#'model__min_samples_leaf': [1, 2], # leaf size 2 slightly reduces variance
+#'model__max_features': ['sqrt', 'log2'], # common ET settings for strong randomness
+#'model__bootstrap': [False], # keep off for ExtraTrees (bootstrapping is less common)
+#'model__criterion': ['squared_error'], # default loss for regression
+}

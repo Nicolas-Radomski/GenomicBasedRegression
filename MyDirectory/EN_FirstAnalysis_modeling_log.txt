@@ -1,29 +1,28 @@
-########################
-####### context  #######
-########################
-The scikit-learn (sklearn)-based Python workflow independently supports both modeling (i.e., training and testing) and prediction (i.e., using a pre-built model), and implements 5 feature selection methods, 17 model regressors, hyperparameter tuning, performance metric computation, feature and permutation importance analyses, prediction interval estimation, execution monitoring via progress bars, and parallel processing.
-########################
-###### reference  ######
-########################
+###########################
+######### context #########
+###########################
+The scikit-learn (sklearn)-based Python workflow independently supports both modeling (i.e., training and testing) and prediction (i.e., using a pre-built model), and implements 4 feature selection methods, 19 model regressors, hyperparameter tuning, performance metric computation, feature and permutation importance analyses, prediction interval estimation, execution monitoring via progress bars, and parallel processing.
+###########################
+######## reference ########
+###########################
 An article might potentially be published in the future.
-########################
-##### repositories #####
-########################
+###########################
+###### repositories  ######
+###########################
 Please cite:
  GitHub (https://github.com/Nicolas-Radomski/GenomicBasedRegression),
  Docker Hub (https://hub.docker.com/r/nicolasradomski/genomicbasedregression),
  and/or Anaconda Hub (https://anaconda.org/nicolasradomski/genomicbasedregression).
-########################
-### acknowledgements ###
-########################
+###########################
+#### acknowledgements  ####
+###########################
 Many thanks to Andrea De Ruvo, Adriano Di Pasquale and ChatGPT for the insightful discussions that helped improve the algorithm.
-########################
-####### versions #######
-########################
-GenomicBasedRegression: 1.1.0 (released in July 2025)
+###########################
+######## versions  ########
+###########################
+GenomicBasedRegression: 1.2.0 (released in November 2025)
 python: 3.12
 argparse: 1.1
-boruta: 0.4.3
 catboost: 1.2.8
 joblib: 1.5.1
 lightgbm: 4.6.0
@@ -36,17 +35,17 @@ sklearn: 1.5.2
 tqdm: 4.67.1
 tqdm-joblib: 0.0.4
 xgboost: 2.1.3
-########################
-####### arguments ######
-########################
+###########################
+######## arguments  #######
+###########################
 subcommand: modeling
 inputpath_mutations: genomic_profils_for_modeling.tsv
-inputpath_phenotypes: MyDirectory/BRI_FirstAnalysis_phenotype_dataset.tsv
+inputpath_phenotypes: MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv
 dataset: manual
 splitting: None
 quantiles: None
 limit: 10
-featureselection: enSFM
+featureselection: rfSFM
 regressor: EN
 fold: 5
 parameters: tuning_parameters_EN.txt
@@ -56,17 +55,19 @@ nrepeats: 10
 alpha: 0.05
 outputpath: MyDirectory
 prefix: EN_FirstAnalysis
-debug: 20
-warnings: True
+digits: 6
+debug: 0
+warnings: False
 nocheck: False
-########################
-######## checks ########
-########################
-The warnings were not ignored
-The traceback level was set to 20
+###########################
+######### checks  #########
+###########################
+The traceback level was set to 0
+The warnings were ignored
 The recommended versions of Python and packages were properly controlled
 The modeling subcommand was used
 The provided sample limit per dataset (i.e., 10) meets or exceeds the recommended minimum (i.e., 10), which is expected to support more reliable performance metrics
+The phenotype in the input file of phenotypes was properly transformed as numeric (i.e., the second column)
 The minimum required number of samples in the training/testing datasets (i.e., >= 20) and the expected number of columns (i.e., >= 3) in the input file of mutations were properly controlled (i.e., 200 and 11, respectively)
 The minimum required number of samples in the training/testing datasets (i.e., >= 20) and the expected number of columns (i.e., = 3) in the input file of phenotypes were properly controlled (i.e., 200 and 3, respectively)
 The absence of missing phenotypes in the input file of phenotypes was properly controlled (i.e., the second column)
@@ -75,32 +76,37 @@ The sorted sample identifiers were confirmed as identical between the input file
 The provided selection of training/testing datasets (i.e., manual) and percentage of random splitting (i.e., None) were compatible
 The provided selection of training/testing datasets (i.e., manual) and number of quantiles (i.e., None) were compatible
 The training and testing datasets were constructed based on the 'manual' setting
-The Kolmogorov–Smirnov statistic was computed to compare the distributions of phenotypes in the training and testing datasets: 0.04375 (p-value: 1.0)
+The Kolmogorov–Smirnov statistic was computed to compare the distributions of phenotypes in the training and testing datasets: 0.05 (p-value: 0.999994)
 The number of samples in the training (i.e., 160) and testing (i.e., 40) datasets was properly controlled to be higher than, or equal to, the set limit (i.e., 10)
 The input tested mutations include all features required by the trained one-hot encoder
 The input tested mutations contain no unexpected features for one-hot encoding
-The 10 provided features were one-hot encoded into 80 encoded features
-The provided feature selection method was properly recognized: SelectFromModel with elasticnet (enSFM)
+The encoded features between training and testing datasets were confirmed as identical
+The one-hot encoded column order was harmonized across training and testing datasets to ensure deterministic feature alignment for feature selection and modeling
+The 10 provided features were one-hot encoded into 78 encoded features
+The provided feature selection method was properly recognized: SelectFromModel with Random Forest (rfSFM)
 The provided regressor was properly recognized: elasticNet (EN)
-The pipeline components were properly recognized: Pipeline(steps=[('feature_selection', SelectFromModel(estimator=ElasticNet(random_state=42))), ('model', ElasticNet(random_state=42, selection='random'))])
-The provided tuning parameters were properly recognized: [{'feature_selection__threshold': [-inf], 'feature_selection__max_features': [25, 50], 'feature_selection__estimator__alpha': [0.1], 'feature_selection__estimator__l1_ratio': [0.5], 'feature_selection__estimator__max_iter': [300], 'feature_selection__estimator__tol': [0.01], 'model__alpha': [0.0001, 0.001, 0.01, 0.1], 'model__l1_ratio': [0.1, 0.3, 0.5, 0.7, 0.9], 'model__max_iter': [10000, 15000, 20000], 'model__tol': [1e-06, 1e-05, 0.0001]}]
-The cross-validation setting implied: 10 distinct parameter names, 22 parameter value options, 360 parameter combinations, and 1800 fits during cross-validation
-The best parameters during model cross-validation were: {'feature_selection__estimator__alpha': 0.1, 'feature_selection__estimator__l1_ratio': 0.5, 'feature_selection__estimator__max_iter': 300, 'feature_selection__estimator__tol': 0.01, 'feature_selection__max_features': 25, 'feature_selection__threshold': -inf, 'model__alpha': 0.01, 'model__l1_ratio': 0.9, 'model__max_iter': 10000, 'model__tol': 0.0001}
-The best negative root mean squared error during model cross-validation was: -3.22294
-The pipeline potentially selected and used 25 one-hot encoded features to train the model
+The pipeline components were properly recognized: Pipeline(steps=[('feature_selection', SelectFromModel(estimator=RandomForestRegressor(n_jobs=1, random_state=42))), ('model', ElasticNet(random_state=42, selection='random'))])
+The provided tuning parameters were properly recognized: [{'feature_selection__threshold': [-inf], 'feature_selection__max_features': [25, 50], 'feature_selection__estimator__n_estimators': [100], 'feature_selection__estimator__max_depth': [10], 'model__alpha': [0.001, 0.01], 'model__l1_ratio': [0.2, 0.5, 0.8], 'model__max_iter': [5000], 'model__tol': [0.0001]}]
+The cross-validation setting implied: 8 distinct parameter names, 12 parameter value options, 12 parameter combinations, and 60 fits during cross-validation
+The tqdm_joblib progress bars are activated when using two or more jobs
+The best parameters during model cross-validation were: {'feature_selection__estimator__max_depth': 10, 'feature_selection__estimator__n_estimators': 100, 'feature_selection__max_features': 50, 'feature_selection__threshold': -inf, 'model__alpha': 0.01, 'model__l1_ratio': 0.5, 'model__max_iter': 5000, 'model__tol': 0.0001}
+The best negative root mean squared error during model cross-validation was: -3.051691
+The pipeline potentially selected and used 50 one-hot encoded features to train the model
 The full one-hot encoded feature names were recovered from the pipeline
-The best model returned 25 importance values (absolute coefficient magnitude (coef_)) for 25 one-hot encoded features (potentially selected and/or polynomially expanded)
-The prediction intervals (i.e., 95.0%) were calculated using ResidualQuantileWrapper with α = 0.05
+The best model returned 50 importance values (absolute coefficient magnitude (coef_)) for 50 one-hot encoded features (potentially selected and/or polynomially expanded)
+The permutation importance was requested (i.e., True) but the number of repetitions was not set (i.e., False); the default value is therefore used (i.e., 10)
+The permutation importance was successfully computed on both training and testing datasets
+The prediction intervals (i.e., 95.0%) were calculated using ResidualQuantileWrapper with alpha = 0.05
 The output directory already existed
-########################
-###### execution #######
-########################
-The script started on 2025-07-04 10:47:35.742922
-The script stoped on 2025-07-04 10:47:56.538677
-The script lasted 0 days, 0 hrs, 0 mins and 20.8 secs (i.e., 20.8 secs in total)
-########################
-##### output files #####
-########################
+###########################
+####### execution  ########
+###########################
+The script started on 2025-11-19 10:18:14.436506
+The script stoped on 2025-11-19 10:18:56.957944
+The script lasted 0 days, 0 hrs, 0 mins and 42.52 secs (i.e., 42.52 secs in total)
+###########################
+###### output  files ######
+###########################
 MyDirectory/EN_FirstAnalysis_features.obj
 MyDirectory/EN_FirstAnalysis_feature_encoder.obj
 MyDirectory/EN_FirstAnalysis_calibration_features.obj
@@ -115,69 +121,122 @@ MyDirectory/EN_FirstAnalysis_prediction_training.tsv
 MyDirectory/EN_FirstAnalysis_prediction_testing.tsv
 MyDirectory/EN_FirstAnalysis_phenotype_dataset.tsv
 MyDirectory/EN_FirstAnalysis_modeling_log.txt
-########################
-# performance  metrics #
-########################
+###########################
+### feature  importance ###
+###########################
+        feature  importance
+    Locus_5_A16    6.126870
+    Locus_2_A13    6.088488
+    Locus_1_A12    6.086577
+     Locus_6_A4    6.073425
+    Locus_10_A2    5.619275
+     Locus_9_A3    5.619246
+     Locus_9_A9    5.535661
+   Locus_10_A19    5.534720
+     Locus_3_A9    4.805789
+   Locus_10_A16    4.805493
+    Locus_9_A10    4.805473
+    Locus_5_A11    4.805434
+     Locus_8_A8    3.937835
+Locus_5_missing    3.326344
+     Locus_1_A1    3.325153
+   Locus_10_A13    3.269024
+     Locus_6_A9    3.266929
+     Locus_9_A7    3.266572
+    Locus_8_A13    3.265900
+    Locus_4_A10    2.918693
+Note: Up to 20 results are displayed in the log for monitoring purposes, while the full set of results is available in the output files. 
+Note: NaN placeholder in case no native or detectable feature importance is available. 
+Note: Boosting models, especially Histogram-based Gradient Boosting (HGB), may yield all-zero feature importances when no meaningful split gains are computed—typically due to strong regularization, shallow trees, or low feature variability. 
+###########################
+# permutation  importance #
+###########################
+        feature  train_mean  train_std  test_mean  test_std
+     Locus_8_A3    1.850062   0.194777   1.069288  0.179185
+     Locus_2_A5    1.832121   0.193813   1.054330  0.178831
+    Locus_1_A12    1.831228   0.193765   1.053587  0.178813
+   Locus_10_A19    1.440241   0.067638   1.261628  0.305055
+    Locus_10_A2    0.585239   0.113224  -0.202950  0.109014
+   Locus_10_A13    0.495989   0.075740   0.482784  0.158549
+     Locus_5_A3    0.460635   0.058248   0.427578  0.128969
+   Locus_10_A16    0.460587   0.058244   0.427536  0.128961
+    Locus_8_A13    0.460578   0.058244   0.427527  0.128960
+     Locus_1_A6    0.368697   0.073287   0.426324  0.091558
+     Locus_3_A9    0.303282   0.083433  -0.068139  0.054077
+     Locus_9_A4    0.294146   0.041430   0.237916  0.133305
+     Locus_2_A8    0.257064   0.054502   0.160054  0.079699
+     Locus_9_A8    0.244146   0.074600   0.208320  0.085491
+     Locus_1_A1    0.243992   0.074574   0.175255  0.066612
+Locus_5_missing    0.169270   0.035601   0.193865  0.080867
+     Locus_4_A7    0.126677   0.033375   0.034763  0.079631
+     Locus_9_A3    0.096868   0.031679   0.038912  0.070389
+     Locus_2_A7    0.096542   0.031151   0.195636  0.058822
+     Locus_3_A8    0.093347   0.022109   0.094394  0.052035
+Note: Up to 20 results are displayed in the log for monitoring purposes, while the full set of results is available in the output files. 
+Note: Positive permutation importance values indicate features that contribute positively to the model’s performance, while negative values suggest features that degrade performance when included. 
+###########################
+### performance metrics ###
+###########################
 from the training dataset: 
-    RMSE      MSE    SMAPE     MAPE      MAE       R2      aR2
-2.911716 8.478088 0.147215 0.163255 1.745456 0.972996 0.971183
+   RMSE     MSE    SMAPE     MAPE      MAE       R2      aR2
+2.66258 7.08933 0.132391 0.146037 1.520706 0.977924 0.976443
 from the testing dataset: 
-    RMSE      MSE   SMAPE     MAPE      MAE       R2     aR2
-2.229005 4.968465 0.12554 0.166488 1.450727 0.983923 0.97838
+    RMSE      MSE    SMAPE     MAPE      MAE       R2      aR2
+2.971581 8.830292 0.136209 0.173195 1.736374 0.968372 0.957466
 Note: RMSE stands for root mean squared error. 
 Note: MSE stands for mean square error. 
 Note: MAPE stands for mean absolute percentage error. 
 Note: MAE stands for mean absolute error. 
 Note: R2 stands for R-squared. 
-########################
-### training dataset ###
-########################
- sample expectation  prediction     lower     upper
-S0.1.01          20   25.472474 17.864520 33.080422
-S0.1.02          20   25.472474 17.864520 33.080422
-S0.1.03          15   15.936663  8.328714 23.544616
-S0.1.04          48   47.384375 39.776444 54.992346
-S0.1.05          14   15.936663  8.328714 23.544616
-S0.1.06          16   15.936663  8.328714 23.544616
-S0.1.07          47   44.403729 36.795775 52.011677
-S0.1.09          58   58.828476 51.220529 66.436431
-S0.1.11          15   15.936663  8.328714 23.544616
-S0.1.18           2    3.699314 -3.908633 11.307269
-S0.1.19           2    2.748578 -4.859375 10.356527
-S0.1.20           4    3.699314 -3.908633 11.307269
-S1.1.03          16   15.936663  8.328714 23.544616
-S1.1.04          48   47.384375 39.776444 54.992346
-S1.1.05          15   15.936663  8.328714 23.544616
-S1.1.06          16   15.936663  8.328714 23.544616
-S1.1.07          43   44.403729 36.795775 52.011677
-S1.1.08          17   15.936663  8.328714 23.544616
-S1.1.12          46   47.901438 40.293488 55.509389
-S1.1.13          13   15.936663  8.328714 23.544616
+###########################
+#### training  dataset ####
+###########################
+ sample  expectation  prediction     lower     upper
+S0.1.02         20.0   24.969019 17.352802 32.585236
+S0.1.03         15.0   16.634987  9.018770 24.251204
+S0.1.04         48.0   47.942535 40.326317 55.558754
+S0.1.05         14.0   15.600029  7.983812 23.216246
+S0.1.06         16.0   16.634987  9.018770 24.251204
+S0.1.07         47.0   44.409401 36.793182 52.025620
+S0.1.08         17.0   16.634987  9.018770 24.251204
+S0.1.09         58.0   60.450562 52.834343 68.066780
+S0.1.10         46.0   46.151833 38.535614 53.768051
+S0.1.11         15.0   15.203316  7.587099 22.819532
+S0.1.12         47.0   47.839790 40.223572 55.456009
+S0.1.13         13.0   15.384684  7.768466 23.000900
+S0.1.14          5.0    5.119402 -2.496815 12.735619
+S0.1.15          6.0    5.936684 -1.679533 13.552900
+S0.1.18          2.0    3.516674 -4.099543 11.132891
+S0.1.19          2.0    2.663948 -4.952269 10.280165
+S0.1.20          4.0    3.516674 -4.099543 11.132891
+S1.1.01         24.0   25.611378 17.995161 33.227596
+S1.1.03         16.0   16.634987  9.018770 24.251204
+S1.1.04         48.0   47.942535 40.326317 55.558754
 Note: Up to 20 results are displayed in the log for monitoring purposes, while the full set of results is available in the output files. 
 Note: Lower and upper correspond to the range of the prediction intervals. 
-########################
-### testing  dataset ###
-########################
- sample expectation  prediction     lower     upper
-S0.1.08          17   15.936663  8.328714 23.544616
-S0.1.10          46   47.167644 39.559681 54.775583
-S0.1.12          47   47.901438 40.293488 55.509389
-S0.1.13          13   15.936663  8.328714 23.544616
-S0.1.14           5    6.023407 -1.584548 13.631353
-S0.1.15           6    6.023407 -1.584548 13.631353
-S0.1.16           6    6.023407 -1.584548 13.631353
-S0.1.17           8    6.974143 -0.633807 14.582095
-S1.1.01          24   25.472474 17.864520 33.080422
-S1.1.02          26   25.472474 17.864520 33.080422
-S1.1.09          58   58.828476 51.220529 66.436431
-S1.1.10          46   47.167644 39.559681 54.775583
-S1.1.11          15   15.936663  8.328714 23.544616
-S2.1.07          50   44.403729 36.795775 52.011677
-S2.1.08          20   15.936663  8.328714 23.544616
-S3.1.04          48   47.384375 39.776444 54.992346
-S3.1.05          25   15.936663  8.328714 23.544616
-S3.1.06          16   15.936663  8.328714 23.544616
-S4.1.12          46   47.901438 40.293488 55.509389
-S4.1.19           2    2.748578 -4.859375 10.356527
+###########################
+##### testing dataset #####
+###########################
+ sample  expectation  prediction     lower     upper
+S0.1.01         20.0   25.611378 17.995161 33.227596
+S0.1.16          6.0    6.785650 -0.830567 14.401867
+S0.1.17          8.0    6.970625 -0.645592 14.586842
+S1.1.02         26.0   24.969019 17.352802 32.585236
+S1.1.11         15.0   15.203316  7.587099 22.819532
+S1.1.17          8.0    6.970625 -0.645592 14.586842
+S1.1.18          5.0    3.516674 -4.099543 11.132891
+S1.1.20          4.0    3.516674 -4.099543 11.132891
+S2.1.07         50.0   44.409401 36.793182 52.025620
+S2.1.08         20.0   16.634987  9.018770 24.251204
+S2.1.20          4.0    3.516674 -4.099543 11.132891
+S3.1.11         15.0   15.203316  7.587099 22.819532
+S3.1.12         50.0   47.839790 40.223572 55.456009
+S3.1.19          2.0    2.663948 -4.952269 10.280165
+S4.1.05         14.0   15.600029  7.983812 23.216246
+S4.1.08         17.0   16.634987  9.018770 24.251204
+S4.1.10         46.0   46.151833 38.535614 53.768051
+S4.1.18          4.0    5.603735 -2.012482 13.219952
+S4.1.19          2.0    2.663948 -4.952269 10.280165
+S5.1.02         25.0   24.969019 17.352802 32.585236
 Note: Up to 20 results are displayed in the log for monitoring purposes, while the full set of results is available in the output files. 
 Note: Lower and upper correspond to the range of the prediction intervals. 

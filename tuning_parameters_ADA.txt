@@ -1,0 +1,48 @@
+{
+# when combined with any model or pipeline, minimizing the number of hyperparameter combinations helps reduce overall search time
+
+# --- Feature selection (SelectKBest) ---
+# used only to modify selected SKB behavior
+#'feature_selection__k': [25, 50], # number of top features to keep
+#'feature_selection__score_func': [mutual_info_regression], # score function (avoid chi2 in a context of regression and f_regression it captures only linear dependancies)
+
+# --- Feature selection (SelectFromModel with lasso) ---
+# used only to modify laSFM behavior
+#'feature_selection__threshold': [-float('inf')], # disable thresholding to rely solely on max_features
+#'feature_selection__max_features': [25, 50], # select exactly this number of top features
+#'feature_selection__estimator__alpha': [0.01, 0.1, 1.0], # increase regularization to speed up convergence
+#'feature_selection__estimator__max_iter': [500], # reduce iterations for faster training
+#'feature_selection__estimator__tol': [1e-2], # relax convergence criteria to save time
+#'feature_selection__estimator__fit_intercept': [True], # whether to estimate the intercept
+
+# --- Feature selection (SelectFromModel with elasticnet) ---
+# used only to modify enSFM behavior
+#'feature_selection__threshold': [-float('inf')], # rank features by importance
+#'feature_selection__max_features': [25, 50], # number of top features to keep
+#'feature_selection__estimator__alpha': [0.1], # moderate regularization strength
+#'feature_selection__estimator__l1_ratio': [0.5], # balanced L1/L2 penalty
+#'feature_selection__estimator__max_iter': [300], # max iterations for convergence
+#'feature_selection__estimator__tol': [1e-2], # relaxed convergence tolerance
+
+# --- Feature selection (SelectFromModel with random forest) ---
+# used only to modify rfSFM behavior
+#'feature_selection__threshold': [-float('inf')], # rank all features by importance
+#'feature_selection__max_features': [25, 50], # number of top features to keep
+#'feature_selection__estimator__n_estimators': [100], # number of trees
+#'feature_selection__estimator__max_depth': [10], # shallow trees for speed
+
+# --- Model tuning (AdaBoostRegressor) ---
+# used only to modify the behavior of AdaBoostRegressor
+# simplified tuning used together with SKB
+#'model__n_estimators': [50], # smaller number of boosting stages for fast evaluation
+#'model__learning_rate': [0.1], # single moderate learning rate to avoid unnecessary variants
+#'model__loss': ['linear'], # standard loss; avoids exploring quadratic/exponential variants
+#'model__random_state': [42], # ensures deterministic behavior
+
+# --- Model tuning (AdaBoostRegressor) ---
+# used only to modify the behavior of AdaBoostRegressor
+'model__n_estimators': [50, 100, 200], # increasing the number of boosting stages; 200 is still fast
+'model__learning_rate': [0.05, 0.1, 0.2], # common learning rates; avoids extreme values
+'model__loss': ['linear', 'square'], # include square loss; exclude 'exponential' (rarely used in regression)
+'model__random_state': [42], # ensures deterministic behavior across runs
+}

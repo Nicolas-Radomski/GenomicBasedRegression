@@ -3,17 +3,17 @@
 
 # --- Feature selection (SelectKBest) ---
 # used only to modify selected SKB behavior
-#'feature_selection__k': [25, 50], # number of top features to keep
-#'feature_selection__score_func': [mutual_info_regression], # score function (avoid chi2 in a context of regression and f_regression it captures only linear dependancies)
+'feature_selection__k': [25, 50], # number of top features to keep
+'feature_selection__score_func': [mutual_info_regression], # score function (avoid chi2 in a context of regression and f_regression it captures only linear dependancies)
 
 # --- Feature selection (SelectFromModel with lasso) ---
 # used only to modify laSFM behavior
-'feature_selection__threshold': [-float('inf')], # disable thresholding to rely solely on max_features
-'feature_selection__max_features': [25, 50], # select exactly this number of top features
-'feature_selection__estimator__alpha': [0.01, 0.1, 1.0], # increase regularization to speed up convergence
-'feature_selection__estimator__max_iter': [500], # reduce iterations for faster training
-'feature_selection__estimator__tol': [1e-2], # relax convergence criteria to save time
-'feature_selection__estimator__fit_intercept': [True], # whether to estimate the intercept
+#'feature_selection__threshold': [-float('inf')], # disable thresholding to rely solely on max_features
+#'feature_selection__max_features': [25, 50], # select exactly this number of top features
+#'feature_selection__estimator__alpha': [0.01, 0.1, 1.0], # increase regularization to speed up convergence
+#'feature_selection__estimator__max_iter': [500], # reduce iterations for faster training
+#'feature_selection__estimator__tol': [1e-2], # relax convergence criteria to save time
+#'feature_selection__estimator__fit_intercept': [True], # whether to estimate the intercept
 
 # --- Feature selection (SelectFromModel with elasticnet) ---
 # used only to modify enSFM behavior
@@ -30,15 +30,6 @@
 #'feature_selection__max_features': [25, 50], # number of top features to keep
 #'feature_selection__estimator__n_estimators': [100], # number of trees
 #'feature_selection__estimator__max_depth': [10], # shallow trees for speed
-
-# --- Feature selection (Boruta) ---
-# used only to modify BO behavior
-#'feature_selection__estimator__n_estimators': [5], # use a very small forest to reduce training time
-#'feature_selection__estimator__max_depth': [2], # limit tree depth to make fitting faster
-#'feature_selection__n_estimators': ['auto'], # use Boruta's default estimator parameter
-#'feature_selection__max_iter': [5], # reduced number of iterations to speed up the selection process
-#'feature_selection__perc': [90], # retain only the most important features (90th percentile)
-#'feature_selection__two_step': [False], # disable the optional second refinement step to reduce computation
 
 # --- Model tuning (PolynomialFeatures + LinearRegression) ---
 # used only to modify PolynomialFeatures + LinearRegression behavior

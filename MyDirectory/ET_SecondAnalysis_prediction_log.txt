@@ -1,0 +1,108 @@
+###########################
+######### context #########
+###########################
+The scikit-learn (sklearn)-based Python workflow independently supports both modeling (i.e., training and testing) and prediction (i.e., using a pre-built model), and implements 4 feature selection methods, 19 model regressors, hyperparameter tuning, performance metric computation, feature and permutation importance analyses, prediction interval estimation, execution monitoring via progress bars, and parallel processing.
+###########################
+######## reference ########
+###########################
+An article might potentially be published in the future.
+###########################
+###### repositories  ######
+###########################
+Please cite:
+ GitHub (https://github.com/Nicolas-Radomski/GenomicBasedRegression),
+ Docker Hub (https://hub.docker.com/r/nicolasradomski/genomicbasedregression),
+ and/or Anaconda Hub (https://anaconda.org/nicolasradomski/genomicbasedregression).
+###########################
+#### acknowledgements  ####
+###########################
+Many thanks to Andrea De Ruvo, Adriano Di Pasquale and ChatGPT for the insightful discussions that helped improve the algorithm.
+###########################
+######## versions  ########
+###########################
+GenomicBasedRegression: 1.2.0 (released in November 2025)
+python: 3.12
+argparse: 1.1
+catboost: 1.2.8
+joblib: 1.5.1
+lightgbm: 4.6.0
+numpy: 1.26.4
+pandas: 2.2.2
+pickle: 4.0
+re: 2.2.1
+scipy: 1.16.0
+sklearn: 1.5.2
+tqdm: 4.67.1
+tqdm-joblib: 0.0.4
+xgboost: 2.1.3
+###########################
+######## arguments  #######
+###########################
+subcommand: prediction
+inputpath_mutations: genomic_profils_for_prediction.tsv
+inputpath_features: MyDirectory/ET_FirstAnalysis_features.obj
+inputpath_feature_encoder: MyDirectory/ET_FirstAnalysis_feature_encoder.obj
+inputpath_calibration_features: MyDirectory/ET_FirstAnalysis_calibration_features.obj
+inputpath_calibration_targets: MyDirectory/ET_FirstAnalysis_calibration_targets.obj
+inputpath_model: MyDirectory/ET_FirstAnalysis_model.obj
+alpha: 0.05
+outputpath: MyDirectory
+prefix: ET_SecondAnalysis
+digits: 6
+debug: 0
+warnings: False
+nocheck: False
+###########################
+######### checks  #########
+###########################
+The traceback level was set to 0
+The warnings were ignored
+The recommended versions of Python and packages were properly controlled
+The prediction subcommand was used
+The minimum required number of samples in the dataset (i.e., >= 1) and the expected number of columns (i.e., >= 3) in the input file of mutations were properly controlled (i.e., 20 and 12, respectively)
+The input tested mutations include all features required by the trained one-hot encoder
+The following unexpected features in the input tested mutations will be ignored for one-hot encoding: ['Locus_11']
+The encoded features between training and prediction datasets were confirmed as identical
+The 10 provided features were one-hot encoded into 78 encoded features
+The pipeline expected 50 one-hot encoded features to perform prediction
+The pipeline components of the provided best model were properly recognized: Pipeline(steps=[('feature_selection', SelectKBest(k=50, score_func=<function mutual_info_regression at 0x7f8b35514540>)), ('model', ExtraTreesRegressor(max_features='sqrt', n_jobs=1, random_state=42))])
+The one-hot encoded prediction matrix was reindexed and aligned to match the exact feature names and order expected by the trained pipeline
+The prediction intervals (i.e., 95.0%) were calculated using a significance level of alpha = 0.05
+The output directory already existed
+###########################
+####### execution  ########
+###########################
+The script started on 2025-11-19 10:19:16.394110
+The script stoped on 2025-11-19 10:19:16.440386
+The script lasted 0 days, 0 hrs, 0 mins and 0.05 secs (i.e., 0.05 secs in total)
+###########################
+###### output  files ######
+###########################
+MyDirectory/ET_SecondAnalysis_prediction.tsv
+MyDirectory/ET_SecondAnalysis_prediction_log.txt
+###########################
+### prediction  dataset ###
+###########################
+ sample  prediction     lower     upper
+S2.1.01   26.103393 18.687768 33.519018
+S2.1.02   24.936250 17.520625 32.351875
+S2.1.03   17.540794 10.125169 24.956419
+S2.1.04   46.283750 38.868125 53.699375
+S2.1.05   17.289127  9.873502 24.704752
+S2.1.06   17.000675  9.585050 24.416300
+S2.1.07   42.673083 35.257458 50.088708
+S2.1.08   17.099940  9.684315 24.515565
+S2.1.09   52.818194 45.402569 60.233819
+S2.1.10   46.000000 38.584375 53.415625
+S2.1.11   15.452599  8.036974 22.868224
+S2.1.12   49.827361 42.411736 57.242986
+S2.1.13   15.216250  7.800625 22.631875
+S2.1.14    9.846230  2.430605 17.261855
+S2.1.15    6.545536 -0.870089 13.961161
+S2.1.16   12.047639  4.632014 19.463264
+S2.1.17   12.204321  4.788696 19.619946
+S2.1.18    5.610000 -1.805625 13.025625
+S2.1.19    2.571429 -4.844196  9.987054
+S2.1.20    3.428571 -3.987054 10.844196
+Note: Up to 20 results are displayed in the log for monitoring purposes, while the full set of results is available in the output files. 
+Lower and upper correspond to the range of the prediction intervals. 

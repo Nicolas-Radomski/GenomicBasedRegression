@@ -1,0 +1,749 @@
+REGRESSION
+# handel encoded categories: https://gsarantitis.wordpress.com/2019/07/16/how-to-persist-categorical-encoding-in-machine-learning-deployment-phase/
+# Handle Unknown Categories Using OneHotEncoder: https://priyanka-ddit.medium.com/handle-unknown-categories-using-onehotencoder-181bdc0a163c
+# OneHotEncoder 's "handle_unknown" parameter: https://www.kaggle.com/discussions/questions-and-answers/337233
+# handle "unseen" categorical variables with one hot encoding: https://stackoverflow.com/questions/73043402/how-to-handle-unseen-categorical-variables-with-one-hot-encoding-in-sklearn
+# reverse OneHotEncoding: https://www.geeksforgeeks.org/reversing-sklearnonehotencoder-transform-to-recover-original-data/
+# process numerical and categorical descriptors and add encoder labels: https://datasensei.medium.com/how-to-transform-nominal-data-for-ml-with-onehotencoder-from-scikit-learn-f6febfefb3c6
+# transform array to df: https://datascience.stackexchange.com/questions/71804/how-to-perform-one-hot-encoding-on-multiple-categorical-columns
+# different binary encoders for linear regression of categorical data: https://saturncloud.io/blog/linear-regression-with-sklearn-using-categorical-variables/
+# handle_unknown in OneHotEncoder: https://scikit-learn.org/dev/modules/generated/sklearn.preprocessing.OneHotEncoder.html
+# OneHotEncoding + linear regrssion: https://saturncloud.io/blog/linear-regression-with-sklearn-using-categorical-variables/
+# classification with multiple models: https://machinelearningmastery.com/machine-learning-in-python-step-by-step/
+# LogisticRegression + save model with Pickle: https://machinelearningmastery.com/save-load-machine-learning-models-python-scikit-learn/
+# argparse to handle subcommands: https://docs.python.org/dev/library/argparse.html#sub-commands
+# argparse to handle subcommands: https://dnmtechs.com/retrieving-subcommands-using-argparse-in-python-3/
+# argparse to handle subcommands: https://stackoverflow.com/questions/26216875/how-to-handle-cli-subcommands-with-argparse
+# LogisticRegression + save model with Pickle: https://machinelearningmastery.com/save-load-machine-learning-models-python-scikit-learn/
+# regression metrics: https://www.youtube.com/watch?v=6KxaRZixh8E
+- mean absolute error (MAE)
+- mean square error (MSE)
+- R-squared (R2)
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+mae = mean_absolute_error(y_test, y_preds)
+mse = mean_squared_error(y_test, y_preds)
+r2 = r2_score(y_test, y_preds)
+print(f"mean absolute error: {mae}")
+print(f"mean squared error: {mse}")
+print(f"R-squared: {r2}")
+usual metrics:
+- RMSE: root mean squared error
+- MAE: mean absolute error 
+- coefficient of determination: R2
+- adjusted: R2
+- mean absolute percentage error: MAPE
+From Davide (parameters_for_regression.md)
+| **Aspect**                      | **Measure**                                            | **What It Tells You**                                          | **Typical Thresholds**                         | **When to Use**                                     |
+| ------------------------------- | ------------------------------------------------------ | -------------------------------------------------------------- | ---------------------------------------------- | --------------------------------------------------- |
+| **Accuracy**                    | RMSE (Root Mean Squared Error)                         | Penalizes large errors more heavily                            | Depends on scale; <10% of target range is good | General performance measure                         |
+|                                 | MAE (Mean Absolute Error)                              | Mean of absolute errors; robust to outliers                    | <10% of target mean is good                    | When outliers are not critical                      |
+|                                 | MAPE (Mean Absolute Percentage Error)                  | Relative average error (%)                                     | <10% = excellent, 10–20% = good, >50% = poor   | When target values > 0 and interpretability matters |
+|                                 | R² (Coefficient of Determination)                      | Proportion of variance explained by model                      | >0.9 = excellent, 0.7–0.9 = good, <0.5 = weak  | For assessing model explanatory power               |
+|                                 |                                                        |                                                                |                                                |                                                     |
+| **Uncertainty **                | Prediction Interval                                    | Estimated range where true value is likely to fall (e.g., 95%) | Interval width <10–20% of prediction = good    | Classical stats, risk-sensitive domains             |
+|                                 | Quantile Regression                                    | Predicts specific percentiles (e.g., 5th and 95th)             | Interval width between quantiles <20% = good   | When uncertainty is asymmetric or non-Gaussian      |
+|                                 | Std. deviation of predictions                          | Variation between individual model predictions                 | std / prediction <10% = high reliability       | Quick estimate in ensemble models                   |
+      
+
+
+
+############################################################################################################################################################################################################################################################################
+
+import numpy as np
+import matplotlib.pyplot as plt
+from xgboost import XGBRegressor
+from sklearn.datasets import fetch_california_housing
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score, make_scorer
+
+# Load data
+X, y = fetch_california_housing(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Grid Search on Median Prediction (Quantile 0.5) 
+
+def rmse(y_true, y_pred):
+    return np.sqrt(mean_squared_error(y_true, y_pred))
+
+scoring = {
+    'MAE': make_scorer(mean_absolute_error, greater_is_better=False),
+    'RMSE': make_scorer(rmse, greater_is_better=False),
+    'R2': 'r2'
+}
+
+param_grid = {
+    'n_estimators': [100],
+    'max_depth': [3, 5],
+    'learning_rate': [0.1],
+    'subsample': [1.0]
+}
+
+xgb_median = XGBRegressor(objective='reg:squarederror', tree_method='auto', random_state=42)
+
+grid = GridSearchCV(
+    estimator=xgb_median,
+    param_grid=param_grid,
+    scoring=scoring,
+    refit='MAE',
+    cv=3,
+    n_jobs=-1,
+    verbose=1
+)
+
+grid.fit(X_train, y_train)
+print("Best Params (Median):", grid.best_params_)
+
+# Train XGB for Quantile Regression (5%, 50%, 95%) 
+
+def train_quantile_model(alpha):
+    model = XGBRegressor(
+        objective='reg:quantileerror',
+        alpha=alpha,
+        n_estimators=100,
+        max_depth=grid.best_params_['max_depth'],
+        learning_rate=grid.best_params_['learning_rate'],
+        subsample=grid.best_params_['subsample'],
+        tree_method='auto',
+        random_state=42
+    )
+    model.fit(X_train, y_train)
+    return model
+
+model_05 = train_quantile_model(0.05)
+model_50 = train_quantile_model(0.5)
+model_95 = train_quantile_model(0.95)
+
+# Predictions and Evaluation 
+
+y_pred_05 = model_05.predict(X_test)
+y_pred_50 = model_50.predict(X_test)
+y_pred_95 = model_95.predict(X_test)
+
+interval_width = y_pred_95 - y_pred_05
+coverage = np.mean((y_test >= y_pred_05) & (y_test <= y_pred_95))
+
+print("\nTest Set Evaluation:")
+print("MAE (median):", mean_absolute_error(y_test, y_pred_50))
+print("RMSE (median):", np.sqrt(mean_squared_error(y_test, y_pred_50)))
+print("R² (median):", r2_score(y_test, y_pred_50))
+print("Avg Interval Width (95%-5%):", np.mean(interval_width))
+print("Interval Coverage (~90% target):", coverage)
+
+# Plot Prediction Intervals 
+
+n_plot = 100
+idx = np.random.choice(len(X_test), n_plot, replace=False)
+
+plt.figure(figsize=(12, 5))
+plt.errorbar(np.arange(n_plot), y_pred_50[idx],
+             yerr=[y_pred_50[idx] - y_pred_05[idx], y_pred_95[idx] - y_pred_50[idx]],
+             fmt='o', ecolor='gray', capsize=3, label='Predicted Interval')
+plt.plot(np.arange(n_plot), y_test[idx], 'r.', label='True Value')
+plt.xlabel("Sample Index")
+plt.ylabel("Target")
+plt.title("XGBoost Quantile Prediction Intervals")
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+# What might be the origin of RMSE, MSE. MAPE, MAE inflation and R2/aR2 negative outcomes of the testing dataset observed with LinearRegression(), while it was not observed with ElasticNet(warm_start=True), KNeighborsRegressor(), RandomForestRegressor(), SVR() and xgb.XGBRegressor(objective='reg:squarederror')?
+## LR (some time):         RMSE          MSE          SMAPE       MAPE          MAE            R2             aR2
+Training:      2.679166      7.177933     0.099633    0.114272      1.175139        0.977107       0.974535
+Testing:       3.497852e+23  3.497852e+23 0.282056    1.085469e+10  1.389250e+11   -1.135344e+21  -1.262910e+21
+1. Multicollinearity (Perfect or Near-Perfect Correlation Between Features)
+Linear regression is very sensitive to multicollinearity.
+Multicollinearity leads to unstable coefficients: very large in magnitude, with signs flipping drastically depending on the data split.
+This can cause tiny differences in inputs (like those between training and testing) to yield huge errors in predictions—hence the exploding RMSE/MSE/MAE on test data.
+Other models (ElasticNet, RF, XGB) are robust to multicollinearity or regularize it away.
+2. Extrapolation Outside Training Domain
+Linear regression can extrapolate wildly outside the training data range because it assumes a global linear relationship.
+If your test set includes samples that lie outside the convex hull of training data, linear regression can produce absurdly large predictions.
+Tree-based models (RF, XGB) or KNN are non-parametric and don’t extrapolate beyond the training domain.
+SVR and ElasticNet include regularization, which reduces extreme extrapolation.
+3. Feature Scaling / Lack of Regularization
+LinearRegression() in scikit-learn does no feature scaling or regularization.
+If your features have very different scales, and the data isn't normalized or standardized, the learned coefficients can be numerically unstable.
+ElasticNet (and Lasso/Ridge) handle this via L1/L2 regularization.
+Other regressors (like SVR or XGB) are also invariant to scale to varying degrees.
+# check possibility to split stratified => quantil pd.qcut() + StratifiedShuffleSplit() = quantile-based discretization
+
+# warm_start=True (reusing the solution of the previous fit to speeding up) should not be used with GridSearchCV + potentially cross-validation (cv=FOLD) in most regressors — even though it’s technically valid for some, because warm_start=True caches state between .fit() calls. But during cross-validation, GridSearchCV:
+Repeatedly clones the base model
+Fits it on different folds and parameter sets
+Does NOT reset state unless you're careful — this can result in leakage, weird performance, or inefficient behavior.
+
+# Logistic regression (whether binary or multinomial, i.e., "multivariate") is a classification algorithm, not a regression algorithm. It is used when:
+Target = categorical (e.g., class labels like 0/1, "low/medium/high", etc.)
+Multinomial logistic regression → for multi-class classification (not multiple continuous outputs)
+
+# other regressor of interest
+## Linear/Generalized Linear Models
+### Ridge (L2 regularized regression): Handles multicollinearity better than OLS.
+from sklearn.linear_model import Ridge
+selected_regressor = Ridge(random_state=42)
+### BayesianRidge: Probabilistic version of Ridge; gives uncertainty estimates.
+from sklearn.linear_model import BayesianRidge
+selected_regressor = BayesianRidge()
+### HuberRegressor: Robust to outliers (combines linear regression with a loss less sensitive to outliers).
+from sklearn.linear_model import HuberRegressor
+selected_regressor = HuberRegressor()
+## Tree-Based / Ensemble Methods
+### GradientBoostingRegressor (from scikit-learn): Often competitive with XGBoost, especially for small/medium datasets.
+from sklearn.ensemble import GradientBoostingRegressor
+selected_regressor = GradientBoostingRegressor(random_state=42)
+### HistGradientBoostingRegressor: Scikit-learn’s fast gradient boosting implementation (efficient on large data).
+from sklearn.ensemble import HistGradientBoostingRegressor
+selected_regressor = HistGradientBoostingRegressor(random_state=42)
+### LightGBM (lightgbm.LGBMRegressor): Gradient boosting using histogram-based learning, often faster than XGBoost. (Requires installing lightgbm)
+from lightgbm import LGBMRegressor
+selected_regressor = LGBMRegressor(random_state=42)
+### CatBoostRegressor: Gradient boosting library with good support for categorical data. (Requires installing catboost)
+from catboost import CatBoostRegressor
+selected_regressor = CatBoostRegressor(verbose=0, random_state=42)
+### CatBoostRegressor: Gradient boosting library with good support for categorical data. (Requires installing catboost)
+from catboost import CatBoostRegressor
+selected_regressor = CatBoostRegressor(verbose=0, random_state=42)
+## Neural Network-Based
+### MLPRegressor: A simple multi-layer perceptron from scikit-learn.
+from sklearn.neural_network import MLPRegressor
+selected_regressor = MLPRegressor(random_state=42, max_iter=1000)
+### NuSVR: Variation of SVR with different regularization scheme.
+from sklearn.svm import NuSVR
+selected_regressor = NuSVR()
+## summary
+Ridge	Simple regularized regression
+BayesianRidge	Regression with uncertainty estimates
+HuberRegressor	Outlier robustness
+GradientBoostingRegressor	Strong baseline boosting model
+HistGradientBoostingRegressor	Fast scalable boosting
+LGBMRegressor	Fast and accurate boosting
+CatBoostRegressor	Categorical features + strong performance
+MLPRegressor	Nonlinear relationships, if well tuned
+
+## DT (some time fixed through parameters, can be suppressed): /home/IZSNT/n.radomski/.local/lib/python3.12/site-packages/numpy/ma/core.py:2820: RuntimeWarning: invalid value encountered in cast data = np.array(data, dtype=dtype, copy=copy,
+## HGB (some time fixed through parameters, can be suppressed): /home/IZSNT/n.radomski/.local/lib/python3.12/site-packages/numpy/ma/core.py:2820: RuntimeWarning: invalid value encountered in cast data = np.array(data, dtype=dtype, copy=copy,
+## EN (can be suppressed, can be suppressed): /home/IZSNT/n.radomski/.local/lib/python3.12/site-packages/sklearn/linear_model/_coordinate_descent.py:697: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 2.700e-01, tolerance: 2.418e-01 model = cd_fast.enet_coordinate_descent(
+## LGBM (some time fixed through parameters):: /home/IZSNT/n.radomski/.local/lib/python3.12/site-packages/numpy/ma/core.py:2820: RuntimeWarning: invalid value encountered in cast _data = np.array(data, dtype=dtype, copy=copy,
+
+
+# You don't need to implement early_stopping_rounds for consistency with the other regressors, but it’s strongly recommended for boosting-based models like CatBoost, XGBoost, and LGBM (and to a less extand optional for GradientBoostingRegressor and HistGradientBoosting) because it can significantly reduce overfitting and training time.
+If you want me to help adapt your full training + hyperparameter tuning pipeline (including GridSearchCV or CV), just ask!
+		not working proposal
+		'''
+		## prepare an additional early_stopping_rounds parameter recommended for CatBoost, XGBoost, and LGBM
+		### prepare a standard format for CatBoost, XGBoost, and LightGBM
+		eval_data = [
+			(X_train_encoded.astype(np.float32), y_train["phenotype"].values.astype(np.float32).ravel())
+		]
+		### add an additional early_stopping_rounds parameter
+		if REGRESSOR == 'CB':
+			fit_params = {
+				"eval_set": eval_data,
+				"early_stopping_rounds": 20
+			}
+		elif REGRESSOR == 'XGB':
+			fit_params = {
+				"eval_set": eval_data,
+				"early_stopping_rounds": 20,
+				"verbose": False
+			}
+		elif REGRESSOR == 'LGBM':
+			fit_params = {
+				"eval_set": eval_data,
+				"early_stopping_rounds": 20,
+				"verbose": -1
+			}
+		else:
+			fit_params = {}
+		## build the model
+		model.fit(
+			X_train_encoded.astype(np.float32),
+			y_train["phenotype"].values.astype(np.float32).ravel(),
+			**fit_params
+		)
+		'''
+# No need to scale X_new manually — the Pipeline takes care of it.
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVR
+
+def build_model(regressor, scale=False):
+    steps = []
+    if scale:
+        steps.append(('scaler', StandardScaler()))
+    steps.append(('model', regressor))
+    return Pipeline(steps)
+selected_regressor = build_model(SVR(), scale=True)
+selected_regressor.fit(X_train, y_train)
+# or without function
+		elif REGRESSOR == 'SVR':
+			if SCALER == 'False':
+				selected_regressor = Pipeline([
+					('model', SVR())
+				])
+			elif SCALER == 'True':
+				selected_regressor = Pipeline([
+					('scaler', StandardScaler()),
+					('model', SVR())
+				])
+
+		This is more compact and easier to maintain (you avoid repeating Pipeline([...])).
+		steps = []
+		if SCALER == 'True':
+			steps.append(('scaler', StandardScaler()))
+		steps.append(('model', SVR()))
+		selected_regressor = Pipeline(steps)
+
+		from sklearn.pipeline import Pipeline
+		from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler, MaxAbsScaler
+		from sklearn.svm import SVR
+
+		# Example user selection
+		REGRESSOR = 'SVR'
+		SCALER = 'standard'  # options: 'none', 'standard', 'minmax'
+
+		# Step 1: Choose regressor
+		if REGRESSOR == 'SVR':
+			base_regressor = SVR()
+
+		# Step 2: Build pipeline steps
+		steps = []
+
+		if SCALER == 'standard':
+			steps.append(('scaler', StandardScaler()))
+		elif SCALER == 'minmax':
+			steps.append(('scaler', MinMaxScaler()))
+		# If SCALER == 'none', skip adding a scaler
+
+		steps.append(('model', base_regressor))
+
+		# Step 3: Create the pipeline
+		selected_regressor = Pipeline(steps)
+
+		# GridSearchCV needs to know which step each parameter belongs to in a Pipeline
+		param_grid = {
+			'model__kernel': ['linear', 'rbf', 'poly'],
+			'model__C': [0.1, 1.0, 10, 100],
+			'model__gamma': ['scale', 'auto', 0.001, 0.01],
+			'model__degree': [2, 3],
+			'model__tol': [1e-4, 1e-5],
+			'model__max_iter': [1000, 5000, -1],
+			'model__epsilon': [0.01, 0.1],
+		}
+
+# impact of scaling
+1. CatBoost is Scale-Invariant
+CatBoost uses gradient boosting with oblivious decision trees, which:
+Split features based on thresholds, not distances or norms.
+Ignore scaling because a value of 1000 vs. 1 will have no impact unless it alters split logic (which standard scaling rarely does).
+So applying StandardScaler, MinMaxScaler, RobustScaler, etc. to inputs does not affect CatBoost’s decision process or final predictions.
+2. Scalers Only Affect Linear/Distance-Based Models
+Scalers are impactful for:
+Models sensitive to feature magnitude:
+LinearRegression, Ridge, Lasso, ElasticNet, BayesianRidge
+KNeighborsRegressor, SVR, MLPRegressor, etc.
+These models optimize based on norms, distances, or dot products.
+So when you switch from CatBoostRegressor to something like SVR, KNN, or MLP, you'll likely see:
+Significant differences between no-scaler, StandardScaler, and MinMaxScaler.
+
+# scaling useless if only binary features
+## Why You Typically Should Not Scale 0/1 (OneHotEncoded) Features
+### They’re already on the same scale.
+Each feature is binary: either 0 or 1.
+There's no need to normalize or standardize since all features have identical magnitude and interpretation.
+### StandardScaler distorts interpretability.
+Standard scaling would center each feature (subtract the mean) and scale by standard deviation — so a 0 might become -0.6, and a 1 might become +1.4, etc.
+These transformed values are harder to interpret, especially for linear models (e.g., in terms of coefficient effect).
+### Risk of over-complicating models.
+Algorithms that rely on sparsity (like Lasso or ElasticNet) or logical decisions (like tree-based models) perform best when inputs are binary and sparse.
+Scaling can turn sparse binary matrices into dense float matrices — more memory and slower computation.
+## When Might You Consider Scaling 0/1 Features?
+1. You’re mixing binary features with continuous features.
+Scaling ensures all features contribute proportionally to distance-based or regularization-sensitive models.
+2. You're using distance-based models (e.g., KNN, SVR, MLP).
+Even though binary features are scaled equally, the model’s performance might benefit if all features — binary and non-binary — are brought onto a similar scale.
+3. Feature imbalance.
+If some binary features are very imbalanced (e.g., 99% zeros), their variance is tiny. In rare edge cases, StandardScaler might help even that out for certain models, although it’s often better to use techniques like regularization or feature selection.
+## Recommendation for Your Case
+If all your features are 0/1 and come from OneHotEncoder, and you're using models like BayesianRidge, LogisticRegression, or CatBoostRegressor:
+Do not scale.
+You'll get cleaner, faster, and often better results without scaling.
+
+########### Boruta
+'''
+I've heard about the Boruta method for feature selection. Do you think I could also implement it through the steps.append() and Pipeline() functions as we did with SBK and SFM
+Great question, Nicolas. Yes, the Boruta feature selection method can be integrated into a Pipeline() workflow — but with some important differences from SelectKBest (SBK) and SelectFromModel (SFM).
+# Key facts about Boruta:
+Boruta is a wrapper method, not a simple transformer.
+It is implemented in Python via the boruta_py or BorutaShap packages.
+It does not follow scikit-learn's Transformer API as cleanly as SelectKBest or SelectFromModel.
+# Limitation:
+The standard BorutaPy class does not integrate cleanly into a Pipeline(), because:
+It lacks a proper transform method until after fitting.
+It does not support being used before model fitting inside GridSearchCV.
+# Workaround 1: Manual Boruta feature selection (outside pipeline)
+Perform Boruta before pipeline creation:
+from boruta import BorutaPy
+from sklearn.ensemble import RandomForestRegressor
+# Step 1: Initialize Boruta with a base model
+boruta_selector = BorutaPy(
+    estimator=RandomForestRegressor(n_jobs=-1, random_state=42),
+    n_estimators='auto',
+    verbose=2,
+    random_state=42
+)
+# Step 2: Fit Boruta on training data
+boruta_selector.fit(X_train.values, y_train.values.ravel())
+# Step 3: Apply Boruta feature selection
+X_train_boruta = X_train.iloc[:, boruta_selector.support_]
+X_test_boruta = X_test.iloc[:, boruta_selector.support_]
+# Step 4: Continue with your Pipeline using X_train_boruta, X_test_boruta
+# Workaround 2: Use BorutaShap with SHAP-based feature importance
+BorutaShap supports classifiers like XGBoost and integrates better in some cases:
+from BorutaShap import BorutaShap
+from xgboost import XGBRegressor
+feature_selector = BorutaShap(
+    model=XGBRegressor(),
+    importance_measure='shap',
+    classification=False
+)
+feature_selector.fit(X=X_train, y=y_train, n_trials=100, sample=False)
+X_train_selected = feature_selector.transform(X_train)
+Not recommended: Direct use of Boruta in Pipeline()
+You would get errors if you do something like this:
+steps = [
+    ('feature_selection', BorutaPy(...)),  # will not work properly
+    ('model', RandomForestRegressor())
+]
+Because BorutaPy is not compatible with the scikit-learn fit/transform expectations during GridSearchCV.
+Summary
+Method	Compatible with Pipeline?	Notes
+SelectKBest	✅ Yes	Easy integration
+SelectFromModel	✅ Yes	Works with embedded models
+Boruta (boruta_py)	❌ No	Requires preprocessing outside pipeline
+BorutaShap	⚠️ Partial support	Requires special handling
+'''
+# single universal method to compute confidence intervals (CIs) or prediction intervals (PIs) 
+MAPIE (Model Agnostic Prediction Interval Estimator) can compute prediction intervals (PIs) with any regressor, whether it's:
+from mapie.regression import MapieRegressor
+# Wrap your already fitted model
+mapie = MapieRegressor(estimator=model, method="quantile", alpha=0.05, cv="split")
+# Fit MAPIE on your training data
+mapie.fit(X_train, y_train)
+# Predict with 95% prediction interval (can also do return_pred_int=True)
+y_pred, y_interval = mapie.predict(X_test, return_pred_int=True)
+# Access intervals
+ci_lower = y_interval[:, 0]
+ci_upper = y_interval[:, 1]
+OR
+def predict_with_intervals(model, X_train, y_train, X_test, alpha=0.05):
+    from mapie.regression import MapieRegressor
+    mapie = MapieRegressor(estimator=model, method="quantile", alpha=alpha, cv="split")
+    mapie.fit(X_train, y_train)
+    y_pred, y_interval = mapie.predict(X_test, return_pred_int=True)
+    return y_pred, y_interval[:, 0], y_interval[:, 1]
+
+PIs with MAPIE
+I developed a modeling subcommand and a prediction subcommand to be able to perform prediction of new samples (prediction subcommand) based on a pre-build model (modeling subcommand). So, because of mapie behavior, I cannot just predict one sample because the standard 95% PIs is dependent of the number of samples to predict. Would it be acceptable to use the prediction subcommand with 21 time the same profile of features in order to get PIs of a single sample?
+Great question! Using 21 identical copies of the same sample to trick the conformal prediction method (like MAPIE) into computing stable 95% prediction intervals (PIs) is technically possible but conceptually a bit iffy.
+Here’s the gist:
+Why 21?
+Because for α = 0.05 (95% PIs), MAPIE requires at least around 21 samples for stable and valid interval estimation.
+What happens if you duplicate a sample 21 times?
+The model & MAPIE will treat these as 21 independent samples, but they're identical in features. This breaks the assumption of independent, identically distributed (i.i.d.) samples and can artificially narrow or widen the intervals, or cause other unintended effects.
+Is it “acceptable”?
+It depends on your tolerance for statistical rigor versus practical needs:
+From a strict stats perspective:
+No, because it violates the assumptions and can lead to misleading PIs.
+From a pragmatic, applied perspective:
+It might be okay if you clearly document this workaround and understand that the PIs could be less reliable or not fully calibrated.
+Alternative recommendations:
+1 Collect more diverse samples if possible — the best fix.
+2 Use a higher alpha (lower confidence level) if you have very few samples, which reduces the minimum sample requirement.
+3 Provide warnings in the prediction tool when the sample size is too small for stable PIs.
+4 Report point predictions only (without PIs) when only one or very few samples are available.
+5 Investigate methods for single-sample uncertainty that don’t rely on conformal prediction with multiple samples.
+Summary for your case:
+You can run the prediction subcommand on 21 duplicated samples to get PIs, but:
+- Clearly warn users this is a workaround with caveats.
+- Emphasize PIs may not be fully valid.
+- Prefer collecting enough real samples when possible.
+Would you like help writing a warning message or adding this logic to your prediction subcommand?
+
+Would you recommend a method for single-sample uncertainty compared to mapie. If yes, which one?
+
+Yes! For single-sample uncertainty estimation (when you have only one or very few samples), conformal prediction methods like MAPIE—which rely on multiple samples—aren’t ideal.
+Here are some alternative approaches to estimate uncertainty for a single sample in regression:
+Recommended Methods for Single-Sample Uncertainty
+1. Quantile Regression (QR)
+How it works:
+Models the conditional quantiles of the target distribution instead of the mean. By predicting quantiles (e.g., 2.5% and 97.5%), you get an uncertainty interval for each sample independently.
+Pros:
+Works on individual samples.
+No requirement for batch size.
+Produces asymmetric intervals naturally.
+Cons:
+Requires training a model explicitly for quantile regression (e.g., GradientBoostingRegressor with loss='quantile' in scikit-learn or lightgbm/xgboost with quantile objectives).
+Slightly more complex training.
+2. Bayesian Regression / Bayesian Neural Networks
+How it works:
+Models uncertainty explicitly by placing distributions on model parameters and propagating that uncertainty to predictions.
+Pros:
+Provides posterior predictive distributions for individual points.
+Gives principled uncertainty estimates (epistemic + aleatoric).
+Cons:
+More complex and computationally expensive.
+Requires Bayesian modeling framework (e.g., PyMC, TensorFlow Probability, or specialized Bayesian NN libraries).
+3. Ensemble Methods / Deep Ensembles
+How it works:
+Train multiple independent models and use the variance of their predictions as an uncertainty measure.
+Pros:
+Easy to implement on top of existing models.
+Works well with any regression model type.
+Uncertainty estimated per sample.
+Cons:
+More training time and model storage.
+Requires multiple models trained independently.
+4. Gaussian Process Regression (GPR)
+How it works:
+A non-parametric Bayesian approach that naturally provides predictive mean and variance for each point.
+Pros:
+Closed-form predictive uncertainty.
+Works well on small datasets.
+Cons:
+Computationally expensive for large datasets (scales poorly with sample size).
+Model assumptions may be restrictive.
+Summary
+Method	Single-Sample Uncertainty	Ease of Implementation	Notes
+Quantile Regression	Yes	Moderate	Requires specific model training
+Bayesian Regression	Yes	Hard	Probabilistic modeling, complex setup
+Ensembles	Yes	Easy	Train multiple models
+Gaussian Processes	Yes	Moderate	Computationally expensive for large data
+For your use case:
+If you want a practical and relatively easy upgrade, try Quantile Regression or Ensemble Methods.
+If you want more rigorous Bayesian uncertainty, explore Bayesian regression.
+If your dataset is small and interpretability of uncertainty is crucial, consider Gaussian Processes.
+If you want, I can help you implement a simple quantile regression example or ensemble approach for your modeling subcommand! Would that interest you?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+
+
+
+CLASSIFICATION
+# different classification: https://www.geeksforgeeks.org/comprehensive-guide-to-classification-models-in-scikit-learn/
+# need "np.ravel()" for the warning "A column-vector y was passed when a 1d array was expected: https://stackoverflow.com/questions/34165731/a-column-vector-y-was-passed-when-a-1d-array-was-expected
+# need "zero_division of classification_report" for the  warning "UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior." https://stackoverflow.com/questions/43162506/undefinedmetricwarning-f-score-is-ill-defined-and-being-set-to-0-0-in-labels-wi
+# XGB: https://xgboost.readthedocs.io/en/stable/python/sklearn_estimator.html
+# XGB for classification: https://www.kaggle.com/code/stuarthallows/using-xgboost-with-scikit-learn
+# XGB multi:softmax for classification https://stackoverflow.com/questions/57986259/multiclass-classification-with-xgboost-classifier
+# XGB need 0,1,2 for the phenotype (ValueError: Invalid classes inferred from unique values of `y`.  Expected: [0 1 2], got ['pig' 'poultry' 'vegetable']): https://stackoverflow.com/questions/71996617/invalid-classes-inferred-from-unique-values-of-y-expected-0-1-2-3-4-5-got
+# save and reuse LabelEncoder(): https://stackoverflow.com/questions/28656736/using-scikits-labelencoder-correctly-across-multiple-programs
+# p-values: 
+## https://stackoverflow.com/questions/27928275/find-p-value-significance-in-scikit-learn-linearregression
+## https://stackoverflow.com/questions/22306341/python-sklearn-how-to-calculate-p-values
+## https://machinelearningmastery.com/make-predictions-scikit-learn/
+## https://stackoverflow.com/questions/43036711/scikit-learn-svc-predict-probability-doesnt-work-as-expected
+# GridSearchCV:
+## https://stackoverflow.com/questions/43036711/scikit-learn-svc-predict-probability-doesnt-work-as-expected
+## https://scikit-learn.org/stable/modules/grid_search.html
+## https://www.analyticsvidhya.com/blog/2021/06/tune-hyperparameters-with-gridsearchcv/
+# GridSearchCV ValueError: n_splits=10 cannot be greater than the number of members in each class: https://stackoverflow.com/questions/48313387/valueerror-n-splits-10-cannot-be-greater-than-the-number-of-members-in-each-cla
+# sklearn.exceptions.NotFittedError: This RandomForestClassifier instance is not fitted yet. Call 'fit' with appropriate arguments before using this estimator.
+# GridSearchCV scores of combinaison of parameters: https://stackoverflow.com/questions/34274598/does-gridsearchcv-store-scores-for-all-parameter-combinations
+# AttributeError: 'super' object has no attribute '__sklearn_tags__': incompatibility between scikit-learn==1.6.1 and xgboost==2.1.3
+## https://stackoverflow.com/questions/79290968/super-object-has-no-attribute-sklearn-tags
+## https://github.com/scikit-learn/scikit-learn/issues/30542
+## downgrading scikit-learn to a stable version
+## before: pip3.12 install -U scikit-learn==1.6.1
+## pip3.12 install scikit-learn==1.3.0 #Failed to build scikit-learn
+## pip3.12 install scikit-learn==1.5.2
+## pip3.12 show scikit-learn # 1.5.2
+# GridSearchCV with XGBClassifier https://medium.com/@mojahid.iitdelhi/a-comprehensive-guide-to-xgboost-from-basics-to-mastery-600f6b5d5e79
+# tune hyperparameters: https://www.analyticsvidhya.com/blog/2021/06/tune-hyperparameters-with-gridsearchcv/
+# AttributeError: This 'GridSearchCV' has no attribute 'predict_proba': https://stackoverflow.com/questions/43036711/scikit-learn-svc-predict-probability-doesnt-work-as-expected
+# SVC and predict_proba: https://scikit-learn.org/stable/modules/svm.html#scores-probabilities
+# possible setting
+## SVC: parameters = [{'probability': [True], 'kernel': ['linear', 'poly', 'rbf'], 'degree': list(range(1, 5))}]
+## XGB: parameters = [{'objective': ['multi:softmax'], 'max_depth': [3, 4, 5], 'eta': [0.1, 0.3, 0.5]}]
+## OR
+## SVC: selected_classifier = xgb.XGBClassifier(objective = 'multi:softmax')
+## XGB: selected_classifier = SVC(probability = True)
+# stratified CV
+## https://stackoverflow.com/questions/48586022/how-to-perform-stratifiedshufflesplit-in-gridsearchcv
+## https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html
+## https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.ShuffleSplit.html#sklearn.model_selection.ShuffleSplit
+# best model selection with .best_estimator_: https://www.youtube.com/watch?v=wwfCZz3VKlY
+# iteration of CV: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html
+# n_jobs parameter of RandomizedSearchCV: https://github.com/scikit-learn/scikit-learn/discussions/19129
+# selection of mutiple metrics (from Andrea DR)
+'''
+from sklearn.metrics import f1_score, precision_score, recall_score, make_scorer,  classification_report, confusion_matrix, roc_auc_score
+scoring = {
+    'accuracy': 'accuracy',
+    'f1': make_scorer(f1_score, average='weighted'),
+    'precision': make_scorer(precision_score, average='weighted'),
+    'recall': make_scorer(recall_score, average='weighted'),
+}
+grid_search = GridSearchCV(make_pipeline(None), param_grid, cv=kfold, refit='accuracy', scoring=scoring, n_jobs=-1, verbose=0)
+'''
+# class dependant accuracy (from Andrea DR)
+'''
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split, RandomizedSearchCV
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.ensemble import RandomForestClassifier
+# Sample dataset
+from sklearn.datasets import load_iris
+data = load_iris()
+X, y = data.data, data.target
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+# Define model and hyperparameter grid
+model = RandomForestClassifier()
+param_dist = {
+    'n_estimators': [50, 100, 150, 200],
+    'max_depth': [None, 10, 20, 30],
+    'min_samples_split': [2, 5, 10],
+    'min_samples_leaf': [1, 2, 4]
+}
+# Randomized search
+random_search = RandomizedSearchCV(model, param_distributions=param_dist, n_iter=10, cv=3, scoring='accuracy', random_state=42)
+random_search.fit(X_train, y_train)
+# Best model
+best_model = random_search.best_estimator_
+# Predictions
+y_pred = best_model.predict(X_test)
+# Compute per-class accuracy
+conf_matrix = confusion_matrix(y_test, y_pred)
+class_accuracies = conf_matrix.diagonal() / conf_matrix.sum(axis=1)
+# Display results
+class_accuracy_dict = {f'Class {i}': acc for i, acc in enumerate(class_accuracies)}
+print("Per-class Accuracy:", class_accuracy_dict)
+# Classification report
+print("\nClassification Report:\n", classification_report(y_test, y_pred))
+'''
+# binary phenotype with XGB: 'binary:logistic' instead of 'binary:hinge': https://xgboost.readthedocs.io/en/stable/parameter.html
+# 0 or 1 as p-values for the DecisionTreeClassifier() is do to too high max_depth: https://stackoverflow.com/questions/47251594/scikit-learn-decision-tree-probability-of-prediction-being-a-or-b
+# 0 or 1 as p-values for the KNeighborsClassifier(): too small n_neighbors: https://stackoverflow.com/questions/41956049/getting-probability-as-0-or-1-in-knn-predict-proba
+# metrics with FN, FP, TN, TP ....
+## extract FN, FP, TN, TP from confusion_matrix: https://www.geeksforgeeks.org/how-to-obtain-tp-tn-fp-fn-with-scikit-learn/
+## extract FN, FP, TN, TP from confusion_matrix for the binary case: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix.html
+## confusion_matrix - too many values to unpack: https://stackoverflow.com/questions/49055410/confusion-matrix-too-many-values-to-unpack
+## from 2x2 confusion matices: https://datascience.stackexchange.com/questions/28493/confusion-matrix-get-items-fp-fn-tp-tn-python
+## pass from FN, FP, TN, TP to metric https://www.youtube.com/watch?v=XWx8sjTkiuQ
+## nice solution: extract nested array of tn, fp, fn, tp using multilabel_confusion_matrix and a simple array using confusion_matrix: https://stackoverflow.com/questions/61130759/how-can-i-extract-tp-fn-fp-from-classification-report
+# metrics considerations
+- scoring of CV: https://scikit-learn.org/stable/modules/model_evaluation.html
+- accuracy score per class: https://stackoverflow.com/questions/39770376/scikit-learn-get-accuracy-scores-for-each-class
+- metrics formula for binary classification: https://stackoverflow.com/questions/48434960/getting-precision-and-recall-using-sklearn + https://medium.com/analytics-vidhya/confusion-matrix-accuracy-precision-recall-f1-score-ade299cf63cd#:~:text=F1%20score%20is%20the%20harmonic,0.857%20%2B%200.75)%20%3D%200.799.
+- micro avg and macro avg are global metrics: https://www.evidentlyai.com/classification-metrics/multi-class-metrics + https://scikit-learn.org/stable/modules/generated/sklearn.metrics.classification_report.html + https://stackoverflow.com/questions/45890328/sklearn-metrics-for-multiclass-classification
+- differences average=None, average='macro', average='micro', average='weighted': https://stackoverflow.com/questions/52269187/facing-valueerror-target-is-multiclass-but-average-binary + https://scikit-learn.org/stable/modules/generated/sklearn.metrics.recall_score.html#sklearn.metrics.recall_score
+- available global metrics: https://scikit-learn.org/stable/auto_examples/model_selection/plot_precision_recall.html
+# test LogisticRegression with MyDirectory_2_classes_phenotype: STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT .... n_iter_i = _check_optimize_result( => https://stackoverflow.com/questions/62658215/convergencewarning-lbfgs-failed-to-converge-status-1-stop-total-no-of-iter
+# test LogisticRegression: ValueError: All the 25 fits failed. It is very likely that your model is misconfigured. You can try to debug the error by setting error_score='raise'.
+# issue with n_jobs = -1 from 'fork' and 'loky' => use threading
+/home/IZSNT/n.radomski/.local/lib/python3.12/site-packages/joblib/externals/loky/backend/fork_exec.py:38: DeprecationWarning: This process (pid=13351) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+from joblib import parallel_backend
+with parallel_backend('threading', n_jobs=-1):
+# enconter with systematically with SVC(probability = True) and some time with KNeighborsClassifier() and RandomForestClassifier() while I never observed this message for DecisionTreeClassifier(), LogisticRegression() and XGBClassifier(objective = 'multi:softmax').
+/home/IZSNT/n.radomski/.local/lib/python3.12/site-packages/numpy/ma/core.py:2820: RuntimeWarning: invalid value encountered in cast
+  _data = np.array(data, dtype=dtype, copy=copy, => parameters modification
+
+# SHAP METHOD (input = best model + (train features and/or test features))
+SHAP value explanations: https://www.youtube.com/watch?v=UJeu29wq7d0
+Binary and Multiclass Target Variables: https://www.youtube.com/watch?v=2xlgOu22YgE
+Multi-classes and fastSHAP: https://www.youtube.com/watch?v=FgJGm17CxdE
+loop over multi-classes + SHAP values df + AUC for multiclass feature importance (best_rf.feature_importances_): https://www.youtube.com/watch?v=sShr1UYF3iE
+explainer.shap_values is fast but explainer.shap_interaction_values is very slow: https://www.youtube.com/watch?app=desktop&v=USIZ4Jqa-dM
+difference between plot_importance(model, importance_type = "weight", "cover" or "gain")
+Multiple figures: https://www.youtube.com/watch?v=Wl9L592ycc4
+basic SHAP plot (waterfall, force, stack force, bar mean SHAP, beeswarm, scatter): https://www.youtube.com/watch?v=MQ6fFDwjuco&list=PLqDyyww9y-1SJgMw92x90qPYpHgahDLIK
+code for basic SHAP plot: https://www.youtube.com/watch?v=L8_sVRhBDLU&list=PLqDyyww9y-1SJgMw92x90qPYpHgahDLIK&index=3
+anomaly detection: https://www.youtube.com/watch?v=ucgR0E_LXCk
+new SHAP plots : https://www.youtube.com/watch?v=efb4vgL-bTE
+SHAP and LIME (local interpretable model explainations): https://www.youtube.com/watch?v=CV9FTCvQ32Q
+doc: https://shap.readthedocs.io/en/latest/example_notebooks/overviews/An%20introduction%20to%20explainable%20AI%20with%20Shapley%20values.html
+# Why SHAP is considered the most trusted:
+## Theoretical foundation: Based on Shapley values from cooperative game theory — provides global and local explanations.
+## Model support: Works with tree-based models (XGBoost, LightGBM, CatBoost), linear models, and deep learning models (via wrappers).
+## Consistent explanations: Guarantees consistency and local accuracy, unlike heuristic-based methods like LIME.
+## Widespread adoption: Used by major companies (e.g., Microsoft, AWS, Uber) and integrated in tools like Microsoft’s InterpretML.
+## Active maintenance: Frequently updated, strong open-source support, and a large community.
+## other: 
+### LIME (Local Interpretable Model-agnostic Explanations): also very used but less universal
+### ELI5 (Explain Like I'm 5)
+### InterpretML
+### Alibi
+### Captum
+'''
+pip install shap
+import shap
+explainer = shap.Explainer(model, data)
+shap_values = explainer(data)
+shap.plots.beeswarm(shap_values)
+'''
+# interpretation local = sample dependant versus global = dataset dependant (https://www.youtube.com/watch?v=bdW0e8LF9vI)
+=> shap.summary_plot show both
+
+# AUC calculation
+sklearn advices: https://scikit-learn.org/stable/auto_examples/model_selection/plot_roc.html
+binar and multi-classes cases (roc_auc_score): https://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_auc_score.html
+
+# learning curve: 
+https://scikit-learn.org/stable/auto_examples/model_selection/plot_learning_curve.html#sphx-glr-auto-examples-model-selection-plot-learning-curve-py%29
+for catboost: https://chatgpt.com/s/t_68bfe68b4dac81918dfa4830e4332b32
+
+
+
+
+
+
+
+
+#TO SEE# 
+
+# print(f"string {variable} string") is better than print("string" + variable + "string")
+## Readability: Easier to read, especially with multiple variables.
+## Performance: Faster than string concatenation in most cases.
+## Type safety: Automatically converts non-string variables (e.g., integers, floats) to strings.
+## Cleaner syntax: No need to break the string to insert variables.
+
+# histograms
+'''
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+df = pd.DataFrame({'A': ['1', '2', '3', '4'],
+                   'B': [24, 50, 59, 40],
+                   'C': [42, 50, 76, 60]})
+df = df.set_index('A')
+df.plot(kind='bar', stacked=True, color=['steelblue', 'orange'])
+'''
+
+
+
+

@@ -3,7 +3,6 @@
 ## pip3.12 install --force-reinstall pandas==2.2.2
 ## pip3.12 install --force-reinstall xgboost==2.1.3
 ## pip3.12 install --force-reinstall lightgbm==4.6.0
-## pip3.12 install --force-reinstall boruta==0.4.3
 ## pip3.12 install --force-reinstall scipy==1.16.0
 ## pip3.12 install --force-reinstall scikit-learn==1.5.2
 ## pip3.12 install --force-reinstall numpy==1.26.4
@@ -12,57 +11,63 @@
 ## pip3.12 install --force-reinstall tqdm-joblib==0.0.4
 '''
 # examples of commands with parameters
-## for the BRI regressor
-python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph phenotype_dataset.tsv -o MyDirectory -x BRI_FirstAnalysis -da random -sp 80 -q 10 -r BRI -k 5 -pa tuning_parameters_BRI.txt -pi -w -de 20
-python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/BRI_FirstAnalysis_features.obj -fe MyDirectory/BRI_FirstAnalysis_feature_encoder.obj -cf MyDirectory/BRI_FirstAnalysis_calibration_features.obj -ct MyDirectory/BRI_FirstAnalysis_calibration_targets.obj -t MyDirectory/BRI_FirstAnalysis_model.obj -o MyDirectory -x BRI_SecondAnalysis -w -de 20
-## for the CB regressor
-python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/BRI_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x CB_FirstAnalysis -da manual -fs SKB -r CB -k 5 -pa tuning_parameters_CB.txt -pi -w -de 20
-python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/CB_FirstAnalysis_features.obj -fe MyDirectory/CB_FirstAnalysis_feature_encoder.obj -cf MyDirectory/CB_FirstAnalysis_calibration_features.obj -ct MyDirectory/CB_FirstAnalysis_calibration_targets.obj -t MyDirectory/CB_FirstAnalysis_model.obj -o MyDirectory -x CB_SecondAnalysis -w -de 20
-## for the DT regressor
-python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/BRI_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x DT_FirstAnalysis -da manual -fs laSFM -r DT -k 5 -pa tuning_parameters_DT.txt -pi -w -de 20
-python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/DT_FirstAnalysis_features.obj -fe MyDirectory/DT_FirstAnalysis_feature_encoder.obj -cf MyDirectory/DT_FirstAnalysis_calibration_features.obj -ct MyDirectory/DT_FirstAnalysis_calibration_targets.obj -t MyDirectory/DT_FirstAnalysis_model.obj -o MyDirectory -x DT_SecondAnalysis -w -de 20
-## for the EN regressor
-python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/BRI_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x EN_FirstAnalysis -da manual -fs enSFM -r EN -k 5 -pa tuning_parameters_EN.txt -pi -w -de 20
-python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/EN_FirstAnalysis_features.obj -fe MyDirectory/EN_FirstAnalysis_feature_encoder.obj -cf MyDirectory/EN_FirstAnalysis_calibration_features.obj -ct MyDirectory/EN_FirstAnalysis_calibration_targets.obj -t MyDirectory/EN_FirstAnalysis_model.obj -o MyDirectory -x EN_SecondAnalysis -w -de 20
-## for the GB regressor
-python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/BRI_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x GB_FirstAnalysis -da manual -fs rfSFM -r GB -k 5 -pa tuning_parameters_GB.txt -pi -w -de 20
-python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/GB_FirstAnalysis_features.obj -fe MyDirectory/GB_FirstAnalysis_feature_encoder.obj -cf MyDirectory/GB_FirstAnalysis_calibration_features.obj -ct MyDirectory/GB_FirstAnalysis_calibration_targets.obj -t MyDirectory/GB_FirstAnalysis_model.obj -o MyDirectory -x GB_SecondAnalysis -w -de 20
-## for the HGB regressor
-python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/BRI_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x HGB_FirstAnalysis -da manual -fs BO -r HGB -k 5 -pa tuning_parameters_HGB.txt -pi -w -de 20
-python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/HGB_FirstAnalysis_features.obj -fe MyDirectory/HGB_FirstAnalysis_feature_encoder.obj -cf MyDirectory/HGB_FirstAnalysis_calibration_features.obj -ct MyDirectory/HGB_FirstAnalysis_calibration_targets.obj -t MyDirectory/HGB_FirstAnalysis_model.obj -o MyDirectory -x HGB_SecondAnalysis -w -de 20
-## for the HU regressor
-python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/BRI_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x HU_FirstAnalysis -da manual -fs BO -r HU -k 5 -pa tuning_parameters_HU.txt -pi -w -de 20
-python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/HU_FirstAnalysis_features.obj -fe MyDirectory/HU_FirstAnalysis_feature_encoder.obj -cf MyDirectory/HU_FirstAnalysis_calibration_features.obj -ct MyDirectory/HU_FirstAnalysis_calibration_targets.obj -t MyDirectory/HU_FirstAnalysis_model.obj -o MyDirectory -x HU_SecondAnalysis -w -de 20
-## for the KNN regressor
-python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/BRI_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x KNN_FirstAnalysis -da manual -fs SKB -r KNN -k 5 -pa tuning_parameters_KNN.txt -pi -w -de 20
-python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/KNN_FirstAnalysis_features.obj -fe MyDirectory/KNN_FirstAnalysis_feature_encoder.obj -cf MyDirectory/KNN_FirstAnalysis_calibration_features.obj -ct MyDirectory/KNN_FirstAnalysis_calibration_targets.obj -t MyDirectory/KNN_FirstAnalysis_model.obj -o MyDirectory -x KNN_SecondAnalysis -w -de 20
-## for the LA regressor
-python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/BRI_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x LA_FirstAnalysis -da manual -fs SKB -r LA -k 5 -pa tuning_parameters_LA.txt -pi -w -de 20
-python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/LA_FirstAnalysis_features.obj -fe MyDirectory/LA_FirstAnalysis_feature_encoder.obj -cf MyDirectory/LA_FirstAnalysis_calibration_features.obj -ct MyDirectory/LA_FirstAnalysis_calibration_targets.obj -t MyDirectory/LA_FirstAnalysis_model.obj -o MyDirectory -x LA_SecondAnalysis -w -de 20
-## for the LGBM regressor
-python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/BRI_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x LGBM_FirstAnalysis -da manual -fs SKB -r LGBM -k 5 -pa tuning_parameters_LGBM.txt -pi -w -de 20
-python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/LGBM_FirstAnalysis_features.obj -fe MyDirectory/LGBM_FirstAnalysis_feature_encoder.obj -cf MyDirectory/LGBM_FirstAnalysis_calibration_features.obj -ct MyDirectory/LGBM_FirstAnalysis_calibration_targets.obj -t MyDirectory/LGBM_FirstAnalysis_model.obj -o MyDirectory -x LGBM_SecondAnalysis -w -de 20
-## for the MLP regressor
-python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/BRI_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x MLP_FirstAnalysis -da manual -fs SKB -r MLP -k 5 -pa tuning_parameters_MLP.txt -pi -w -de 20
-python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/MLP_FirstAnalysis_features.obj -fe MyDirectory/MLP_FirstAnalysis_feature_encoder.obj -cf MyDirectory/MLP_FirstAnalysis_calibration_features.obj -ct MyDirectory/MLP_FirstAnalysis_calibration_targets.obj -t MyDirectory/MLP_FirstAnalysis_model.obj -o MyDirectory -x MLP_SecondAnalysis -w -de 20
-## for the NSV regressor
-python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/BRI_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x NSV_FirstAnalysis -da manual -fs SKB -r NSV -k 5 -pa tuning_parameters_NSV.txt -pi -w -de 20
-python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/NSV_FirstAnalysis_features.obj -fe MyDirectory/NSV_FirstAnalysis_feature_encoder.obj -cf MyDirectory/NSV_FirstAnalysis_calibration_features.obj -ct MyDirectory/NSV_FirstAnalysis_calibration_targets.obj -t MyDirectory/NSV_FirstAnalysis_model.obj -o MyDirectory -x NSV_SecondAnalysis -w -de 20
-## for the PN regressor
-python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/BRI_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x PN_FirstAnalysis -da manual -fs laSFM -r PN -k 5 -pa tuning_parameters_PN.txt -pi -w -de 20
-python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/PN_FirstAnalysis_features.obj -fe MyDirectory/PN_FirstAnalysis_feature_encoder.obj -cf MyDirectory/PN_FirstAnalysis_calibration_features.obj -ct MyDirectory/PN_FirstAnalysis_calibration_targets.obj -t MyDirectory/PN_FirstAnalysis_model.obj -o MyDirectory -x PN_SecondAnalysis -w -de 20
-## for the RI regressor
-python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/BRI_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x RI_FirstAnalysis -da manual -fs SKB -r RI -k 5 -pa tuning_parameters_RI.txt -pi -w -de 20
-python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/RI_FirstAnalysis_features.obj -fe MyDirectory/RI_FirstAnalysis_feature_encoder.obj -cf MyDirectory/RI_FirstAnalysis_calibration_features.obj -ct MyDirectory/RI_FirstAnalysis_calibration_targets.obj -t MyDirectory/RI_FirstAnalysis_model.obj -o MyDirectory -x RI_SecondAnalysis -w -de 20
-## for the RF regressor
-python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/BRI_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x RF_FirstAnalysis -da manual -fs SKB -r RF -k 5 -pa tuning_parameters_RF.txt -pi -w -de 20
-python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/RF_FirstAnalysis_features.obj -fe MyDirectory/RF_FirstAnalysis_feature_encoder.obj -cf MyDirectory/RF_FirstAnalysis_calibration_features.obj -ct MyDirectory/RF_FirstAnalysis_calibration_targets.obj -t MyDirectory/RF_FirstAnalysis_model.obj -o MyDirectory -x RF_SecondAnalysis -w -de 20
-## for the SVR regressor
-python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/BRI_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x SVR_FirstAnalysis -da manual -fs SKB -r SVR -k 5 -pa tuning_parameters_SVR.txt -pi -w -de 20
-python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/SVR_FirstAnalysis_features.obj -fe MyDirectory/SVR_FirstAnalysis_feature_encoder.obj -cf MyDirectory/SVR_FirstAnalysis_calibration_features.obj -ct MyDirectory/SVR_FirstAnalysis_calibration_targets.obj -t MyDirectory/SVR_FirstAnalysis_model.obj -o MyDirectory -x SVR_SecondAnalysis -w -de 20
-## for the XGB regressor
-python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/BRI_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x XGB_FirstAnalysis -da manual -fs SKB -r XGB -k 5 -pa tuning_parameters_XGB.txt -pi -w -de 20
-python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/XGB_FirstAnalysis_features.obj -fe MyDirectory/XGB_FirstAnalysis_feature_encoder.obj -cf MyDirectory/XGB_FirstAnalysis_calibration_features.obj -ct MyDirectory/XGB_FirstAnalysis_calibration_targets.obj -t MyDirectory/XGB_FirstAnalysis_model.obj -o MyDirectory -x XGB_SecondAnalysis -w -de 20
+## without feature selection and with the ADA model regressor
+python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph phenotype_dataset.tsv -o MyDirectory -x ADA_FirstAnalysis -da random -sp 80 -q 10 -r ADA -k 5 -pa tuning_parameters_ADA.txt -pi
+python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/ADA_FirstAnalysis_features.obj -fe MyDirectory/ADA_FirstAnalysis_feature_encoder.obj -cf MyDirectory/ADA_FirstAnalysis_calibration_features.obj -ct MyDirectory/ADA_FirstAnalysis_calibration_targets.obj -t MyDirectory/ADA_FirstAnalysis_model.obj -o MyDirectory -x ADA_SecondAnalysis
+## with the SKB feature selection and the BRI model regressor
+python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x BRI_FirstAnalysis -da manual -fs SKB -r BRI -k 5 -pa tuning_parameters_BRI.txt -pi
+python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/BRI_FirstAnalysis_features.obj -fe MyDirectory/BRI_FirstAnalysis_feature_encoder.obj -cf MyDirectory/BRI_FirstAnalysis_calibration_features.obj -ct MyDirectory/BRI_FirstAnalysis_calibration_targets.obj -t MyDirectory/BRI_FirstAnalysis_model.obj -o MyDirectory -x BRI_SecondAnalysis
+## with the laSFM feature selection and the CAT model regressor
+python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x CAT_FirstAnalysis -da manual -fs laSFM -r CAT -k 5 -pa tuning_parameters_CAT.txt -pi
+python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/CAT_FirstAnalysis_features.obj -fe MyDirectory/CAT_FirstAnalysis_feature_encoder.obj -cf MyDirectory/CAT_FirstAnalysis_calibration_features.obj -ct MyDirectory/CAT_FirstAnalysis_calibration_targets.obj -t MyDirectory/CAT_FirstAnalysis_model.obj -o MyDirectory -x CAT_SecondAnalysis
+## with the enSFM feature selection and the DT model regressor
+python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x DT_FirstAnalysis -da manual -fs enSFM -r DT -k 5 -pa tuning_parameters_DT.txt -pi
+python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/DT_FirstAnalysis_features.obj -fe MyDirectory/DT_FirstAnalysis_feature_encoder.obj -cf MyDirectory/DT_FirstAnalysis_calibration_features.obj -ct MyDirectory/DT_FirstAnalysis_calibration_targets.obj -t MyDirectory/DT_FirstAnalysis_model.obj -o MyDirectory -x DT_SecondAnalysis
+## with the rfSFM feature selection and the EN model regressor
+python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x EN_FirstAnalysis -da manual -fs rfSFM -r EN -k 5 -pa tuning_parameters_EN.txt -pi
+python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/EN_FirstAnalysis_features.obj -fe MyDirectory/EN_FirstAnalysis_feature_encoder.obj -cf MyDirectory/EN_FirstAnalysis_calibration_features.obj -ct MyDirectory/EN_FirstAnalysis_calibration_targets.obj -t MyDirectory/EN_FirstAnalysis_model.obj -o MyDirectory -x EN_SecondAnalysis
+## with the SKB feature selection and the ET model regressor
+python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x ET_FirstAnalysis -da manual -fs SKB -r ET -k 5 -pa tuning_parameters_ET.txt -pi
+python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/ET_FirstAnalysis_features.obj -fe MyDirectory/ET_FirstAnalysis_feature_encoder.obj -cf MyDirectory/ET_FirstAnalysis_calibration_features.obj -ct MyDirectory/ET_FirstAnalysis_calibration_targets.obj -t MyDirectory/ET_FirstAnalysis_model.obj -o MyDirectory -x ET_SecondAnalysis
+## with the SKB feature selection and the GB model regressor
+python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x GB_FirstAnalysis -da manual -fs SKB -r GB -k 5 -pa tuning_parameters_GB.txt -pi
+python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/GB_FirstAnalysis_features.obj -fe MyDirectory/GB_FirstAnalysis_feature_encoder.obj -cf MyDirectory/GB_FirstAnalysis_calibration_features.obj -ct MyDirectory/GB_FirstAnalysis_calibration_targets.obj -t MyDirectory/GB_FirstAnalysis_model.obj -o MyDirectory -x GB_SecondAnalysis
+## with the SKB feature selection and the HGB model regressor
+python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x HGB_FirstAnalysis -da manual -fs SKB -r HGB -k 5 -pa tuning_parameters_HGB.txt -pi
+python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/HGB_FirstAnalysis_features.obj -fe MyDirectory/HGB_FirstAnalysis_feature_encoder.obj -cf MyDirectory/HGB_FirstAnalysis_calibration_features.obj -ct MyDirectory/HGB_FirstAnalysis_calibration_targets.obj -t MyDirectory/HGB_FirstAnalysis_model.obj -o MyDirectory -x HGB_SecondAnalysis
+## with the SKB feature selection and the HU model regressor
+python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x HU_FirstAnalysis -da manual -fs SKB -r HU -k 5 -pa tuning_parameters_HU.txt -pi
+python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/HU_FirstAnalysis_features.obj -fe MyDirectory/HU_FirstAnalysis_feature_encoder.obj -cf MyDirectory/HU_FirstAnalysis_calibration_features.obj -ct MyDirectory/HU_FirstAnalysis_calibration_targets.obj -t MyDirectory/HU_FirstAnalysis_model.obj -o MyDirectory -x HU_SecondAnalysis
+## with the SKB feature selection and the KNN model regressor
+python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x KNN_FirstAnalysis -da manual -fs SKB -r KNN -k 5 -pa tuning_parameters_KNN.txt -pi
+python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/KNN_FirstAnalysis_features.obj -fe MyDirectory/KNN_FirstAnalysis_feature_encoder.obj -cf MyDirectory/KNN_FirstAnalysis_calibration_features.obj -ct MyDirectory/KNN_FirstAnalysis_calibration_targets.obj -t MyDirectory/KNN_FirstAnalysis_model.obj -o MyDirectory -x KNN_SecondAnalysis
+## with the SKB feature selection and the LA model regressor
+python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x LA_FirstAnalysis -da manual -fs SKB -r LA -k 5 -pa tuning_parameters_LA.txt -pi
+python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/LA_FirstAnalysis_features.obj -fe MyDirectory/LA_FirstAnalysis_feature_encoder.obj -cf MyDirectory/LA_FirstAnalysis_calibration_features.obj -ct MyDirectory/LA_FirstAnalysis_calibration_targets.obj -t MyDirectory/LA_FirstAnalysis_model.obj -o MyDirectory -x LA_SecondAnalysis
+## with the SKB feature selection and the LGBM model regressor
+python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x LGBM_FirstAnalysis -da manual -fs SKB -r LGBM -k 5 -pa tuning_parameters_LGBM.txt -pi
+python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/LGBM_FirstAnalysis_features.obj -fe MyDirectory/LGBM_FirstAnalysis_feature_encoder.obj -cf MyDirectory/LGBM_FirstAnalysis_calibration_features.obj -ct MyDirectory/LGBM_FirstAnalysis_calibration_targets.obj -t MyDirectory/LGBM_FirstAnalysis_model.obj -o MyDirectory -x LGBM_SecondAnalysis
+## with the SKB feature selection and the MLP model regressor
+python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x MLP_FirstAnalysis -da manual -fs SKB -r MLP -k 5 -pa tuning_parameters_MLP.txt -pi
+python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/MLP_FirstAnalysis_features.obj -fe MyDirectory/MLP_FirstAnalysis_feature_encoder.obj -cf MyDirectory/MLP_FirstAnalysis_calibration_features.obj -ct MyDirectory/MLP_FirstAnalysis_calibration_targets.obj -t MyDirectory/MLP_FirstAnalysis_model.obj -o MyDirectory -x MLP_SecondAnalysis
+## with the SKB feature selection and the NSV model regressor
+python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x NSV_FirstAnalysis -da manual -fs SKB -r NSV -k 5 -pa tuning_parameters_NSV.txt -pi
+python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/NSV_FirstAnalysis_features.obj -fe MyDirectory/NSV_FirstAnalysis_feature_encoder.obj -cf MyDirectory/NSV_FirstAnalysis_calibration_features.obj -ct MyDirectory/NSV_FirstAnalysis_calibration_targets.obj -t MyDirectory/NSV_FirstAnalysis_model.obj -o MyDirectory -x NSV_SecondAnalysis
+## with the SKB feature selection and the PN model regressor
+python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x PN_FirstAnalysis -da manual -fs SKB -r PN -k 5 -pa tuning_parameters_PN.txt -pi
+python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/PN_FirstAnalysis_features.obj -fe MyDirectory/PN_FirstAnalysis_feature_encoder.obj -cf MyDirectory/PN_FirstAnalysis_calibration_features.obj -ct MyDirectory/PN_FirstAnalysis_calibration_targets.obj -t MyDirectory/PN_FirstAnalysis_model.obj -o MyDirectory -x PN_SecondAnalysis
+## with the SKB feature selection and the RF model regressor
+python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x RF_FirstAnalysis -da manual -fs SKB -r RF -k 5 -pa tuning_parameters_RF.txt -pi
+python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/RF_FirstAnalysis_features.obj -fe MyDirectory/RF_FirstAnalysis_feature_encoder.obj -cf MyDirectory/RF_FirstAnalysis_calibration_features.obj -ct MyDirectory/RF_FirstAnalysis_calibration_targets.obj -t MyDirectory/RF_FirstAnalysis_model.obj -o MyDirectory -x RF_SecondAnalysis
+## with the SKB feature selection and the RI model regressor
+python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x RI_FirstAnalysis -da manual -fs SKB -r RI -k 5 -pa tuning_parameters_RI.txt -pi
+python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/RI_FirstAnalysis_features.obj -fe MyDirectory/RI_FirstAnalysis_feature_encoder.obj -cf MyDirectory/RI_FirstAnalysis_calibration_features.obj -ct MyDirectory/RI_FirstAnalysis_calibration_targets.obj -t MyDirectory/RI_FirstAnalysis_model.obj -o MyDirectory -x RI_SecondAnalysis
+## with the SKB feature selection and the SVR model regressor
+python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x SVR_FirstAnalysis -da manual -fs SKB -r SVR -k 5 -pa tuning_parameters_SVR.txt -pi
+python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/SVR_FirstAnalysis_features.obj -fe MyDirectory/SVR_FirstAnalysis_feature_encoder.obj -cf MyDirectory/SVR_FirstAnalysis_calibration_features.obj -ct MyDirectory/SVR_FirstAnalysis_calibration_targets.obj -t MyDirectory/SVR_FirstAnalysis_model.obj -o MyDirectory -x SVR_SecondAnalysis
+## with the SKB feature selection and the XGB model regressor
+python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x XGB_FirstAnalysis -da manual -fs SKB -r XGB -k 5 -pa tuning_parameters_XGB.txt -pi
+python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/XGB_FirstAnalysis_features.obj -fe MyDirectory/XGB_FirstAnalysis_feature_encoder.obj -cf MyDirectory/XGB_FirstAnalysis_calibration_features.obj -ct MyDirectory/XGB_FirstAnalysis_calibration_targets.obj -t MyDirectory/XGB_FirstAnalysis_model.obj -o MyDirectory -x XGB_SecondAnalysis
 '''
 # import packages
 ## standard libraries
@@ -77,6 +82,9 @@ import threading as th # no individual installation because is part of the Pytho
 import time as ti # no individual installation because is part of the Python Standard Library (no version)
 import importlib.metadata as im # no individual installation because is part of the Python Standard Library (no version)
 import functools as ft # no individual installation because is part of the Python Standard Library (no version)
+import contextlib as ctl # no individual installation because is part of the Python Standard Library (no version)
+import io as io # no individual installation because is part of the Python Standard Library (no version)
+import threadpoolctl as tpc # no individual installation because is part of the Python Standard Library (no version)
 ## third-party libraries
 import pandas as pd
 import sklearn as sk
@@ -85,7 +93,6 @@ import scipy as sp
 import xgboost as xgb
 import lightgbm as lgbm
 import catboost as cb
-import boruta as bo
 import joblib as jl
 import tqdm as tq
 import tqdm.auto as tqa # no version because it corresponds a tqdm module
@@ -97,26 +104,35 @@ from sklearn.preprocessing import OneHotEncoder, PolynomialFeatures, StandardSca
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score, mean_absolute_percentage_error
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.neighbors import KNeighborsRegressor
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, HistGradientBoostingRegressor
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, HistGradientBoostingRegressor, ExtraTreesRegressor, AdaBoostRegressor
 from sklearn.svm import SVR, NuSVR
 from sklearn.neural_network import MLPRegressor
 from sklearn.pipeline import Pipeline
 from sklearn.feature_selection import SelectKBest, chi2, f_regression, mutual_info_regression, SelectFromModel
 from sklearn import set_config
 from sklearn.inspection import permutation_importance
+from catboost import CatBoostRegressor, Pool
+
+# compatibility patch: prevent GridSearchCV from injecting random_state into CatBoost
+class SafeCatBoostRegressor(CatBoostRegressor):
+    """a subclass of CatBoostRegressor that safely ignores sklearn random_state parameter."""
+    def set_params(self, **params):
+		# Drop sklearn’s automatic random_state injection to avoid CatBoostError
+        params.pop("random_state", None)
+        return super().set_params(**params)
 
 # set static metadata to keep outside the main function
 ## set workflow repositories
 repositories = 'Please cite:\n GitHub (https://github.com/Nicolas-Radomski/GenomicBasedRegression),\n Docker Hub (https://hub.docker.com/r/nicolasradomski/genomicbasedregression),\n and/or Anaconda Hub (https://anaconda.org/nicolasradomski/genomicbasedregression).'
 ## set the workflow context
-context = "The scikit-learn (sklearn)-based Python workflow independently supports both modeling (i.e., training and testing) and prediction (i.e., using a pre-built model), and implements 5 feature selection methods, 17 model regressors, hyperparameter tuning, performance metric computation, feature and permutation importance analyses, prediction interval estimation, execution monitoring via progress bars, and parallel processing."
+context = "The scikit-learn (sklearn)-based Python workflow independently supports both modeling (i.e., training and testing) and prediction (i.e., using a pre-built model), and implements 4 feature selection methods, 19 model regressors, hyperparameter tuning, performance metric computation, feature and permutation importance analyses, prediction interval estimation, execution monitoring via progress bars, and parallel processing."
 ## set the workflow reference
 reference = "An article might potentially be published in the future."
 ## set the acknowledgement
 acknowledgements = "Many thanks to Andrea De Ruvo, Adriano Di Pasquale and ChatGPT for the insightful discussions that helped improve the algorithm."
 ## set the version and release
-__version__ = "1.1.0"
-__release__ = "July 2025"
+__version__ = "1.2.0"
+__release__ = "November 2025"
 
 # set global sklearn config early
 set_config(transform_output="pandas")
@@ -176,22 +192,35 @@ def adjusted_r2(y_true, y_pred, n_features):
 	adjusted = 1 - (1 - r2) * ((n - 1) / (n - n_features - 1))
 	return adjusted  # return the adjusted R² value
 
-def count_selected_features(pipeline: Pipeline, encoded_matrix):
+def count_selected_features(pipeline, encoded_matrix):
 	"""
-	robust count of features the pipeline expects
-	return the number of columns reaching the final estimator
+	robust count of features the pipeline expects.
+	returns the number of columns reaching the final estimator.
+	handles both Pipeline objects and direct estimators.
 	"""
+	# ensure the object is a pipeline; wrap standalone estimators
+	if not hasattr(pipeline, "named_steps"):
+		pipeline = Pipeline([("model", pipeline)])
+	# check if a feature selection step exists
 	if 'feature_selection' in pipeline.named_steps:
 		fs = pipeline.named_steps['feature_selection']
-		if hasattr(fs, "support_"):
-			return int(np.sum(fs.support_))          # fast & reliable
-		else:                                       # very rare fallback
-			return fs.transform(encoded_matrix[:1]).shape[1]
-	# no explicit selector → try the estimator attribute
+		if hasattr(fs, "support_") and fs.support_ is not None:
+			return int(np.sum(fs.support_))
+		else:
+			# fallback: apply transform to a single sample
+			try:
+				return fs.transform(encoded_matrix[:1]).shape[1]
+			except Exception:
+				pass
+	# no explicit selector → check the estimator directly
 	est = pipeline.named_steps.get('model', pipeline)
 	n_feat = getattr(est, "n_features_in_", None)
-	if n_feat is None or n_feat == 0:               # CatBoost case
-		n_feat = encoded_matrix.shape[1]            # use full width
+	# check alternative attribute for sklearn 1.3+ compatibility
+	if n_feat is None and hasattr(est, "feature_names_in_"):
+		n_feat = len(est.feature_names_in_)
+	# fallback: use encoded matrix width (e.g., CatBoost, XGB, HGB)
+	if n_feat is None or n_feat == 0:
+		n_feat = encoded_matrix.shape[1]
 	return int(n_feat)
 
 def restricted_float_split(x: str) -> float:
@@ -360,7 +389,7 @@ class ResidualQuantileWrapper(BaseEstimator, RegressorMixin):
 		self.lower_quantile = np.quantile(residuals, self.alpha / 2)
 		self.upper_quantile = np.quantile(residuals, 1 - self.alpha / 2)
 		# optional print/log for debugging
-		#print(f"[ResidualQuantileWrapper] Residual quantile bounds set to ±{self.upper_quantile:.4f} for α = {self.alpha}")
+		#print(f"[ResidualQuantileWrapper] Residual quantile bounds set to ±{self.upper_quantile:.4f} for alpha = {self.alpha}")
 		return self
 	def predict(self, X, return_prediction_interval=False):
 		"""
@@ -421,82 +450,37 @@ class ResidualQuantileWrapper(BaseEstimator, RegressorMixin):
 			setattr(self, key, value)
 		return self
 
-# ---------- BorutaSelectorDF ----------
-# import boruta as bo # BorutaPy wrapper
-# import numpy as np # arrays
-# import pandas as pd # DataFrame support
-# import threading as th # alias for threading
-# import time as ti # alias for time
-# import tqdm.auto as tqa # adaptive tqdm
-# from sklearn.base import BaseEstimator, TransformerMixin # base classes for custom estimators and transformers compatible with sklearn pipelines
-class BorutaSelectorDF(BaseEstimator, TransformerMixin):  # subclass for sklearn compatibility
+def restricted_int_digits(x: str) -> int:
 	"""
-	Boruta feature selector with nested tqdm bars that keep both inner and outer bars informative.
-	compatible with sklearn Pipelines and GridSearchCV.
+	convert *x* to int and ensure x ≥ 0
+	raises
+	------
+	argparse.ArgumentTypeError
+		if *x* cannot be parsed as int or is negative.
 	"""
-	""" -------------------- INIT -------------------- """
-	def __init__(self, estimator, show_progress=True, **kwargs):  # constructor
-		self.estimator = estimator  # base estimator used by Boruta
-		self.kwargs = kwargs  # BorutaPy‑specific kwargs
-		self.show_progress = show_progress  # toggle progress
-		self.boruta = None  # will hold BorutaPy instance
-		self.support_ = None  # mask of selected features after fit
-		self.ranking_ = None  # ranking of all features after fit
-		self.columns_ = None  # column names if X is a DataFrame
-	""" ---------------- INTERNAL: Fit with tqdm ---------------- """
-	def _fit_with_progress(self, X_np, y):  # helper: run Boruta with manual progress bar
-		kwargs = self.kwargs.copy()  # copy kwargs to avoid side‑effects
-		kwargs.pop("verbose", None)  # remove verbose to silence BorutaPy
-		self.boruta = bo.BorutaPy(  # instantiate BorutaPy
-			estimator=self.estimator,
-			verbose=0,  # silence BorutaPy internal verbose
-			**kwargs
-		)
-		total_iter = self.boruta.max_iter  # total iterations Boruta will run
-		with tqa.tqdm(total=total_iter, desc="Boruta iterations",  # use tqdm.auto alias tqa
-					position=1, leave=False, dynamic_ncols=True) as pbar:
-			# Run Boruta fit in a separate thread to keep UI responsive
-			def target():
-				self.boruta.fit(X_np, y)  # actual fitting
-			thread = th.Thread(target=target)  # create thread (alias th)
-			thread.start()
-			while thread.is_alive():  # update bar while running
-				if pbar.n < total_iter:
-					pbar.update(1)
-				else:
-					pbar.n = total_iter  # cap progress bar if exceeded
-				pbar.refresh()
-				ti.sleep(0.5)  # sleep (alias ti)
-			thread.join()  # ensure completion
-	""" -------------------- FIT -------------------- """
-	def fit(self, X, y):  # standard sklearn fit
-		if isinstance(X, pd.DataFrame):  # handle DataFrame input
-			self.columns_ = X.columns  # save column names
-			X_np = X.values  # convert to NumPy
-		else:
-			X_np = np.asarray(X)  # ensure NumPy
+	try:
+		x = int(x)
+	except ValueError:
+		raise ap.ArgumentTypeError(f"{x!r} is not a valid integer")
+	if x < 0:
+		raise ap.ArgumentTypeError("digits must be an integer ≥ 0")
+	return x
 
-		if self.show_progress:  # choose verbose fit
-			self._fit_with_progress(X_np, y)  # run with manual progress bar
-		else:
-			self.boruta = bo.BorutaPy(estimator=self.estimator, **self.kwargs)  # silent Boruta
-			self.boruta.fit(X_np, y)  # fit without bars
-		self.support_ = self.boruta.support_  # store mask
-		self.ranking_ = self.boruta.ranking_  # store rankings
-		return self  # return self for chaining
-	""" ------------------ TRANSFORM ------------------ """
-	def transform(self, X):  # reduce X to selected features
-		if isinstance(X, pd.DataFrame):  # DataFrame input
-			return X.loc[:, self.support_]  # mask columns
-		return X[:, self.support_]  # mask NumPy array
-	""" --------------- PARAMETER GETTER --------------- """
-	def get_params(self, deep=True):  # expose params for grid search
-		params = {"estimator": self.estimator, "show_progress": self.show_progress}  # base params
-		if deep and hasattr(self.estimator, "get_params"):  # include nested estimator params
-			for k, v in self.estimator.get_params().items():
-				params[f"estimator__{k}"] = v  # flatten nested params
-		params.update(self.kwargs)  # add BorutaPy kwargs
-		return params  # return full param dict
+def restricted_debug_level(x: str) -> int:
+	"""
+	convert *x* to int and ensure x >= 0.
+	raises
+	------
+	argparse.ArgumentTypeError
+		if *x* cannot be parsed as int or is negative.
+	"""
+	try:
+		x = int(x)
+	except ValueError:
+		raise ap.ArgumentTypeError(f"{x!r} is not a valid integer")
+	if x < 0:
+		raise ap.ArgumentTypeError("debug must be zero or a positive integer (0, 1, 2, ...)")
+	return x
 
 # create a main function preventing the global scope from being unintentionally executed on import
 def main():
@@ -576,7 +560,7 @@ def main():
 		action='store', 
 		required=False, 
 		default='None', 
-		help='Acronym of the feature selection method to use: SelectKBest (SKB), SelectFromModel with Lasso (laSFM), SelectFromModel with ElasticNet (enSFM), SelectFromModel with Random Forest (rfSFM), or Boruta (BO). Listed in order of increasing computational demand, these methods were chosen for their efficiency, interpretability, and suitability for high-dimensional binary or categorical-encoded features. [OPTIONAL, DEFAULT: None]'
+		help='Acronym of the feature selection method to use: SelectKBest (SKB), SelectFromModel with Lasso (laSFM), SelectFromModel with ElasticNet (enSFM), or SelectFromModel with Random Forest (rfSFM). These methods are suitable for high-dimensional binary or categorical-encoded features. [OPTIONAL, DEFAULT: None]'
 		)
 	parser_modeling.add_argument(
 		'-r', '--regressor', 
@@ -585,7 +569,7 @@ def main():
 		action='store', 
 		required=False, 
 		default='XGB', 
-		help='Acronym of the regressor to use among bayesian bidge (BRI), cat boost (CB), decision tree (DT), elasticnet (EN), gradient boosting (GB), hist gradient boosting (HGB), huber (HU), k-nearest neighbors (KNN), lassa (LA), light gradient goosting machine (LGBM), multi-layer perceptron (MLP), nu support vector (NSV), polynomial (PN), ridge (RI), random forest (RF), support vector regressor (SVR) or extreme gradient boosting (XGB). [OPTIONAL, DEFAULT: XGB]'
+		help='Acronym of the regressor to use among adaboost (ADA), bayesian bidge (BRI), catboost (CAT), decision tree (DT), elasticnet (EN), extra trees (ET), gradient boosting (GB), hist gradient boosting (HGB), huber (HU), k-nearest neighbors (KNN), lassa (LA), light gradient goosting machine (LGBM), multi-layer perceptron (MLP), nu support vector (NSV), polynomial (PN), ridge (RI), random forest (RF), support vector regressor (SVR) or extreme gradient boosting (XGB). [OPTIONAL, DEFAULT: XGB]'
 		)
 	parser_modeling.add_argument(
 		'-k', '--fold', 
@@ -627,7 +611,7 @@ def main():
 		action='store', 
 		required=False, 
 		default=10, 
-		help='Number of repetitions per feature for permutation importance (higher = more stable but slower). [OPTIONAL, DEFAULT: 10]'
+		help='Number of repetitions per feature for permutation importance; higher values provide more stable estimates but increase runtime. [OPTIONAL, DEFAULT: 10]'
 		)
 	parser_modeling.add_argument(
 		'-a', '--alpha', 
@@ -636,7 +620,7 @@ def main():
 		action='store', 
 		required=False, 
 		default=0.05, 
-		help='Significance level α (a float between 0 and 1) used to compute prediction intervals corresponding to a [(1 − α) × 100]%% coverage. [OPTIONAL, DEFAULT: 0.05]'
+		help='Significance level alpha (a float between 0 and 1) used to compute prediction intervals corresponding to a [(1 − alpha) × 100]%% coverage. [OPTIONAL, DEFAULT: 0.05]'
 		)
 	parser_modeling.add_argument(
 		'-o', '--output', 
@@ -655,9 +639,18 @@ def main():
 		help='Prefix of output files. [OPTIONAL, DEFAULT: output]'
 		)
 	parser_modeling.add_argument(
+		'-di', '--digits', 
+		dest='digits', 
+		type=restricted_int_digits, # control >= 1
+		action='store', 
+		required=False, 
+		default=6, 
+		help='Number of decimal digits to round numerical results (e.g., root mean squared error, importance, metrics). [OPTIONAL, DEFAULT: 6]'
+		)
+	parser_modeling.add_argument(
 		'-de', '--debug', 
 		dest='debug', 
-		type=int,
+		type=restricted_debug_level, # control >= 1
 		action='store', 
 		required=False, 
 		default=0, 
@@ -733,7 +726,7 @@ def main():
 		action='store', 
 		required=False, 
 		default=0.05, 
-		help='Significance level α (a float between 0 and 1) used to compute prediction intervals corresponding to a [(1 − α) × 100]%% coverage. [OPTIONAL, DEFAULT: 0.05]'
+		help='Significance level alpha (a float between 0 and 1) used to compute prediction intervals corresponding to a [(1 − alpha) × 100]%% coverage. [OPTIONAL, DEFAULT: 0.05]'
 		)
 	parser_prediction.add_argument(
 		'-o', '--output', 
@@ -752,9 +745,18 @@ def main():
 		help='Prefix of output files. [OPTIONAL, DEFAULT: output_]'
 		)
 	parser_prediction.add_argument(
+		'-di', '--digits', 
+		dest='digits', 
+		type=restricted_int_digits, # control >= 1
+		action='store', 
+		required=False, 
+		default=6, 
+		help='Number of decimal digits to round numerical results (e.g., root mean squared error, importance, metrics). [OPTIONAL, DEFAULT: 6]'
+		)
+	parser_prediction.add_argument(
 		'-de', '--debug', 
 		dest='debug', 
-		type=int,
+		type=restricted_debug_level, # control >= 1
 		action='store', 
 		required=False, 
 		default=0, 
@@ -803,6 +805,7 @@ def main():
 		ALPHA=args.alpha
 		OUTPUTPATH=args.outputpath
 		PREFIX=args.prefix
+		DIGITS=args.digits
 		DEBUG=args.debug
 		WARNINGS=args.warnings
 		NOCHECK=args.nocheck
@@ -816,6 +819,7 @@ def main():
 		ALPHA=args.alpha
 		OUTPUTPATH=args.outputpath
 		PREFIX=args.prefix
+		DIGITS=args.digits
 		DEBUG=args.debug
 		WARNINGS=args.warnings
 		NOCHECK=args.nocheck
@@ -847,8 +851,6 @@ def main():
 		# control versions of packages
 		if ap.__version__ != "1.1":
 			raise Exception('argparse 1.1 (1.4.1) version is recommended')
-		if im.version("boruta") != "0.4.3":
-			raise Exception("boruta 0.4.3 version is recommended")
 		if cb.__version__ != "1.2.8":
 			raise Exception('catboost 1.2.8 version is recommended')
 		if jl.__version__ != "1.5.1":
@@ -881,7 +883,7 @@ def main():
 	print(message_versions)
 
 	# set rounded digits
-	digits = 6
+	digits = DIGITS
 
 	# check the subcommand and execute corresponding code
 	if args.subcommand == 'modeling':
@@ -901,7 +903,8 @@ def main():
 				"The provided sample limit per dataset (i.e., " + str(LIMIT) + ") meets or exceeds the recommended minimum (i.e., 10), which is expected to support more reliable performance metrics"
 			)
 			print(message_limit)
-		## define minimal limits of samples (i.e., 2 * LIMIT per dataset)
+
+		# define minimal limits of samples (i.e., 2 * LIMIT per dataset)
 		limit_samples = 2 * LIMIT
 
 		# read input files
@@ -909,8 +912,23 @@ def main():
 		df_mutations = pd.read_csv(INPUTPATH_MUTATIONS, sep='\t', dtype=str)
 		## phenotypes
 		df_phenotypes = pd.read_csv(INPUTPATH_PHENOTYPES, sep='\t', dtype=str)
-		## convert the phenotype column (second column, index 1) to numeric after reading
-		df_phenotypes.iloc[:, 1] = pd.to_numeric(df_phenotypes.iloc[:, 1], errors='raise')
+
+		# transform the phenotype as numeric
+		## make sure the phenotype column exists (i.e., the second column)
+		if df_phenotypes.shape[1] < 2:
+			message_phenotype_numeric = ("The presence of phenotype in the input file of phenotypes was improperly controlled (i.e., the second column is missing)")
+			raise Exception(message_phenotype_numeric)
+		## extract the phenotype column
+		phenotype_col = df_phenotypes.iloc[:, 1]
+		## make sure that the phenotype column can be transformed as numeric
+		elif_invalid = pd.to_numeric(phenotype_col, errors="coerce").isna().any()
+		if elif_invalid:
+			message_phenotype_numeric = ("The phenotype in the input file of phenotypes cannot be transformed as numeric (i.e., the second column contains non-numeric values)")
+			raise Exception(message_phenotype_numeric)
+		else:
+			# convert the phenotype column to numeric
+			df_phenotypes.iloc[:, 1] = pd.to_numeric(phenotype_col)
+			message_phenotype_numeric = ("The phenotype in the input file of phenotypes was properly transformed as numeric (i.e., the second column)")
 
 		# check the input file of mutations
 		## calculate the number of rows
@@ -1015,67 +1033,59 @@ def main():
 			message_compatibility_dataset_quantiles = "The provided selection of training/testing datasets (i.e., " + DATASET + ") did not require the number of quantiles (i.e., " + str(QUANTILES) + ")"
 			raise Exception(message_compatibility_dataset_quantiles)
 
-		# perform splitting of the training and testing datasets according to the settings
+		# perform splitting of the training and testing datasets according to the setting
 		if DATASET == 'random':
 			message_dataset = "The training and testing datasets were constructed based on the 'random' setting"
 			print(message_dataset)
-			# trash dataset column
+			# drop dataset column (since it is irrelevant in random mode)
 			df_phenotypes = df_phenotypes.drop("dataset", axis='columns')
-			# index with sample identifiers the dataframes mutations (X) and phenotypes (y)
-			X = df_mutations.set_index('sample')
-			y = df_phenotypes.set_index('sample')
-			# get the first column of y (i.e., phenotype) as a Pandas Series
-			y_series = y.iloc[:, 0]
-			# bin y into quantiles
-			y_binned = pd.qcut(y_series, # quantile-based discretization
-							q=QUANTILES, # number of quantiles
-							labels=False, # return bin integer
-							duplicates='drop') # reduce number of bin to avoid ValueError: Bin edges must be unique
-			# perform a stratified split based on binned targets (Note: ensures balanced distributions even if the exact split ratio is not followed perfectly)
-			split = StratifiedShuffleSplit(
-				n_splits=1, 
-				test_size=1 - SPLITTING/100,
-            	random_state=None # make it random (random_state=42 for reproducibility)
+			# deterministic merge of phenotypes and mutations on sample identifier
+			# ensures perfect alignment and prevents any mis-ordered sample mixing
+			df_all = (
+				pd.merge(df_phenotypes, df_mutations, on="sample", how="inner", validate="one_to_one")
+				.sort_values(by="sample") # enforce deterministic ordering
+				.reset_index(drop=True)
 			)
-			for train_idx, test_idx in split.split(X, y_binned):
+			# build X (mutations) and y (phenotypes) with sample index preserved
+			X = df_all.drop(columns=["phenotype"]).set_index("sample")
+			y = df_all[["sample", "phenotype"]].set_index("sample")["phenotype"]
+			# quantile binning of continuous phenotypes to enable stratified splitting
+			y_binned = pd.qcut(
+				y,
+				q=QUANTILES,
+				labels=False,
+				duplicates='drop' # avoids ValueError when bins overlap
+			)
+			# deterministic stratified split
+			# random_state=None allows true randomness; use 42 for reproducibility if desired
+			splitter = StratifiedShuffleSplit(
+				n_splits=1,
+				train_size=SPLITTING / 100,
+				random_state=None # no reproducibility by design
+			)
+			for train_idx, test_idx in splitter.split(X, y_binned):
 				X_train, X_test = X.iloc[train_idx], X.iloc[test_idx]
 				y_train, y_test = y.iloc[train_idx], y.iloc[test_idx]
-			# ensure y_train and y_test are 1D Series instead of (n,1) DataFrames
-			y_train = y_train.iloc[:, 0] # extract phenotype column as Series to avoid DataConversionWarning (for random split)
-			y_test = y_test.iloc[:, 0] # extract phenotype column as Series to avoid DataConversionWarning (for random split)
-		elif DATASET == "manual":
-			message_dataset = ("The training and testing datasets were constructed based on the 'manual' setting")
+			# y_train and y_test are already 1D Series (phenotype only)
+		elif DATASET == 'manual':
+			message_dataset = "The training and testing datasets were constructed based on the 'manual' setting"
 			print(message_dataset)
-			# align phenotype and mutation dataframes by the common key ‘sample’ (validate='one_to_one' will raise if a sample exists twice in either file)
-			# use merge (row is matched by sample name and mismatches raise errors) rather than concat(axis=1) (assume that dataframes have the same row order and rows correspond to the same samples index by index)
-			df_phenotypes_mutations = (
-				df_phenotypes
-				.merge(df_mutations, on="sample", how="inner", validate="one_to_one")
+			# merge phenotypes and mutations deterministically
+			df_all = (
+				pd.merge(df_phenotypes, df_mutations, on="sample", how="inner", validate="one_to_one")
+				.sort_values(by="sample")
+				.reset_index(drop=True)
 			)
-			# split rows back into training/testing, using the saved ‘dataset’ column
-			df_training = df_phenotypes_mutations[
-				df_phenotypes_mutations["dataset"] == "training"
-			]
-			df_testing = df_phenotypes_mutations[
-				df_phenotypes_mutations["dataset"] == "testing"
-			]
-			# build y‑dataframes (phenotypes) indexing sample identifiers
-			y_train = df_training[["sample", "phenotype"]].set_index("sample")
-			y_test  = df_testing[["sample", "phenotype"]].set_index("sample")
-			# ensure y_train and y_test are 1D Series instead of (n,1) DataFrames
-			y_train = y_train["phenotype"] # extract phenotype column as Series to avoid DataConversionWarning (for manual split)
-			y_test = y_test["phenotype"] # extract phenotype column as Series to avoid DataConversionWarning (for manual split)
-			# build X‑dataframes (mutations), keeping one ‘sample’ column as index
-			X_train = (
-				df_training
-				.drop(columns=["phenotype", "dataset"]) # drop only these two
-				.set_index("sample")
-			)
-			X_test = (
-				df_testing
-				.drop(columns=["phenotype", "dataset"])
-				.set_index("sample")
-			)
+			# normalize only here (since dataset column exists)
+			df_all["dataset"] = df_all["dataset"].astype(str).str.strip().str.lower()
+			# split according to dataset column
+			df_training = df_all[df_all["dataset"] == "training"]
+			df_testing  = df_all[df_all["dataset"] == "testing"]
+			# build X and y dataframes for training/testing
+			X_train = df_training.drop(columns=["phenotype", "dataset"]).set_index("sample")
+			y_train = df_training[["sample", "phenotype"]].set_index("sample")["phenotype"]
+			X_test  = df_testing .drop(columns=["phenotype", "dataset"]).set_index("sample")
+			y_test  = df_testing [ ["sample", "phenotype"]].set_index("sample")["phenotype"]
 
 		# check similarity between distributions of phenotypes from the training and testing datasets 
 		## compute Kolmogorov–Smirnov statistic and p-values
@@ -1138,6 +1148,21 @@ def main():
 		X_test_features_str = X_test[features].astype(str)
 		## use the same encoder (already fitted) to transform test data
 		X_test_encoded = encoder.transform(X_test_features_str)
+		## assert identical encoded features between training and testing datasets
+		train_encoded_features = list(X_train_encoded.columns)
+		test_encoded_features = list(X_test_encoded.columns)
+		if train_encoded_features != test_encoded_features:
+			message_assert_encoded_features = "The encoded features between training and testing datasets do not match"
+			raise AssertionError(message_assert_encoded_features)
+		else:
+			message_assert_encoded_features = "The encoded features between training and testing datasets were confirmed as identical"
+			print(message_assert_encoded_features)
+
+		# enforce consistent one-hot encoded column order between train/test and across runs
+		X_train_encoded = X_train_encoded.reindex(sorted(X_train_encoded.columns), axis=1)
+		X_test_encoded  = X_test_encoded.reindex(sorted(X_train_encoded.columns), axis=1, fill_value=0)
+		message_column_order = ("The one-hot encoded column order was harmonized across training and testing datasets to ensure deterministic feature alignment for feature selection and modeling")
+		print(message_column_order)
 
 		# count features
 		## count the number of raw categorical features before one-hot encoding
@@ -1149,7 +1174,7 @@ def main():
 		print(message_ohe_features)
 		
 		# prepare elements of the model
-		## initialize the feature selection method (without tuning parameters: deterministic and repeatable)
+		## initialize the feature selection method (regression-compatible and without tuning parameters: deterministic and repeatable)
 		if FEATURESELECTION == 'None':
 			message_feature_selection = "The provided feature selection method was properly recognized: None"
 			print(message_feature_selection)
@@ -1158,56 +1183,73 @@ def main():
 			message_feature_selection = "The provided feature selection method was properly recognized: SelectKBest (SKB)"
 			print(message_feature_selection)
 			selected_feature_selector = SelectKBest(
-				score_func=ft.partial( # partial allow reproducibility
-					mutual_info_regression, # mutual_info_regression captures linear and non-linear dependancies, default f_regression was not proposed per default because it captures only linear dependancies, optional chi2 is not recommended for regression, all score_func can be used through tunining parameters
+				score_func=ft.partial(  # partial ensures deterministic behavior
+					mutual_info_regression, # captures linear + nonlinear dependencies; preferred over f_regression (linear only)
 					random_state=42 # reproducibility
-				), 
-				k=10 # default top k features can be modified in the parameters file if needed
-			) 
-		elif FEATURESELECTION in ['laSFM', 'rfSFM', 'enSFM']:
-			if FEATURESELECTION == 'laSFM':
-				message_feature_selection = "The provided feature selection method was properly recognized: SelectFromModel with lasso (laSFM)"
-				selector_model = Lasso(random_state=42) # reproducibility
-			elif FEATURESELECTION == 'rfSFM':
-				message_feature_selection = "The provided feature selection method was properly recognized: SelectFromModel with random forest (rfSFM)"
-				selector_model = RandomForestRegressor(random_state=42) # reproducibility
-			elif FEATURESELECTION == 'enSFM':
-				message_feature_selection = "The provided feature selection method was properly recognized: SelectFromModel with elasticnet (enSFM)"
-				selector_model = ElasticNet(random_state=42) # reproducibility
-			print(message_feature_selection)
-			selected_feature_selector = SelectFromModel(
-				estimator=selector_model,
-				threshold=None # default threshold behavior based on model, user can specify max_features in the parameters file if needed together with 'threshold': [-float('inf')] to rank features by importance
+				),
+				k=10 # default top k features; user may override in the parameter file
 			)
-		elif FEATURESELECTION == 'BO':
-			message_feature_selection = "The provided feature selection method was properly recognized: Boruta (BO)"
+		elif FEATURESELECTION == 'laSFM':
+			message_feature_selection = "The provided feature selection method was properly recognized: SelectFromModel with Lasso (laSFM)"
 			print(message_feature_selection)
-			# Boruta requires a regressor internally, for instance RandomForestRegressor with fast default or param overrides
-			boruta_estimator = RandomForestRegressor(random_state=42) # reproducibility
-			# create Boruta selector with fast default custom parameters, can be expanded later from parameters file
-			boruta_selector = BorutaSelectorDF(
-				estimator=boruta_estimator,
-				n_estimators='auto', # use the same number of estimators as defined in the estimator (custom for speed, Boruta default: 100)
-				max_iter=10, # few iterations to reduce runtime (custom for speed, Boruta default: 100)
-				perc=85, # stricter cutoff can reduce number of features selected (custom for speed, Boruta default: 100)
-				two_step=True, # can reduce the number of iterations (custom for speed, Boruta default: False)
-				verbose=0, # avoid print in shell (custom, Boruta default: 1)
+			selector_model = Lasso(
 				random_state=42 # reproducibility
 			)
-			selected_feature_selector = boruta_selector
+			selected_feature_selector = SelectFromModel(
+				estimator=selector_model,
+				threshold=None # default threshold; user may override via 'max_features' and 'threshold': [-float('inf')]
+			)
+		elif FEATURESELECTION == 'enSFM':
+			message_feature_selection = "The provided feature selection method was properly recognized: SelectFromModel with ElasticNet (enSFM)"
+			print(message_feature_selection)
+			selector_model = ElasticNet(
+				random_state=42 # reproducibility
+			)
+			selected_feature_selector = SelectFromModel(
+				estimator=selector_model,
+				threshold=None
+			)
+		elif FEATURESELECTION == 'rfSFM':
+			message_feature_selection = "The provided feature selection method was properly recognized: SelectFromModel with Random Forest (rfSFM)"
+			print(message_feature_selection)
+			selector_model = RandomForestRegressor(
+				random_state=42, # reproducibility
+				n_jobs=1 # enforce single-thread determinism for consistent feature importances
+			)
+			selected_feature_selector = SelectFromModel(
+				estimator=selector_model,
+				threshold=None
+			)
 		else:
 			message_feature_selection = "The provided feature selection method is not implemented yet"
 			raise Exception(message_feature_selection)
-		
 		## initialize the regressor (without tuning parameters: deterministic and repeatable if possible)
-		if REGRESSOR == 'BRI':
+		if REGRESSOR == 'ADA':
+			message_regressor = "The provided regressor was properly recognized: AdaBoost (ADA)"
+			print(message_regressor)
+			selected_regressor = AdaBoostRegressor(random_state=42)
+		elif REGRESSOR == 'BRI':
 			message_regressor = "The provided regressor was properly recognized: bayesian ridge (BRI)"
 			print(message_regressor)
 			selected_regressor = BayesianRidge()
-		elif REGRESSOR == 'CB':
-			message_regressor = "The provided regressor was properly recognized: catboost (CB)"
+		elif REGRESSOR == 'CAT':
+			message_regressor = "The provided regressor was properly recognized: CatBoost (CAT)"
 			print(message_regressor)
-			selected_regressor = cb.CatBoostRegressor(random_state=42, verbose=0)
+			# deterministic configuration for CatBoost
+			# - use random_seed (not random_state) to prevent synonym conflicts
+			# - thread_count=1 avoids nested parallelism with GridSearchCV
+			# - allow_writing_files=False disables CatBoost automatic file outputs
+			# - bootstrap_type='Bayesian' + random_strength=0 ensure reproducible splits
+			# - verbose=False keeps logs clean and avoids stdout clutter
+			selected_regressor = SafeCatBoostRegressor(
+				loss_function="RMSE", # default loss for regression
+				random_seed=42, # deterministic
+				thread_count=1, # avoid nested parallelism
+				verbose=False, # no stdout spam
+				allow_writing_files=False, # prevent auto logging files
+				bootstrap_type="Bayesian", # deterministic bootstrap
+				random_strength=0 # must be 0 for reproducibility
+			)
 		elif REGRESSOR == 'DT':
 			message_regressor = "The provided regressor was properly recognized: decision tree (DT)"
 			print(message_regressor)
@@ -1216,6 +1258,13 @@ def main():
 			message_regressor = "The provided regressor was properly recognized: elasticNet (EN)"
 			print(message_regressor)
 			selected_regressor = ElasticNet(random_state=42, selection='random')
+		elif REGRESSOR == 'ET':
+			message_regressor = "The provided regressor was properly recognized: extra trees (ET)"
+			print(message_regressor)
+			selected_regressor = ExtraTreesRegressor(
+				random_state=42, # deterministic
+				n_jobs=1 # avoid nested parallelism and ensure reproducible tree construction
+			)
 		elif REGRESSOR == 'GB':
 			message_regressor = "The provided regressor was properly recognized: gradient boosting (GB)"
 			print(message_regressor)
@@ -1259,7 +1308,10 @@ def main():
 		elif REGRESSOR == 'RF':
 			message_regressor = "The provided regressor was properly recognized: random forest (RF)"
 			print(message_regressor)
-			selected_regressor = RandomForestRegressor(random_state=42)
+			selected_regressor = RandomForestRegressor(
+				random_state=42, # deterministic
+				n_jobs=1 # avoid nested parallelism and ensure reproducible tree construction
+			)
 		elif REGRESSOR == 'SVR':
 			message_regressor = "The provided regressor was properly recognized: support vector regression (SVR)"
 			print(message_regressor)
@@ -1276,7 +1328,7 @@ def main():
 		### create an empty list
 		steps = []
 		### add feature selection step if specified
-		if FEATURESELECTION in ['SKB', 'laSFM', 'rfSFM', 'enSFM', 'BO']:
+		if FEATURESELECTION in ['SKB', 'laSFM', 'rfSFM', 'enSFM']:
 			steps.append(('feature_selection', selected_feature_selector))
 		### add polynomial features if the regressor is polynomial
 		if REGRESSOR == 'PN': # use aggressive feature selection (laSFM or rfSFM) before polynomial expansion to get stable predictions
@@ -1315,7 +1367,6 @@ def main():
 			n_jobs=JOBS,
 			verbose=0 # do not display any messages or logs
 		)
-
 		## compute metrics related to grid search CV
 		### number of distinct parameter names (i.e., how many parameters are tuned)
 		n_param_names = len({k for d in parameters for k in d})
@@ -1329,26 +1380,57 @@ def main():
 		message_metrics_cv = "The cross-validation setting implied: " + str(n_param_names) + " distinct parameter names, " + str(n_total_values) + " parameter value options, " + str(param_combinations) + " parameter combinations, and " + str(gridsearchcv_fits) + " fits during cross-validation"
 		print(message_metrics_cv)
 
-
 		# ensure numeric compatibility (astype(np.float32)) with upstream encoding (sparse_output=False) and efficiency (float32 dtype), 
 		# especially for tree-based regressors (e.g., HistGradientBoostingRegressor, XGBRegressor, LightGBM)
 		X_train_encoded_float32 = X_train_encoded.astype(np.float32)
+		X_test_encoded_float32 = X_test_encoded.astype(np.float32)
+		# preserve sample IDs before conversion
+		train_sample_ids = y_train.index
+		test_sample_ids = y_test.index
 		# convert to float32 NumPy array (avoid object dtype, required by LightGBM and other regressors)
 		y_train_float32 = y_train.astype(np.float32).to_numpy()
+		y_test_float32 = y_test.astype(np.float32).to_numpy()
+
+		# reconstruct a 1-D Series required by CatBoost for importance extraction
+		y_train_series = pd.Series(y_train_float32.ravel(), index=train_sample_ids)
+
+		## check parallelization and print a message
+		if JOBS == 1:
+			message_parallelization = "The tqdm_joblib progress bars are deactivated when using one job"
+			print(message_parallelization)
+		else:
+			message_parallelization = "The tqdm_joblib progress bars are activated when using two or more jobs"
+			print(message_parallelization)
 
 		## fit the model
-		### use tqdm.auto rather than tqdm library because it automatically choose the best display format (terminal, notebook, etc.)
+		### use tqdm.auto rather than tqdm library because it automatically chooses the best display format (terminal, notebook, etc.)
 		### use a tqdm progress bar from the tqdm_joblib library (compatible with GridSearchCV)
 		### use a tqdm progress bar immediately after the last print (position=0), disable the additional bar after completion (leave=False), and allow for dynamic resizing (dynamic_ncols=True)
 		### force GridSearchCV to use the threading backend to avoid the DeprecationWarning from fork and ChildProcessError from the loky backend (default in joblib)
 		### threading is slower than loky, but it allows using a progress bar with GridSearchCV and avoids the DeprecationWarning and ChildProcessError
-		with tqa.tqdm(total=gridsearchcv_fits, desc="Model building progress", position=0, leave=False, dynamic_ncols=True) as progress_bar:
+		if JOBS == 1:
+			# when using a single thread, tqdm_joblib does not display intermediate progress updates
+			# in this case, we run GridSearchCV normally without the tqdm_joblib wrapper
 			with jl.parallel_backend('threading', n_jobs=JOBS):
-				with tqjl.tqdm_joblib(progress_bar):
-					model.fit(
-						X_train_encoded_float32,
-						y_train_float32
-					)
+				model.fit(
+					X_train_encoded_float32,
+					y_train_float32
+				)
+		else:
+			# when using multiple threads, tqdm_joblib correctly hooks into joblib and displays progress updates
+			with tqa.tqdm(
+				total=gridsearchcv_fits, 
+				desc="Model building progress", 
+				position=0, 
+				leave=False, 
+				dynamic_ncols=True
+			) as progress_bar:
+				with jl.parallel_backend('threading', n_jobs=JOBS):
+					with tqjl.tqdm_joblib(progress_bar):
+						model.fit(
+							X_train_encoded_float32,
+							y_train_float32
+						)
 
 		## print best parameters
 		if PARAMETERS == None:
@@ -1388,7 +1470,7 @@ def main():
 		
 		# count features
 		## count the number of features selected by feature selection actually used by the final regressor
-		selected_features_int = count_selected_features(best_model, X_train_encoded)
+		selected_features_int = count_selected_features(best_model, X_train_encoded_float32)
 		## print a message
 		message_selected_features = (
 			"The pipeline potentially selected and used "
@@ -1400,130 +1482,148 @@ def main():
 		# output a dataframe of features used by the final model with ranked importance scores
 		# get the final estimator from the pipeline or directly if standalone
 		final_estimator = best_model[-1] if hasattr(best_model, '__getitem__') else best_model
-		# initialize list of feature names and selection mask
+		# initialize feature name list and selection mask
 		feature_encoded_lst = None
 		support_mask = None
-		selector = None
 		try:
 			# check if the model is a pipeline
 			if hasattr(best_model, 'named_steps'):
-				# if it contains a polynomial transformer, extract feature names
+				# extract feature names from polynomial expansion if present
 				if 'poly' in best_model.named_steps and hasattr(best_model.named_steps['poly'], 'get_feature_names_out'):
-					input_features = X_train_encoded.columns
+					input_features = X_train_encoded_float32.columns
 					feature_encoded_lst = best_model.named_steps['poly'].get_feature_names_out(input_features=input_features)
+				# otherwise extract feature names from encoder or encoded dataframe
+				elif 'encoder' in best_model.named_steps and hasattr(best_model.named_steps['encoder'], 'get_feature_names_out'):
+					feature_encoded_lst = best_model.named_steps['encoder'].get_feature_names_out()
 				else:
-					# otherwise use column names from the encoded training data
-					feature_encoded_lst = X_train_encoded.columns
-				# check for a feature selection step
+					feature_encoded_lst = X_train_encoded_float32.columns
+				# check for an optional feature selection step
 				if 'feature_selection' in best_model.named_steps:
 					selector = best_model.named_steps['feature_selection']
-					# if get_support is defined, use it to filter selected features
 					if hasattr(selector, 'get_support'):
 						support_mask = selector.get_support()
-						# align feature names with selected features
-						feature_encoded_lst = np.array(feature_encoded_lst)[support_mask]
-					# otherwise check for ranking_ attribute, used by boruta
-					elif hasattr(selector, 'ranking_'):
-						ranking = np.array(selector.ranking_)
-						support_mask = ranking == 1
-						# align feature names with selected features
 						feature_encoded_lst = np.array(feature_encoded_lst)[support_mask]
 					else:
-						# fallback: assume all features were kept
 						support_mask = np.ones(len(feature_encoded_lst), dtype=bool)
-			# if the best_model (final estimator) has get_feature_names_out method (e.g., PolynomialFeatures)
-			elif hasattr(best_model, 'get_feature_names_out'):
-				# use model's method to get transformed feature names
-				feature_encoded_lst = best_model.get_feature_names_out()
-				# assume no feature selection applied (all True mask)
-				support_mask = np.ones(len(feature_encoded_lst), dtype=bool)
+				else:
+					support_mask = np.ones(len(feature_encoded_lst), dtype=bool)
+			# fallback if not a pipeline
 			else:
-				# fallback: use column names from encoded training data
-				feature_encoded_lst = X_train_encoded.columns
-				# assume no feature selection applied
+				feature_encoded_lst = X_train_encoded_float32.columns
 				support_mask = np.ones(len(feature_encoded_lst), dtype=bool)
 			message_importance_encoded_feature_names = "The full one-hot encoded feature names were recovered from the pipeline"
 		except Exception:
-			# fallback: on error, use encoded training data column names
-			feature_encoded_lst = X_train_encoded.columns
-			# assume no feature selection applied
+			# fallback on error
+			feature_encoded_lst = X_train_encoded_float32.columns
 			support_mask = np.ones(len(feature_encoded_lst), dtype=bool)
 			message_importance_encoded_feature_names = "The full one-hot encoded feature names were not recovered from the pipeline"
 		print(message_importance_encoded_feature_names)
-		# ensure feature names are a list
+		# ensure feature names are a Python list
 		if hasattr(feature_encoded_lst, 'tolist'):
 			feature_encoded_lst = feature_encoded_lst.tolist()
-		# get importance_type parameter from model params if exists, else fallback to defaults
-		importance_type = None
+		# extract feature importance depending on regressor type
 		try:
 			if isinstance(final_estimator, cb.CatBoostRegressor):
-				# CatBoost regressor: get feature importance using loss-based method
-				importances = final_estimator.get_feature_importance(prettified=False)
-				importance_type = "catboost's loss-based importance"
+				try:
+					# ensure feature names exactly match the encoded, selected matrix
+					if len(feature_encoded_lst) != X_train_encoded_float32.shape[1]:
+						# hard safety correction: rebuild feature list from encoded data
+						feature_encoded_lst = list(X_train_encoded_float32.columns)
+					# build CatBoost Pool with aligned feature names
+					train_pool = cb.Pool(
+						X_train_encoded_float32,
+						y_train_series,
+						feature_names=feature_encoded_lst
+					)
+					# extract importance
+					importances = final_estimator.get_feature_importance(
+						train_pool,
+						type="PredictionValuesChange"
+					)
+					importance_type = "catboost's loss-based importance (PredictionValuesChange)"
+				except Exception as e:
+					importances = np.array([np.nan] * len(feature_encoded_lst))
+					importance_type = f"NaN placeholder (CatBoost importance extraction failed: {e})"
 			elif isinstance(final_estimator, xgb.XGBRegressor):
-				# XGBoost regressor: determine importance_type from parameters or fallback to 'weight'
+				# XGBRegressor: importance type from parameters or fallback to 'weight'
 				xgb_importance_type = None
-				# check if params dict exists and contains importance_type (model__importance_type)
+				# check parameters dictionary
 				if 'params' in locals():
 					xgb_importance_type = params.get('model__importance_type', None)
-				# else check model's own get_params for importance_type
+				# check estimator parameters
 				if xgb_importance_type is None and hasattr(final_estimator, 'get_params'):
-					params_ = final_estimator.get_params()
-					xgb_importance_type = params_.get('importance_type', None)
-				# fallback to XGBoost default importance type 'weight' if none found
+					xgb_importance_type = final_estimator.get_params().get('importance_type', None)
+				# fallback
 				if xgb_importance_type is None:
 					xgb_importance_type = 'weight'
-				# get booster and feature names
 				booster = final_estimator.get_booster()
-				xgb_feature_names = booster.feature_names
-				# get importance scores dict for given importance_type
+				booster_feature_names = booster.feature_names
 				importances_dict = booster.get_score(importance_type=xgb_importance_type)
-				# create importance array aligned with booster feature names (fill missing with 0)
-				importances = np.array([importances_dict.get(f, 0.0) for f in xgb_feature_names])
-				# update feature names to booster feature names for correct alignment
-				feature_encoded_lst = list(xgb_feature_names)
+				# align XGB importances with booster feature order
+				importances = np.array([importances_dict.get(f, 0.0) for f in booster_feature_names])
+				feature_encoded_lst = list(booster_feature_names)
 				importance_type = f"xgboost's {xgb_importance_type}-based importance"
 			elif isinstance(final_estimator, lgbm.LGBMRegressor):
-				# LightGBM regressor: determine importance_type from parameters or fallback to 'gain'
+				# LightGBM supports importance types such as 'gain', 'split', etc.
 				lgbm_importance_type = None
-				# check if params dict exists and contains importance_type (model__importance_type)
 				if 'params' in locals():
 					lgbm_importance_type = params.get('model__importance_type', None)
-				# else check model's own get_params for importance_type
 				if lgbm_importance_type is None and hasattr(final_estimator, 'get_params'):
-					params_ = final_estimator.get_params()
-					lgbm_importance_type = params_.get('importance_type', None)
-				# fallback to LightGBM default importance type 'gain' if none found
+					lgbm_importance_type = final_estimator.get_params().get('importance_type', None)
 				if lgbm_importance_type is None:
 					lgbm_importance_type = 'gain'
-				# get importance scores with chosen importance_type
 				importances = final_estimator.booster_.feature_importance(importance_type=lgbm_importance_type)
 				importance_type = f"lightgbm's {lgbm_importance_type}-based importance"
+			elif isinstance(final_estimator, HistGradientBoostingRegressor):
+				# histogram-based gradient boosting does not expose feature_importances_ directly
+				try:
+					from sklearn.ensemble._hist_gradient_boosting.utils import get_feature_importances
+					importances = get_feature_importances(final_estimator, normalize=True)
+				except Exception:
+					importances = np.array([])
+				# fallback on HGB internal gains if helper returns empty or zeros
+				if importances is None or len(importances) == 0 or np.all(importances == 0):
+					n_features = X_train_encoded_float32.shape[1]
+					importances = np.zeros(n_features, dtype=np.float64)
+					for predictors in getattr(final_estimator, "_predictors", []):
+						if predictors is None:
+							continue
+						for tree in np.atleast_1d(predictors):
+							if hasattr(tree, "split_features_") and hasattr(tree, "split_gains_"):
+								for feat, gain in zip(tree.split_features_, tree.split_gains_):
+									if feat >= 0:
+										importances[int(feat)] += gain
+					total_gain = np.sum(importances)
+					if total_gain > 0:
+						importances /= total_gain
+				importance_type = "histogram-based mean impurity reduction (auto fallback to internal split gains)"
 			elif hasattr(final_estimator, 'feature_importances_'):
-				# fallback for tree-based models exposing feature_importances_
+				# most tree-based regressors expose impurity-based importances
 				importances = final_estimator.feature_importances_
 				importance_type = "tree-based impurity reduction (feature_importances_)"
 			elif hasattr(final_estimator, 'coef_'):
-				# fallback for linear models with coef_ attribute
-				importances = np.abs(final_estimator.coef_.ravel() if hasattr(final_estimator.coef_, 'ravel') else final_estimator.coef_)
+				# linear models expose coefficients
+				coef = final_estimator.coef_
+				coef = coef.ravel() if hasattr(coef, 'ravel') else coef
+				importances = np.abs(coef)
 				importance_type = "absolute coefficient magnitude (coef_)"
 			else:
-				# fallback: no importance available, fill with NaNs
+				# fallback if model has no interpretability
 				importances = np.array([np.nan] * len(feature_encoded_lst))
-				importance_type = "NaN placeholder"
+				importance_type = "NaN placeholder (no native importance)"
 		except Exception as e:
-			# fallback: error while extracting importance, fill with NaNs
+			# final fallback upon error
 			importances = np.array([np.nan] * len(feature_encoded_lst))
-			importance_type = "NaN fallback due to importance extraction error: " + str(e)
-		# check for size mismatch between importances and feature names, truncate to shortest length
+			importance_type = "NaN fallback due to extraction error: " + str(e)
+		# align feature names and importance vector lengths
 		if len(importances) != len(feature_encoded_lst):
 			min_len = min(len(importances), len(feature_encoded_lst))
 			importances = importances[:min_len]
 			feature_encoded_lst = feature_encoded_lst[:min_len]
-		# print a message depending on regressor type
+		# print model-type-specific message
 		if REGRESSOR in ('HGB', 'KNN', 'MLP', 'NSV', 'SVR'):
 			message_importance_count = (
-				"The selected model regressor did not expose feature importance natively ("
+				"The selected model regressor did not expose feature importances natively ("
 				+ importance_type + ")"
 			)
 		else:
@@ -1535,57 +1635,169 @@ def main():
 				+ " one-hot encoded features (potentially selected and/or polynomially expanded)"
 			)
 		print(message_importance_count)
-		# create dataframe of feature importances and round importance values to 6 decimal places
+		# ensure importances array is valid
+		if importances is None or np.all(np.isnan(importances)):
+			importances = np.full(len(feature_encoded_lst), np.nan, dtype=float)
+		# create dataframe of feature importances and round values
 		feature_importance_df = pd.DataFrame({
 			"feature": feature_encoded_lst,
-			"importance": np.round(importances, digits)  # round before assigning
+			"importance": np.round(importances, digits)
 		})
 		# sort by descending importance
-		feature_importance_df = feature_importance_df.sort_values(by="importance", ascending=False).reset_index(drop=True)
+		feature_importance_df = feature_importance_df.sort_values(by="importance",ascending=False).reset_index(drop=True)
 
+		# check compatibility between permutation importance (detected after argument parsing) and the number of repetitions (detected before argument parsing)
+		set_nrepeats = ('-nr' in sys.argv) or ('--nrepeats' in sys.argv)
+		if (PERMUTATIONIMPORTANCE is True) and (set_nrepeats is True):
+			message_compatibility_permutation_nrepeat = "The permutation importance was requested (i.e., " + str(PERMUTATIONIMPORTANCE) + ") and the number of repetitions was explicitly set (i.e., " + str(set_nrepeats) + ") to a specific value (i.e., " + str(NREPEATS) + ")"
+			print(message_compatibility_permutation_nrepeat)
+		elif (PERMUTATIONIMPORTANCE is True) and (set_nrepeats is False):
+			message_compatibility_permutation_nrepeat = "The permutation importance was requested (i.e., " + str(PERMUTATIONIMPORTANCE) + ") but the number of repetitions was not set (i.e., " + str(set_nrepeats) + "); the default value is therefore used (i.e., " + str(NREPEATS) + ")"
+			print(message_compatibility_permutation_nrepeat)
+		elif (PERMUTATIONIMPORTANCE is False) and (set_nrepeats is True):
+			message_compatibility_permutation_nrepeat = "The permutation importance was not requested (i.e., " + str(PERMUTATIONIMPORTANCE) + ") but the number of repetitions was set (i.e., " + str(set_nrepeats) + "); this setting is consequently ignored (i.e., " + str(NREPEATS) + ")"
+			print(message_compatibility_permutation_nrepeat)
+		elif (PERMUTATIONIMPORTANCE is False) and (set_nrepeats is False):
+			message_compatibility_permutation_nrepeat = "The permutation importance was not requested (i.e., " + str(PERMUTATIONIMPORTANCE) + ") and the number of repetitions was not set, as expected (i.e., " + str(set_nrepeats) + ")"
+			print(message_compatibility_permutation_nrepeat)
+
+		# fix nested parallelism issues for tree-based models so tqdm_joblib stays accurate
+		# set n_jobs on the *inner* estimator (Pipeline param prefix) instead of the Pipeline itself
+		if REGRESSOR in ['RF', 'GB']:
+			try:
+				best_model.set_params(model__n_jobs=1)  # enforce single-thread inference for inner estimator
+			except Exception:
+				if hasattr(best_model, "n_jobs"):
+					best_model.set_params(n_jobs=1)  # fallback if model__n_jobs is not available (non-pipeline case)
 		# compute permutation importance only if explicitly requested
 		# use tqdm.auto rather than tqdm library because it automatically chooses the best display format (terminal, notebook, etc.)
 		# use a tqdm progress bar from the tqdm_joblib library (compatible with permutation_importance using joblib parallelism)
-		# use a tqdm progress bar immediately after the last print (position=0), disable the additional bar after completion (leave=False), and allow for dynamic resizing (dynamic_ncols=True)
-		# force permutation_importance to use the threading backend to avoid the DeprecationWarning from fork and ChildProcessError from the loky backend (default in joblib)
-		# threading is slower than loky, but it allows using a progress bar with joblib and avoids the DeprecationWarning and ChildProcessError
+		# use threading backend to avoid DeprecationWarning from fork and ChildProcessError from the loky backend
+		# threading is slightly slower but ensures smooth tqdm display and avoids nested multiprocessing issues
 		if PERMUTATIONIMPORTANCE is True:
 			try:
-				# compute the total number of permutations to estimate progress: each feature will be shuffled 'n_repeats' times
-				n_repeats = 10  # default number of permutations per feature
+				# compute total number of permutations to estimate progress: one job per feature
 				n_features = X_train_encoded_float32.shape[1]
-				permutation_total = n_features  # not n_features * n_repeats to make the bar correctly report based on actual joblib jobs
-				with tqa.tqdm(total=permutation_total, desc="Permutation importance progress", position=0, leave=False, dynamic_ncols=True) as progress_bar:
-					with jl.parallel_backend('threading', n_jobs=JOBS):
-						with tqjl.tqdm_joblib(progress_bar):
-							permutation_result = permutation_importance(
-								best_model,                     # can be a full pipeline or a standalone estimator
-								X_train_encoded_float32,       # encoded features used for training
-								y_train_float32,               # target values
-								n_repeats=NREPEATS,           # number of repetitions per feature
-								random_state=42,               # ensure reproducibility
-								scoring='neg_root_mean_squared_error',  # scoring consistent with RMSE used in CV
-								n_jobs=JOBS                    # number of parallel jobs
-							)
-				# extract average permutation importance and its standard deviation
-				perm_importances = np.round(permutation_result.importances_mean, digits)
-				perm_std = np.round(permutation_result.importances_std, digits)
-				# handle any shape mismatch between importance scores and recovered feature names
-				if len(perm_importances) != len(feature_encoded_lst):
-					min_len = min(len(perm_importances), len(feature_encoded_lst))
-					perm_importances = perm_importances[:min_len]
-					perm_std = perm_std[:min_len]
-					feature_encoded_lst = feature_encoded_lst[:min_len]
-				# construct the final DataFrame containing mean and std of permutation importance
+				permutation_total = n_features
+				# handle GradientBoostingRegressor separately (no tqdm, no parallelism)
+				if REGRESSOR == 'GB':
+					message_permutation = (
+						"Permutation importance for GradientBoostingRegressor (GB) is being computed without tqdm progress bars and parallel joblib to ensure stability"
+					)
+					print(message_permutation)
+					# compute permutation importance safely in single-thread mode
+					permutation_train = permutation_importance(
+						best_model,
+						X_train_encoded_float32,
+						y_train_float32,
+						n_repeats=NREPEATS,
+						random_state=42, # fixed seed to make permutation shuffling reproducible across runs
+						scoring='neg_root_mean_squared_error',
+						n_jobs=1
+					)
+					permutation_test = permutation_importance(
+						best_model,
+						X_test_encoded_float32,
+						y_test_float32,
+						n_repeats=NREPEATS,
+						random_state=42, # fixed seed to make permutation shuffling reproducible across runs
+						scoring='neg_root_mean_squared_error',
+						n_jobs=1
+					)
+				else:
+					# single-thread execution (JOBS = 1)
+					# tqdm_joblib does not update dynamically in single-threaded mode; run normally without progress bar
+					if JOBS == 1:
+						permutation_train = permutation_importance(
+							best_model,
+							X_train_encoded_float32,
+							y_train_float32,
+							n_repeats=NREPEATS,
+							random_state=42, # fixed seed to make permutation shuffling reproducible across runs
+							scoring='neg_root_mean_squared_error',
+							n_jobs=1
+						)
+						permutation_test = permutation_importance(
+							best_model,
+							X_test_encoded_float32,
+							y_test_float32,
+							n_repeats=NREPEATS,
+							random_state=42, # fixed seed to make permutation shuffling reproducible across runs
+							scoring='neg_root_mean_squared_error',
+							n_jobs=1
+						)
+					else:
+						# multi-threaded execution (JOBS > 1)
+						# tqdm_joblib correctly displays the progress bar using threading backend
+						# permutation importance on training dataset
+						with tqa.tqdm(
+							total=permutation_total,
+							desc="Permutation importance on the training dataset",
+							position=0,
+							leave=True,
+							dynamic_ncols=True,
+							mininterval=0.2
+						) as progress_bar:
+							with jl.parallel_backend('threading', n_jobs=JOBS):
+								with tqjl.tqdm_joblib(progress_bar):
+									with tpc.threadpool_limits(limits=1):  # prevent nested parallelism
+										with ctl.redirect_stdout(io.StringIO()), ctl.redirect_stderr(io.StringIO()):
+											permutation_train = permutation_importance(
+												best_model,
+												X_train_encoded_float32,
+												y_train_float32,
+												n_repeats=NREPEATS,
+												random_state=42, # fixed seed to make permutation shuffling reproducible across runs
+												scoring='neg_root_mean_squared_error',
+												n_jobs=JOBS
+											)
+						# permutation importance on testing dataset
+						with tqa.tqdm(
+							total=permutation_total,
+							desc="Permutation importance on the testing dataset",
+							position=0,
+							leave=True,
+							dynamic_ncols=True,
+							mininterval=0.2
+						) as progress_bar:
+							with jl.parallel_backend('threading', n_jobs=JOBS):
+								with tqjl.tqdm_joblib(progress_bar):
+									with tpc.threadpool_limits(limits=1):
+										with ctl.redirect_stdout(io.StringIO()), ctl.redirect_stderr(io.StringIO()):
+											permutation_test = permutation_importance(
+												best_model,
+												X_test_encoded_float32,
+												y_test_float32,
+												n_repeats=NREPEATS,
+												random_state=42, # fixed seed to make permutation shuffling reproducible across runs
+												scoring='neg_root_mean_squared_error',
+												n_jobs=JOBS
+											)
+
+				# extract average permutation importance and its standard deviation (train)
+				perm_train_mean = np.round(permutation_train.importances_mean, digits)
+				perm_train_std = np.round(permutation_train.importances_std, digits)
+				# extract average permutation importance and its standard deviation (test)
+				perm_test_mean = np.round(permutation_test.importances_mean, digits)
+				perm_test_std = np.round(permutation_test.importances_std, digits)
+				# handle potential shape mismatch between names and scores
+				min_len = min(len(feature_encoded_lst), len(perm_train_mean), len(perm_test_mean))
+				feature_encoded_lst = feature_encoded_lst[:min_len]
+				perm_train_mean = perm_train_mean[:min_len]
+				perm_train_std = perm_train_std[:min_len]
+				perm_test_mean = perm_test_mean[:min_len]
+				perm_test_std = perm_test_std[:min_len]
+				# combine permutation importances from training and testing
 				permutation_importance_df = pd.DataFrame({
 					'feature': feature_encoded_lst,
-					'permutation_importance_mean': perm_importances,
-					'permutation_importance_std': perm_std
-				}).sort_values(by="permutation_importance_mean", ascending=False).reset_index(drop=True)
+					'train_mean': perm_train_mean,
+					'train_std': perm_train_std,
+					'test_mean': perm_test_mean,
+					'test_std': perm_test_std
+				}).sort_values(by='train_mean', ascending=False).reset_index(drop=True)
 				# message to confirm success
 				message_permutation = (
-					"The permutation importance was successfully computed "
-					"using sklearn.inspection.permutation_importance"
+					"The permutation importance was successfully computed on both training and testing datasets"
 				)
 			except Exception as e:
 				# fallback in case of failure: return empty DataFrame and report error
@@ -1596,15 +1808,15 @@ def main():
 		else:
 			# if not requested, return empty DataFrame and skip computation
 			permutation_importance_df = pd.DataFrame()
-			message_permutation = "The permutation importance was not computed"
+			message_permutation = "T permutation importance was not computed"
 		# print a message
 		print(message_permutation)
 
 		# perform prediction
 		## from the training dataset
-		y_pred_train = best_model.predict(X_train_encoded)
+		y_pred_train = best_model.predict(X_train_encoded_float32)
 		## from the testing dataset
-		y_pred_test = best_model.predict(X_test_encoded)
+		y_pred_test = best_model.predict(X_test_encoded_float32)
 
 		# evaluate model
 		# root mean squared error (RMSE): square root of the mean of the squared differences between true and predicted values
@@ -1624,26 +1836,26 @@ def main():
 
 		## compute metrics
 		### RMSE
-		rmse_train = np.sqrt(mean_squared_error(y_train, y_pred_train))
-		rmse_test = np.sqrt(mean_squared_error(y_test, y_pred_test))
+		rmse_train = np.sqrt(mean_squared_error(y_train_float32, y_pred_train))
+		rmse_test = np.sqrt(mean_squared_error(y_test_float32, y_pred_test))
 		### MSE
-		mse_train = mean_squared_error(y_train, y_pred_train)
-		mse_test = mean_squared_error(y_test, y_pred_test)
+		mse_train = mean_squared_error(y_train_float32, y_pred_train)
+		mse_test = mean_squared_error(y_test_float32, y_pred_test)
 		### SMAPE
-		smape_train = smape(y_train, y_pred_train, threshold=1e-3)
-		smape_test = smape(y_test, y_pred_test, threshold=1e-3)
+		smape_train = smape(y_train_float32, y_pred_train, threshold=1e-3)
+		smape_test = smape(y_test_float32, y_pred_test, threshold=1e-3)
 		### MAPE
-		mape_train = mape(y_train, y_pred_train, threshold=1e-3)
-		mape_test = mape(y_test, y_pred_test, threshold=1e-3)
+		mape_train = mape(y_train_float32, y_pred_train, threshold=1e-3)
+		mape_test = mape(y_test_float32, y_pred_test, threshold=1e-3)
 		### MAE
-		mae_train = mean_absolute_error(y_train, y_pred_train)
-		mae_test = mean_absolute_error(y_test, y_pred_test)	
+		mae_train = mean_absolute_error(y_train_float32, y_pred_train)
+		mae_test = mean_absolute_error(y_test_float32, y_pred_test)	
 		### R2
-		r2_train = r2_score(y_train, y_pred_train)
-		r2_test = r2_score(y_test, y_pred_test)
+		r2_train = r2_score(y_train_float32, y_pred_train)
+		r2_test = r2_score(y_test_float32, y_pred_test)
 		### aR2
-		ar2_train = adjusted_r2(y_train, y_pred_train, n_features=X_train.shape[1])
-		ar2_test = adjusted_r2(y_test, y_pred_test, n_features=X_test.shape[1])
+		ar2_train = adjusted_r2(y_train_float32, y_pred_train, n_features=X_train.shape[1])
+		ar2_test = adjusted_r2(y_test_float32, y_pred_test, n_features=X_test.shape[1])
 
 		## combine in dataframes
 		## from the training dataset
@@ -1667,45 +1879,39 @@ def main():
 			'aR2': [round(ar2_test, digits)], 
 			})
 
-		# combine expectation and prediction from the training
-		## transform numpy.ndarray into pandas.core.frame.DataFrame
-		y_pred_train_df = pd.DataFrame(y_pred_train)
-		## retrieve the sample index in a column
-		y_train_df = y_train.reset_index().rename(columns={"index":"sample"})
-		## concatenate horizontally dataframes
+		# combine expectation and prediction from the training dataset
+		y_pred_train_df = pd.DataFrame(y_pred_train, columns=["prediction"])
+		y_train_df = pd.DataFrame({
+			"sample": train_sample_ids,
+			"expectation": y_train_float32
+		})
 		combined_train_df = pd.concat(
-			[y_train_df.reset_index(drop=True), 
-			y_pred_train_df.reset_index(drop=True)], 
-			axis=1, join="inner" # safeguards against accidental row misalignment down the line
-		) 
-		## rename labels of headers
-		combined_train_df.rename(columns={'phenotype': 'expectation'}, inplace=True)
-		combined_train_df.rename(columns={0: 'prediction'}, inplace=True)
+			[y_train_df.reset_index(drop=True),
+			y_pred_train_df.reset_index(drop=True)],
+			axis=1, join="inner"
+		)
 
-		# combine expectation and prediction from the testing
-		## transform numpy.ndarray into pandas.core.frame.DataFrame
-		y_pred_test_df = pd.DataFrame(y_pred_test)
-		## retrieve the sample index in a column
-		y_test_df = y_test.reset_index().rename(columns={"index":"sample"})
-		## concatenate horizontally dataframes
+		# combine expectation and prediction from the testing dataset
+		y_pred_test_df = pd.DataFrame(y_pred_test, columns=["prediction"])
+		y_test_df = pd.DataFrame({
+			"sample": test_sample_ids,
+			"expectation": y_test_float32
+		})
 		combined_test_df = pd.concat(
-			[y_test_df.reset_index(drop=True), 
-			y_pred_test_df.reset_index(drop=True)], 
-			axis=1, join="inner" # safeguards against accidental row misalignment down the line
-		) 
-		## rename labels of headers
-		combined_test_df.rename(columns={'phenotype': 'expectation'}, inplace=True)
-		combined_test_df.rename(columns={0: 'prediction'}, inplace=True)
+			[y_test_df.reset_index(drop=True),
+			y_pred_test_df.reset_index(drop=True)],
+			axis=1, join="inner"
+		)
 
 		# retrieve only prediction intervals using a custom ResidualQuantileWrapper independantly of mapie 0.9.2 to be able to manage only one sample
 		## instantiate the residual quantile wrapper with the best trained model and the desired alpha level
 		res_wrapper = ResidualQuantileWrapper(estimator=best_model, alpha=ALPHA)
 		## fit the wrapper: trains the underlying model and calculates residual quantile for prediction intervals
-		res_wrapper.fit(X_train_encoded, y_train_float32)
+		res_wrapper.fit(X_train_encoded_float32, y_train_float32)
 		## predict on training data, returning both point predictions and prediction intervals
-		y_pred_train_res_wrapper, y_intervals_train = res_wrapper.predict(X_train_encoded, return_prediction_interval=True)
+		y_pred_train_res_wrapper, y_intervals_train = res_wrapper.predict(X_train_encoded_float32, return_prediction_interval=True)
 		## predict on testing data, returning both point predictions and prediction intervals
-		y_pred_test_res_wrapper, y_intervals_test = res_wrapper.predict(X_test_encoded, return_prediction_interval=True)
+		y_pred_test_res_wrapper, y_intervals_test = res_wrapper.predict(X_test_encoded_float32, return_prediction_interval=True)
 		## convert the numpy array of prediction intervals on training data into a pandas DataFrame
 		## columns are named 'lower' and 'upper' for interval bounds
 		y_intervals_train_df = pd.DataFrame(y_intervals_train, columns=["lower", "upper"])
@@ -1715,7 +1921,7 @@ def main():
 		message_alpha = (
 			"The prediction intervals (i.e., "
 			+ str(round((1 - ALPHA) * 100, 1))
-			+ "%) were calculated using ResidualQuantileWrapper with α = "
+			+ "%) were calculated using ResidualQuantileWrapper with alpha = "
 			+ str(ALPHA)
 		)
 		print(message_alpha)
@@ -1736,12 +1942,12 @@ def main():
 		# round digits of a dataframe avoid SettingWithCopyWarning with .copy()
 		## from the training dataset
 		combined_train_df = combined_train_df.copy()
-		numeric_cols_combined_train = combined_train_df.select_dtypes(include='number').columns
-		combined_train_df[numeric_cols_combined_train] = combined_train_df[numeric_cols_combined_train].round(digits)
+		numeric_cols = combined_train_df.select_dtypes(include='number').columns
+		combined_train_df[numeric_cols] = combined_train_df[numeric_cols].astype(float).round(digits)
 		## from the testing dataset
 		combined_test_df = combined_test_df.copy()
-		numeric_cols_combined_test = combined_test_df.select_dtypes(include='number').columns
-		combined_test_df[numeric_cols_combined_test] = combined_test_df[numeric_cols_combined_test].round(digits)
+		numeric_cols = combined_test_df.select_dtypes(include='number').columns
+		combined_test_df[numeric_cols] = combined_test_df[numeric_cols].astype(float).round(digits)
 
 		# build a clean phenotype/dataset file to reuse later
 		## keep only sample identifiers and the true phenotype value
@@ -1816,28 +2022,27 @@ def main():
 			pi.dump(encoder, file)
 		## save the calibration features
 		with open(outpath_calibration_features, 'wb') as file:
-			pi.dump(X_train_encoded, file)
+			pi.dump(X_train_encoded_float32, file)
 		## save the calibration targets
 		with open(outpath_calibration_targets, 'wb') as file:
-			pi.dump(y_train, file)
+			pi.dump(y_train_float32, file)
 		## save the model
 		with open(outpath_model, 'wb') as file:
 			pi.dump(best_model, file)
 		## write output in a txt file
 		log_file = open(outpath_log, "w")
-		log_file.writelines(["########################\n####### context  #######\n########################\n"])
+		log_file.writelines(["###########################\n######### context #########\n###########################\n"])
 		print(context, file=log_file)
-		log_file.writelines(["########################\n###### reference  ######\n########################\n"])
+		log_file.writelines(["###########################\n######## reference ########\n###########################\n"])
 		print(reference, file=log_file)
-		log_file.writelines(["########################\n##### repositories #####\n########################\n"])
+		log_file.writelines(["###########################\n###### repositories  ######\n###########################\n"])
 		print(parser.epilog, file=log_file)
-		log_file.writelines(["########################\n### acknowledgements ###\n########################\n"])
+		log_file.writelines(["###########################\n#### acknowledgements  ####\n###########################\n"])
 		print(acknowledgements, file=log_file)
-		log_file.writelines(["########################\n####### versions #######\n########################\n"])
+		log_file.writelines(["###########################\n######## versions  ########\n###########################\n"])
 		log_file.writelines("GenomicBasedRegression: " + __version__ + " (released in " + __release__ + ")" + "\n")
 		log_file.writelines("python: " + str(sys.version_info[0]) + "." + str(sys.version_info[1]) + "\n")
 		log_file.writelines("argparse: " + str(ap.__version__) + "\n")
-		log_file.writelines("boruta: " + str(im.version("boruta")) + "\n")
 		log_file.writelines("catboost: " + str(cb.__version__) + "\n")
 		log_file.writelines("joblib: " + str(jl.__version__) + "\n")
 		log_file.writelines("lightgbm: " + str(lgbm.__version__) + "\n")
@@ -1850,15 +2055,16 @@ def main():
 		log_file.writelines("tqdm: " + str(tq.__version__) + "\n")
 		log_file.writelines("tqdm-joblib: " + str(im.version("tqdm-joblib")) + "\n")	
 		log_file.writelines("xgboost: " + str(xgb.__version__) + "\n")
-		log_file.writelines(["########################\n####### arguments ######\n########################\n"])
+		log_file.writelines(["###########################\n######## arguments  #######\n###########################\n"])
 		for key, value in vars(args).items():
 			log_file.write(f"{key}: {value}\n")
-		log_file.writelines(["########################\n######## checks ########\n########################\n"])
-		log_file.writelines(message_warnings + "\n")
+		log_file.writelines(["###########################\n######### checks  #########\n###########################\n"])
 		log_file.writelines(message_traceback + "\n")
+		log_file.writelines(message_warnings + "\n")
 		log_file.writelines(message_versions + "\n")
 		log_file.writelines(message_subcommand + "\n")
 		log_file.writelines(message_limit + "\n")
+		log_file.writelines(message_phenotype_numeric + "\n")
 		log_file.writelines(message_input_mutations + "\n")
 		log_file.writelines(message_input_phenotypes + "\n")
 		log_file.writelines(message_missing_phenotypes + "\n")
@@ -1871,20 +2077,25 @@ def main():
 		log_file.writelines(message_count_samples + "\n")
 		log_file.writelines(message_missing_features + "\n")
 		log_file.writelines(message_extra_features + "\n")
+		log_file.writelines(message_assert_encoded_features + "\n")
+		log_file.writelines(message_column_order + "\n")
 		log_file.writelines(message_ohe_features + "\n")
 		log_file.writelines(message_feature_selection + "\n")
 		log_file.writelines(message_regressor + "\n")
 		log_file.writelines(message_pipeline + "\n")
 		log_file.writelines(message_parameters + "\n")
 		log_file.writelines(message_metrics_cv + "\n")
+		log_file.writelines(message_parallelization + "\n")
 		log_file.writelines(message_best_parameters + "\n")
 		log_file.writelines(message_best_score + "\n")
 		log_file.writelines(message_selected_features + "\n")
 		log_file.writelines(message_importance_encoded_feature_names + "\n")
 		log_file.writelines(message_importance_count + "\n")
+		log_file.writelines(message_compatibility_permutation_nrepeat + "\n")
+		log_file.writelines(message_permutation + "\n")
 		log_file.writelines(message_alpha + "\n")
 		log_file.writelines(message_output_directory + "\n")
-		log_file.writelines(["########################\n###### execution #######\n########################\n"])
+		log_file.writelines(["###########################\n####### execution  ########\n###########################\n"])
 		log_file.writelines("The script started on " + str(step1_start) + "\n")
 		log_file.writelines("The script stoped on " + str(step1_end) + "\n")
 		total_secs = step1_diff.total_seconds() # store total seconds before modification
@@ -1897,7 +2108,7 @@ def main():
 			int(days), int(hrs), int(mins), secs, round(total_secs, 2)
 		)
 		log_file.writelines(message_duration + "\n")
-		log_file.writelines(["########################\n##### output files #####\n########################\n"])
+		log_file.writelines(["###########################\n###### output  files ######\n###########################\n"])
 		log_file.writelines(outpath_features + "\n")
 		log_file.writelines(outpath_feature_encoder + "\n")
 		log_file.writelines(outpath_calibration_features + "\n")
@@ -1913,7 +2124,19 @@ def main():
 		log_file.writelines( outpath_test+ "\n")
 		log_file.writelines(outpath_phenotype_dataset + "\n")
 		log_file.writelines(outpath_log + "\n")
-		log_file.writelines(["########################\n# performance  metrics #\n########################\n"])
+		log_file.writelines(["###########################\n### feature  importance ###\n###########################\n"])
+		print(feature_importance_df.head(20).to_string(index=False), file=log_file)
+		log_file.writelines(f"Note: Up to 20 results are displayed in the log for monitoring purposes, while the full set of results is available in the output files. \n")
+		log_file.writelines(f"Note: NaN placeholder in case no native or detectable feature importance is available. \n")
+		log_file.writelines(f"Note: Boosting models, especially Histogram-based Gradient Boosting (HGB), may yield all-zero feature importances when no meaningful split gains are computed—typically due to strong regularization, shallow trees, or low feature variability. \n")
+		log_file.writelines(["###########################\n# permutation  importance #\n###########################\n"])
+		if PERMUTATIONIMPORTANCE is True:
+			print(permutation_importance_df.head(20).to_string(index=False), file=log_file)
+			log_file.writelines(f"Note: Up to 20 results are displayed in the log for monitoring purposes, while the full set of results is available in the output files. \n")
+			log_file.writelines(f"Note: Positive permutation importance values indicate features that contribute positively to the model’s performance, while negative values suggest features that degrade performance when included. \n")
+		else:
+			log_file.writelines(f"Note: Permutation importance was not requested. \n")
+		log_file.writelines(["###########################\n### performance metrics ###\n###########################\n"])
 		log_file.writelines(f"from the training dataset: \n")
 		print(metrics_global_train_df.to_string(index=False), file=log_file)
 		log_file.writelines(f"from the testing dataset: \n")
@@ -1923,11 +2146,11 @@ def main():
 		log_file.writelines(f"Note: MAPE stands for mean absolute percentage error. \n")
 		log_file.writelines(f"Note: MAE stands for mean absolute error. \n")
 		log_file.writelines(f"Note: R2 stands for R-squared. \n")
-		log_file.writelines(["########################\n### training dataset ###\n########################\n"])
+		log_file.writelines(["###########################\n#### training  dataset ####\n###########################\n"])
 		print(combined_train_df.head(20).to_string(index=False), file=log_file)
 		log_file.writelines(f"Note: Up to 20 results are displayed in the log for monitoring purposes, while the full set of results is available in the output files. \n")
 		log_file.writelines(f"Note: Lower and upper correspond to the range of the prediction intervals. \n")
-		log_file.writelines(["########################\n### testing  dataset ###\n########################\n"])
+		log_file.writelines(["###########################\n##### testing dataset #####\n###########################\n"])
 		print(combined_test_df.head(20).to_string(index=False), file=log_file)
 		log_file.writelines(f"Note: Up to 20 results are displayed in the log for monitoring purposes, while the full set of results is available in the output files. \n")
 		log_file.writelines(f"Note: Lower and upper correspond to the range of the prediction intervals. \n")
@@ -2001,6 +2224,15 @@ def main():
 		X_features_str = X_mutations[features].astype(str)
 		## apply the trained OneHotEncoder to the selected input features
 		X_mutations_encoded = feature_encoder.transform(X_features_str)
+		## assert identical encoded features between training and prediction datasets
+		training_encoded_features = list(feature_encoder.get_feature_names_out())
+		prediction_encoded_features = list(X_mutations_encoded.columns)
+		if training_encoded_features != prediction_encoded_features:
+			message_assert_encoded_features = "The encoded features between training and prediction datasets do not match"
+			raise AssertionError(message_assert_encoded_features)
+		else:
+			message_assert_encoded_features = "The encoded features between training and prediction datasets were confirmed as identical"
+			print(message_assert_encoded_features)
 
 		# count features for diagnostics
 		## count the number of raw categorical features before one-hot encoding
@@ -2016,13 +2248,36 @@ def main():
 		message_selected_features = "The pipeline expected " + str(selected_features_int) + " one-hot encoded features to perform prediction"
 		print(message_selected_features)
 
-		# detect the loaded model and perform prediction
-		## detect the loaded model
-		detected_model = loaded_model.__class__.__name__
-		## print a message
-		message_detected_model = "The pipeline components of the provided best model were properly recognized: " + re.sub(r'\s+', ' ', str(loaded_model)).strip()
+		# detect regressor type even if wrapped in a Pipeline
+		if hasattr(loaded_model, 'named_steps') and 'model' in loaded_model.named_steps:
+			final_estimator = loaded_model.named_steps['model']
+		else:
+			final_estimator = loaded_model
+		detected_model = final_estimator.__class__.__name__
+
+		# print a message about pipeline components
+		message_detected_model = (
+			"The pipeline components of the provided best model were properly recognized: " + re.sub(r'\s+', ' ', str(loaded_model)).strip())
 		print(message_detected_model)
-		## perform prediction
+
+		# determine expected feature order from the trained pipeline
+		if hasattr(loaded_model, "feature_names_in_"):
+			# the pipeline itself remembers training feature names (since sklearn 1.0+)
+			expected_features = list(loaded_model.feature_names_in_)
+		elif hasattr(loaded_model, "named_steps") and "feature_selection" in loaded_model.named_steps:
+			# use the input feature names stored in the selector (without validation)
+			expected_features = getattr(
+				loaded_model.named_steps["feature_selection"], "feature_names_in_", X_mutations_encoded.columns
+			)
+		else:
+			# fallback to whatever is available
+			expected_features = X_mutations_encoded.columns
+		# align prediction matrix to expected feature names and order
+		X_mutations_encoded = X_mutations_encoded.reindex(columns=expected_features, fill_value=0)
+		message_prediction_alignment = ("The one-hot encoded prediction matrix was reindexed and aligned to match the exact feature names and order expected by the trained pipeline")
+		print(message_prediction_alignment)
+
+		# perform prediction
 		y_pred_mutations = loaded_model.predict(X_mutations_encoded)
 
 		# prepare output results
@@ -2056,7 +2311,7 @@ def main():
 			columns=["lower", "upper"]
 		)
 		## print a message
-		message_alpha = "The prediction intervals (i.e., " + str(((1-ALPHA)*100)) + "%) were calculated using a significance level of α = " + str(ALPHA)
+		message_alpha = "The prediction intervals (i.e., " + str(((1-ALPHA)*100)) + "%) were calculated using a significance level of alpha = " + str(ALPHA)
 		print(message_alpha)
 		## concatenate intervals with predictions
 		combined_mutations_df = pd.concat(
@@ -2067,8 +2322,8 @@ def main():
 
 		# round digits of a dataframe avoid SettingWithCopyWarning with .copy()
 		combined_mutations_df = combined_mutations_df.copy()
-		numeric_cols_combined_mutations = combined_mutations_df.select_dtypes(include='number').columns
-		combined_mutations_df[numeric_cols_combined_mutations] = combined_mutations_df[numeric_cols_combined_mutations].round(digits)
+		numeric_cols = combined_mutations_df.select_dtypes(include='number').columns
+		combined_mutations_df[numeric_cols] = combined_mutations_df[numeric_cols].astype(float).round(digits)
 
 		# check if the output directory does not exists and make it
 		if not os.path.exists(OUTPUTPATH):
@@ -2091,19 +2346,18 @@ def main():
 		combined_mutations_df.to_csv(outpath_prediction, sep="\t", index=False, header=True)
 		## write output in a txt file
 		log_file = open(outpath_log, "w")
-		log_file.writelines(["########################\n####### context  #######\n########################\n"])
+		log_file.writelines(["###########################\n######### context #########\n###########################\n"])
 		print(context, file=log_file)
-		log_file.writelines(["########################\n###### reference  ######\n########################\n"])
+		log_file.writelines(["###########################\n######## reference ########\n###########################\n"])
 		print(reference, file=log_file)
-		log_file.writelines(["########################\n##### repositories #####\n########################\n"])
+		log_file.writelines(["###########################\n###### repositories  ######\n###########################\n"])
 		print(parser.epilog, file=log_file)
-		log_file.writelines(["########################\n### acknowledgements ###\n########################\n"])
+		log_file.writelines(["###########################\n#### acknowledgements  ####\n###########################\n"])
 		print(acknowledgements, file=log_file)
-		log_file.writelines(["########################\n####### versions #######\n########################\n"])
+		log_file.writelines(["###########################\n######## versions  ########\n###########################\n"])
 		log_file.writelines("GenomicBasedRegression: " + __version__ + " (released in " + __release__ + ")" + "\n")
 		log_file.writelines("python: " + str(sys.version_info[0]) + "." + str(sys.version_info[1]) + "\n")
 		log_file.writelines("argparse: " + str(ap.__version__) + "\n")
-		log_file.writelines("boruta: " + str(im.version("boruta")) + "\n")
 		log_file.writelines("catboost: " + str(cb.__version__) + "\n")
 		log_file.writelines("joblib: " + str(jl.__version__) + "\n")
 		log_file.writelines("lightgbm: " + str(lgbm.__version__) + "\n")
@@ -2116,23 +2370,25 @@ def main():
 		log_file.writelines("tqdm: " + str(tq.__version__) + "\n")
 		log_file.writelines("tqdm-joblib: " + str(im.version("tqdm-joblib")) + "\n")	
 		log_file.writelines("xgboost: " + str(xgb.__version__) + "\n")
-		log_file.writelines(["########################\n####### arguments ######\n########################\n"])
+		log_file.writelines(["###########################\n######## arguments  #######\n###########################\n"])
 		for key, value in vars(args).items():
 			log_file.write(f"{key}: {value}\n")
-		log_file.writelines(["########################\n######## checks ########\n########################\n"])
-		log_file.writelines(message_warnings + "\n")
+		log_file.writelines(["###########################\n######### checks  #########\n###########################\n"])
 		log_file.writelines(message_traceback + "\n")
+		log_file.writelines(message_warnings + "\n")
 		log_file.writelines(message_versions + "\n")
 		log_file.writelines(message_subcommand + "\n")
 		log_file.writelines(message_input_mutations + "\n")
 		log_file.writelines(message_missing_features + "\n")
 		log_file.writelines(message_extra_features + "\n")
+		log_file.writelines(message_assert_encoded_features + "\n")
 		log_file.writelines(message_ohe_features + "\n")
 		log_file.writelines(message_selected_features + "\n")
 		log_file.writelines(message_detected_model + "\n")
+		log_file.writelines(message_prediction_alignment + "\n")
 		log_file.writelines(message_alpha + "\n")
 		log_file.writelines(message_output_directory + "\n")
-		log_file.writelines(["########################\n###### execution #######\n########################\n"])
+		log_file.writelines(["###########################\n####### execution  ########\n###########################\n"])
 		log_file.writelines("The script started on " + str(step1_start) + "\n")
 		log_file.writelines("The script stoped on " + str(step1_end) + "\n")
 		total_secs = step1_diff.total_seconds() # store total seconds before modification
@@ -2145,10 +2401,10 @@ def main():
 			int(days), int(hrs), int(mins), secs, round(total_secs, 2)
 		)
 		log_file.writelines(message_duration + "\n")
-		log_file.writelines(["########################\n##### output files #####\n########################\n"])
+		log_file.writelines(["###########################\n###### output  files ######\n###########################\n"])
 		log_file.writelines(outpath_prediction + "\n")
 		log_file.writelines(outpath_log + "\n")
-		log_file.writelines(["########################\n## prediction dataset ##\n########################\n"])
+		log_file.writelines(["###########################\n### prediction  dataset ###\n###########################\n"])
 		print(combined_mutations_df.head(20).to_string(index=False), file=log_file)
 		log_file.writelines(f"Note: Up to 20 results are displayed in the log for monitoring purposes, while the full set of results is available in the output files. \n")
 		log_file.writelines(f"Lower and upper correspond to the range of the prediction intervals. \n")

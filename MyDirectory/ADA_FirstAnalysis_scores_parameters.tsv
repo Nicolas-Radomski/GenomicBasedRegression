@@ -1,0 +1,19 @@
+scores	parameters
+-4.6636832994677775	'model__learning_rate': 0.2, 'model__loss': 'square', 'model__n_estimators': 50, 'model__random_state': 42
+-4.687757662751439	'model__learning_rate': 0.1, 'model__loss': 'square', 'model__n_estimators': 100, 'model__random_state': 42
+-4.694437555940754	'model__learning_rate': 0.05, 'model__loss': 'square', 'model__n_estimators': 200, 'model__random_state': 42
+-4.7322513057515465	'model__learning_rate': 0.1, 'model__loss': 'square', 'model__n_estimators': 200, 'model__random_state': 42
+-4.761507455267562	'model__learning_rate': 0.2, 'model__loss': 'square', 'model__n_estimators': 100, 'model__random_state': 42
+-4.778148789036143	'model__learning_rate': 0.05, 'model__loss': 'square', 'model__n_estimators': 100, 'model__random_state': 42
+-4.805100638909622	'model__learning_rate': 0.2, 'model__loss': 'square', 'model__n_estimators': 200, 'model__random_state': 42
+-4.917291054701012	'model__learning_rate': 0.1, 'model__loss': 'linear', 'model__n_estimators': 100, 'model__random_state': 42
+-4.920348012590216	'model__learning_rate': 0.1, 'model__loss': 'square', 'model__n_estimators': 50, 'model__random_state': 42
+-4.923252144186073	'model__learning_rate': 0.1, 'model__loss': 'linear', 'model__n_estimators': 200, 'model__random_state': 42
+-5.041422956881236	'model__learning_rate': 0.2, 'model__loss': 'linear', 'model__n_estimators': 100, 'model__random_state': 42
+-5.041422956881236	'model__learning_rate': 0.2, 'model__loss': 'linear', 'model__n_estimators': 200, 'model__random_state': 42
+-5.0478813301249374	'model__learning_rate': 0.05, 'model__loss': 'linear', 'model__n_estimators': 200, 'model__random_state': 42
+-5.067709820456412	'model__learning_rate': 0.05, 'model__loss': 'linear', 'model__n_estimators': 100, 'model__random_state': 42
+-5.0889996899414465	'model__learning_rate': 0.2, 'model__loss': 'linear', 'model__n_estimators': 50, 'model__random_state': 42
+-5.1594404772051465	'model__learning_rate': 0.1, 'model__loss': 'linear', 'model__n_estimators': 50, 'model__random_state': 42
+-5.22203664062967	'model__learning_rate': 0.05, 'model__loss': 'square', 'model__n_estimators': 50, 'model__random_state': 42
+-5.248751761250956	'model__learning_rate': 0.05, 'model__loss': 'linear', 'model__n_estimators': 50, 'model__random_state': 42

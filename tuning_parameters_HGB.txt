@@ -3,8 +3,8 @@
 
 # --- Feature selection (SelectKBest) ---
 # used only to modify selected SKB behavior
-#'feature_selection__k': [25, 50], # number of top features to keep
-#'feature_selection__score_func': [mutual_info_regression], # score function (avoid chi2 in a context of regression and f_regression it captures only linear dependancies)
+'feature_selection__k': [25, 50], # number of top features to keep
+'feature_selection__score_func': [mutual_info_regression], # score function (avoid chi2 in a context of regression and f_regression it captures only linear dependancies)
 
 # --- Feature selection (SelectFromModel with lasso) ---
 # used only to modify laSFM behavior
@@ -31,18 +31,9 @@
 #'feature_selection__estimator__n_estimators': [100], # number of trees
 #'feature_selection__estimator__max_depth': [10], # shallow trees for speed
 
-# --- Feature selection (Boruta) ---
-# used only to modify BO behavior
-'feature_selection__estimator__n_estimators': [5], # use a very small forest to reduce training time
-'feature_selection__estimator__max_depth': [2], # limit tree depth to make fitting faster
-'feature_selection__n_estimators': ['auto'], # use Boruta's default estimator parameter
-'feature_selection__max_iter': [5], # reduced number of iterations to speed up the selection process
-'feature_selection__perc': [90], # retain only the most important features (90th percentile)
-'feature_selection__two_step': [False], # disable the optional second refinement step to reduce computation
-
 # --- Model tuning (HistGradientBoostingRegressor) ---
 # used only to modify HistGradientBoostingRegressor behavior
-# simplified tuning used together with BO
+# simplified tuning used together with SKB
 'model__learning_rate': [0.05], # safer learning rate for generalization
 'model__max_iter': [100], # enough iterations for convergence
 'model__max_depth': [3], # shallow trees for speed and simplicity

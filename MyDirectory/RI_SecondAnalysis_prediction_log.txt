@@ -1,29 +1,28 @@
-########################
-####### context  #######
-########################
-The scikit-learn (sklearn)-based Python workflow independently supports both modeling (i.e., training and testing) and prediction (i.e., using a pre-built model), and implements 5 feature selection methods, 17 model regressors, hyperparameter tuning, performance metric computation, feature and permutation importance analyses, prediction interval estimation, execution monitoring via progress bars, and parallel processing.
-########################
-###### reference  ######
-########################
+###########################
+######### context #########
+###########################
+The scikit-learn (sklearn)-based Python workflow independently supports both modeling (i.e., training and testing) and prediction (i.e., using a pre-built model), and implements 4 feature selection methods, 19 model regressors, hyperparameter tuning, performance metric computation, feature and permutation importance analyses, prediction interval estimation, execution monitoring via progress bars, and parallel processing.
+###########################
+######## reference ########
+###########################
 An article might potentially be published in the future.
-########################
-##### repositories #####
-########################
+###########################
+###### repositories  ######
+###########################
 Please cite:
  GitHub (https://github.com/Nicolas-Radomski/GenomicBasedRegression),
  Docker Hub (https://hub.docker.com/r/nicolasradomski/genomicbasedregression),
  and/or Anaconda Hub (https://anaconda.org/nicolasradomski/genomicbasedregression).
-########################
-### acknowledgements ###
-########################
+###########################
+#### acknowledgements  ####
+###########################
 Many thanks to Andrea De Ruvo, Adriano Di Pasquale and ChatGPT for the insightful discussions that helped improve the algorithm.
-########################
-####### versions #######
-########################
-GenomicBasedRegression: 1.1.0 (released in July 2025)
+###########################
+######## versions  ########
+###########################
+GenomicBasedRegression: 1.2.0 (released in November 2025)
 python: 3.12
 argparse: 1.1
-boruta: 0.4.3
 catboost: 1.2.8
 joblib: 1.5.1
 lightgbm: 4.6.0
@@ -36,9 +35,9 @@ sklearn: 1.5.2
 tqdm: 4.67.1
 tqdm-joblib: 0.0.4
 xgboost: 2.1.3
-########################
-####### arguments ######
-########################
+###########################
+######## arguments  #######
+###########################
 subcommand: prediction
 inputpath_mutations: genomic_profils_for_prediction.tsv
 inputpath_features: MyDirectory/RI_FirstAnalysis_features.obj
@@ -49,58 +48,61 @@ inputpath_model: MyDirectory/RI_FirstAnalysis_model.obj
 alpha: 0.05
 outputpath: MyDirectory
 prefix: RI_SecondAnalysis
-debug: 20
-warnings: True
+digits: 6
+debug: 0
+warnings: False
 nocheck: False
-########################
-######## checks ########
-########################
-The warnings were not ignored
-The traceback level was set to 20
+###########################
+######### checks  #########
+###########################
+The traceback level was set to 0
+The warnings were ignored
 The recommended versions of Python and packages were properly controlled
 The prediction subcommand was used
 The minimum required number of samples in the dataset (i.e., >= 1) and the expected number of columns (i.e., >= 3) in the input file of mutations were properly controlled (i.e., 20 and 12, respectively)
 The input tested mutations include all features required by the trained one-hot encoder
 The following unexpected features in the input tested mutations will be ignored for one-hot encoding: ['Locus_11']
-The 10 provided features were one-hot encoded into 80 encoded features
+The encoded features between training and prediction datasets were confirmed as identical
+The 10 provided features were one-hot encoded into 78 encoded features
 The pipeline expected 50 one-hot encoded features to perform prediction
-The pipeline components of the provided best model were properly recognized: Pipeline(steps=[('feature_selection', SelectKBest(k=50, score_func=<function mutual_info_regression at 0x7f3713318c20>)), ('model', Ridge(max_iter=1000, tol=1e-05))])
-The prediction intervals (i.e., 95.0%) were calculated using a significance level of α = 0.05
+The pipeline components of the provided best model were properly recognized: Pipeline(steps=[('feature_selection', SelectKBest(k=50, score_func=<function mutual_info_regression at 0x7fd6e40fc540>)), ('model', Ridge(max_iter=1000, tol=0.001))])
+The one-hot encoded prediction matrix was reindexed and aligned to match the exact feature names and order expected by the trained pipeline
+The prediction intervals (i.e., 95.0%) were calculated using a significance level of alpha = 0.05
 The output directory already existed
-########################
-###### execution #######
-########################
-The script started on 2025-07-04 10:57:16.606772
-The script stoped on 2025-07-04 10:57:16.631638
-The script lasted 0 days, 0 hrs, 0 mins and 0.02 secs (i.e., 0.02 secs in total)
-########################
-##### output files #####
-########################
+###########################
+####### execution  ########
+###########################
+The script started on 2025-11-19 10:24:50.729517
+The script stoped on 2025-11-19 10:24:50.756954
+The script lasted 0 days, 0 hrs, 0 mins and 0.03 secs (i.e., 0.03 secs in total)
+###########################
+###### output  files ######
+###########################
 MyDirectory/RI_SecondAnalysis_prediction.tsv
 MyDirectory/RI_SecondAnalysis_prediction_log.txt
-########################
-## prediction dataset ##
-########################
+###########################
+### prediction  dataset ###
+###########################
  sample  prediction     lower     upper
-S2.1.01   26.213749 17.707115 34.720384
-S2.1.02   26.718921 18.212287 35.225555
-S2.1.03   17.053748  8.547113 25.560382
-S2.1.04   42.006132 33.499498 50.512767
-S2.1.05   15.401901  6.895266 23.908535
-S2.1.06   16.375836  7.869201 24.882470
-S2.1.07   39.550062 31.043427 48.056696
-S2.1.08   16.336621  7.829986 24.843255
-S2.1.09   56.034940 47.528305 64.541574
-S2.1.10   46.665135 38.158501 55.171770
-S2.1.11   16.571352  8.064718 25.077987
-S2.1.12   46.186467 37.679832 54.693101
-S2.1.13   16.564106  8.057472 25.070741
-S2.1.14   13.085339  4.578704 21.591973
-S2.1.15    3.208173 -5.298462 11.714807
-S2.1.16   13.838184  5.331549 22.344818
-S2.1.17   14.323288  5.816653 22.829922
-S2.1.18    7.823824 -0.682811 16.330458
-S2.1.19    2.496183 -6.010452 11.002817
-S2.1.20    3.208173 -5.298462 11.714807
+S2.1.01   27.670190 19.117178 36.223202
+S2.1.02   26.915788 18.362776 35.468800
+S2.1.03   17.217471  8.664459 25.770482
+S2.1.04   44.551530 35.998519 53.104542
+S2.1.05   16.258272  7.705260 24.811284
+S2.1.06   16.138821  7.585809 24.691832
+S2.1.07   39.356462 30.803451 47.909474
+S2.1.08   15.779547  7.226535 24.332559
+S2.1.09   53.825948 45.272936 62.378959
+S2.1.10   47.281526 38.728515 55.834538
+S2.1.11   15.999340  7.446328 24.552352
+S2.1.12   48.406345 39.853334 56.959357
+S2.1.13   17.350217  8.797205 25.903229
+S2.1.14   13.814112  5.261100 22.367124
+S2.1.15    7.957324 -0.595687 16.510336
+S2.1.16   14.529414  5.976402 23.082426
+S2.1.17   14.052380  5.499368 22.605392
+S2.1.18    7.850258 -0.702754 16.403270
+S2.1.19    2.558492 -5.994520 11.111504
+S2.1.20    3.294062 -5.258950 11.847073
 Note: Up to 20 results are displayed in the log for monitoring purposes, while the full set of results is available in the output files. 
 Lower and upper correspond to the range of the prediction intervals. 
