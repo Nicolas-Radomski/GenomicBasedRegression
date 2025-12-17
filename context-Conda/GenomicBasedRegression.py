@@ -1,10 +1,10 @@
 # required librairies
-## pip3.12 install --force-reinstall catboost==1.2.8
 ## pip3.12 install --force-reinstall pandas==2.2.2
-## pip3.12 install --force-reinstall xgboost==2.1.3
-## pip3.12 install --force-reinstall lightgbm==4.6.0
 ## pip3.12 install --force-reinstall scipy==1.16.0
 ## pip3.12 install --force-reinstall scikit-learn==1.5.2
+## pip3.12 install --force-reinstall catboost==1.2.8
+## pip3.12 install --force-reinstall lightgbm==4.6.0
+## pip3.12 install --force-reinstall xgboost==2.1.3
 ## pip3.12 install --force-reinstall numpy==1.26.4
 ## pip3.12 install --force-reinstall joblib==1.5.1
 ## pip3.12 install --force-reinstall tqdm==4.67.1
@@ -23,11 +23,11 @@ python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_predictio
 ## with the enSFM feature selection and the DT model regressor
 python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x DT_FirstAnalysis -da manual -fs enSFM -r DT -k 5 -pa tuning_parameters_DT.txt -pi
 python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/DT_FirstAnalysis_features.obj -fe MyDirectory/DT_FirstAnalysis_feature_encoder.obj -cf MyDirectory/DT_FirstAnalysis_calibration_features.obj -ct MyDirectory/DT_FirstAnalysis_calibration_targets.obj -t MyDirectory/DT_FirstAnalysis_model.obj -o MyDirectory -x DT_SecondAnalysis
-## with the rfSFM feature selection and the EN model regressor
-python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x EN_FirstAnalysis -da manual -fs rfSFM -r EN -k 5 -pa tuning_parameters_EN.txt -pi
+## with the riSFM feature selection and the EN model regressor
+python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x EN_FirstAnalysis -da manual -fs riSFM -r EN -k 5 -pa tuning_parameters_EN.txt -pi
 python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/EN_FirstAnalysis_features.obj -fe MyDirectory/EN_FirstAnalysis_feature_encoder.obj -cf MyDirectory/EN_FirstAnalysis_calibration_features.obj -ct MyDirectory/EN_FirstAnalysis_calibration_targets.obj -t MyDirectory/EN_FirstAnalysis_model.obj -o MyDirectory -x EN_SecondAnalysis
-## with the SKB feature selection and the ET model regressor
-python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x ET_FirstAnalysis -da manual -fs SKB -r ET -k 5 -pa tuning_parameters_ET.txt -pi
+## with the rfSFM feature selection and the ET model regressor
+python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x ET_FirstAnalysis -da manual -fs rfSFM -r ET -k 5 -pa tuning_parameters_ET.txt -pi
 python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/ET_FirstAnalysis_features.obj -fe MyDirectory/ET_FirstAnalysis_feature_encoder.obj -cf MyDirectory/ET_FirstAnalysis_calibration_features.obj -ct MyDirectory/ET_FirstAnalysis_calibration_targets.obj -t MyDirectory/ET_FirstAnalysis_model.obj -o MyDirectory -x ET_SecondAnalysis
 ## with the SKB feature selection and the GB model regressor
 python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x GB_FirstAnalysis -da manual -fs SKB -r GB -k 5 -pa tuning_parameters_GB.txt -pi
@@ -125,14 +125,14 @@ class SafeCatBoostRegressor(CatBoostRegressor):
 ## set workflow repositories
 repositories = 'Please cite:\n GitHub (https://github.com/Nicolas-Radomski/GenomicBasedRegression),\n Docker Hub (https://hub.docker.com/r/nicolasradomski/genomicbasedregression),\n and/or Anaconda Hub (https://anaconda.org/nicolasradomski/genomicbasedregression).'
 ## set the workflow context
-context = "The scikit-learn (sklearn)-based Python workflow independently supports both modeling (i.e., training and testing) and prediction (i.e., using a pre-built model), and implements 4 feature selection methods, 19 model regressors, hyperparameter tuning, performance metric computation, feature and permutation importance analyses, prediction interval estimation, execution monitoring via progress bars, and parallel processing."
+context = "The scikit-learn (sklearn)-based Python workflow independently supports both modeling (i.e., training and testing) and prediction (i.e., using a pre-built model), and implements 5 feature selection methods, 19 model regressors, hyperparameter tuning, performance metric computation, feature and permutation importance analyses, prediction interval estimation, execution monitoring via progress bars, and parallel processing."
 ## set the workflow reference
 reference = "An article might potentially be published in the future."
 ## set the acknowledgement
 acknowledgements = "Many thanks to Andrea De Ruvo, Adriano Di Pasquale and ChatGPT for the insightful discussions that helped improve the algorithm."
 ## set the version and release
-__version__ = "1.2.0"
-__release__ = "November 2025"
+__version__ = "1.3.0"
+__release__ = "December 2025"
 
 # set global sklearn config early
 set_config(transform_output="pandas")
@@ -194,31 +194,39 @@ def adjusted_r2(y_true, y_pred, n_features):
 
 def count_selected_features(pipeline, encoded_matrix):
 	"""
-	robust count of features the pipeline expects.
-	returns the number of columns reaching the final estimator.
-	handles both Pipeline objects and direct estimators.
+	robust count of features the pipeline expects
+	returns the number of columns reaching the final estimator
+	handles both Pipeline objects and direct estimators
 	"""
 	# ensure the object is a pipeline; wrap standalone estimators
 	if not hasattr(pipeline, "named_steps"):
 		pipeline = Pipeline([("model", pipeline)])
+	# ensure encoded_matrix preserves feature names
+	if not hasattr(encoded_matrix, "columns"):
+		raise ValueError(
+			"encoded_matrix must be a pandas DataFrame with feature names "
+			"to safely count selected features"
+		)
 	# check if a feature selection step exists
-	if 'feature_selection' in pipeline.named_steps:
-		fs = pipeline.named_steps['feature_selection']
-		if hasattr(fs, "support_") and fs.support_ is not None:
-			return int(np.sum(fs.support_))
-		else:
-			# fallback: apply transform to a single sample
+	if "feature_selection" in pipeline.named_steps:
+		fs = pipeline.named_steps["feature_selection"]
+		# support_ is the most reliable and warning-free indicator
+		if hasattr(fs, "get_support"):
 			try:
-				return fs.transform(encoded_matrix[:1]).shape[1]
+				support = fs.get_support()
+				return int(np.sum(support))
 			except Exception:
 				pass
+		# fallback: selector exists but does not expose support_
+		# assume no dimensionality reduction occurred
+		return int(encoded_matrix.shape[1])
 	# no explicit selector → check the estimator directly
-	est = pipeline.named_steps.get('model', pipeline)
+	est = pipeline.named_steps.get("model", pipeline)
+	# sklearn 1.3+ compatibility
 	n_feat = getattr(est, "n_features_in_", None)
-	# check alternative attribute for sklearn 1.3+ compatibility
 	if n_feat is None and hasattr(est, "feature_names_in_"):
 		n_feat = len(est.feature_names_in_)
-	# fallback: use encoded matrix width (e.g., CatBoost, XGB, HGB)
+	# CatBoost, XGB, HGB often hide n_features_in_
 	if n_feat is None or n_feat == 0:
 		n_feat = encoded_matrix.shape[1]
 	return int(n_feat)
@@ -560,7 +568,7 @@ def main():
 		action='store', 
 		required=False, 
 		default='None', 
-		help='Acronym of the feature selection method to use: SelectKBest (SKB), SelectFromModel with Lasso (laSFM), SelectFromModel with ElasticNet (enSFM), or SelectFromModel with Random Forest (rfSFM). These methods are suitable for high-dimensional binary or categorical-encoded features. [OPTIONAL, DEFAULT: None]'
+		help='Acronym of the regression-compatible feature selection method to use: SelectKBest (SKB), SelectFromModel with lasso (laSFM), SelectFromModel with elasticnet (enSFM), or SelectFromModel with ridge (riSFM), or SelectFromModel with random forest (rfSFM). These methods are suitable for high-dimensional binary or categorical-encoded features. [OPTIONAL, DEFAULT: None]'
 		)
 	parser_modeling.add_argument(
 		'-r', '--regressor', 
@@ -569,7 +577,7 @@ def main():
 		action='store', 
 		required=False, 
 		default='XGB', 
-		help='Acronym of the regressor to use among adaboost (ADA), bayesian bidge (BRI), catboost (CAT), decision tree (DT), elasticnet (EN), extra trees (ET), gradient boosting (GB), hist gradient boosting (HGB), huber (HU), k-nearest neighbors (KNN), lassa (LA), light gradient goosting machine (LGBM), multi-layer perceptron (MLP), nu support vector (NSV), polynomial (PN), ridge (RI), random forest (RF), support vector regressor (SVR) or extreme gradient boosting (XGB). [OPTIONAL, DEFAULT: XGB]'
+		help='Acronym of the regressor to use among adaboost (ADA), bayesian ridge (BRI), catboost (CAT), decision tree (DT), elasticnet (EN), extra trees (ET), gradient boosting (GB), histogram-based gradient boosting (HGB), huber (HU), k-nearest neighbors (KNN), lassa (LA), light gradient boosting machine (LGBM), multi-layer perceptron (MLP), nu support vector (NSV), polynomial (PN), ridge (RI), random forest (RF), support vector regressor (SVR) or extreme gradient boosting (XGB). [OPTIONAL, DEFAULT: XGB]'
 		)
 	parser_modeling.add_argument(
 		'-k', '--fold', 
@@ -641,7 +649,7 @@ def main():
 	parser_modeling.add_argument(
 		'-di', '--digits', 
 		dest='digits', 
-		type=restricted_int_digits, # control >= 1
+		type=restricted_int_digits, # control >= 0
 		action='store', 
 		required=False, 
 		default=6, 
@@ -650,11 +658,11 @@ def main():
 	parser_modeling.add_argument(
 		'-de', '--debug', 
 		dest='debug', 
-		type=restricted_debug_level, # control >= 1
+		type=restricted_debug_level, # control >= 0
 		action='store', 
 		required=False, 
 		default=0, 
-		help='Traceback level when an error occurs. (DEFAULT: 0)'
+		help='Traceback level when an error occurs. [OPTIONAL, DEFAULT: 0]'
 		)
 	parser_modeling.add_argument(
 		'-w', '--warnings', 
@@ -747,7 +755,7 @@ def main():
 	parser_prediction.add_argument(
 		'-di', '--digits', 
 		dest='digits', 
-		type=restricted_int_digits, # control >= 1
+		type=restricted_int_digits, # control >= 0
 		action='store', 
 		required=False, 
 		default=6, 
@@ -756,7 +764,7 @@ def main():
 	parser_prediction.add_argument(
 		'-de', '--debug', 
 		dest='debug', 
-		type=restricted_debug_level, # control >= 1
+		type=restricted_debug_level, # control >= 0
 		action='store', 
 		required=False, 
 		default=0, 
@@ -851,30 +859,28 @@ def main():
 		# control versions of packages
 		if ap.__version__ != "1.1":
 			raise Exception('argparse 1.1 (1.4.1) version is recommended')
-		if cb.__version__ != "1.2.8":
-			raise Exception('catboost 1.2.8 version is recommended')
-		if jl.__version__ != "1.5.1":
-			raise Exception('joblib 1.5.1 version is recommended')
-		if lgbm.__version__ != "4.6.0":
-			raise Exception("lightgbm 4.6.0 version is recommended")
-		if np.__version__ != "1.26.4":
-			raise Exception("numpy 1.26.4 version is recommended")
-		if pd.__version__ != "2.2.2":
-			raise Exception('pandas 2.2.2 version is recommended')
-		if pi.format_version != "4.0":
-			raise Exception('pickle 4.0 version is recommended')
-		if re.__version__ != "2.2.1":
-			raise Exception('re 2.2.1 version is recommended')
 		if sp.__version__ != "1.16.0":
 			raise Exception("scipy 1.16.0 version is recommended")
+		if pd.__version__ != "2.2.2":
+			raise Exception('pandas 2.2.2 version is recommended')
 		if sk.__version__ != "1.5.2":
 			raise Exception('sklearn 1.5.2 version is recommended')
+		if pi.format_version != "4.0":
+			raise Exception('pickle 4.0 version is recommended')
+		if cb.__version__ != "1.2.8":
+			raise Exception('catboost 1.2.8 version is recommended')
+		if lgbm.__version__ != "4.6.0":
+			raise Exception("lightgbm 4.6.0 version is recommended")
+		if xgb.__version__ != "2.1.3":
+			raise Exception("xgboost 2.1.3 version is recommended")
+		if np.__version__ != "1.26.4":
+			raise Exception("numpy 1.26.4 version is recommended")
+		if jl.__version__ != "1.5.1":
+			raise Exception('joblib 1.5.1 version is recommended')
 		if tq.__version__ != "4.67.1":
 			raise Exception('tqdm 4.67.1 version is recommended')
 		if im.version("tqdm-joblib") != "0.0.4":
-			raise Exception("btqdm-joblib 0.0.4 version is recommended")
-		if xgb.__version__ != "2.1.3":
-			raise Exception("xgboost 2.1.3 version is recommended")
+			raise Exception("tqdm-joblib 0.0.4 version is recommended")
 		message_versions = 'The recommended versions of Python and packages were properly controlled'
 	else:
 		message_versions = 'The recommended versions of Python and packages were not controlled'
@@ -1082,8 +1088,10 @@ def main():
 			df_training = df_all[df_all["dataset"] == "training"]
 			df_testing  = df_all[df_all["dataset"] == "testing"]
 			# build X and y dataframes for training/testing
+			## extract numerical genomic features and set sample identifiers as index
 			X_train = df_training.drop(columns=["phenotype", "dataset"]).set_index("sample")
 			y_train = df_training[["sample", "phenotype"]].set_index("sample")["phenotype"]
+			## extract phenotype as a clean 1-D Series indexed by sample
 			X_test  = df_testing .drop(columns=["phenotype", "dataset"]).set_index("sample")
 			y_test  = df_testing [ ["sample", "phenotype"]].set_index("sample")["phenotype"]
 
@@ -1174,7 +1182,7 @@ def main():
 		print(message_ohe_features)
 		
 		# prepare elements of the model
-		## initialize the feature selection method (regression-compatible and without tuning parameters: deterministic and repeatable)
+		## initialize the feature selection method (without tuning parameters: deterministic randomness (random_state=42) without repeatability for parallel nondeterminism (n_jobs=1 or thread_count=1))
 		if FEATURESELECTION == 'None':
 			message_feature_selection = "The provided feature selection method was properly recognized: None"
 			print(message_feature_selection)
@@ -1185,141 +1193,126 @@ def main():
 			selected_feature_selector = SelectKBest(
 				score_func=ft.partial(  # partial ensures deterministic behavior
 					mutual_info_regression, # captures linear + nonlinear dependencies; preferred over f_regression (linear only)
-					random_state=42 # reproducibility
+					random_state=42 # deterministic
 				),
 				k=10 # default top k features; user may override in the parameter file
 			)
 		elif FEATURESELECTION == 'laSFM':
 			message_feature_selection = "The provided feature selection method was properly recognized: SelectFromModel with Lasso (laSFM)"
 			print(message_feature_selection)
-			selector_model = Lasso(
-				random_state=42 # reproducibility
-			)
-			selected_feature_selector = SelectFromModel(
-				estimator=selector_model,
-				threshold=None # default threshold; user may override via 'max_features' and 'threshold': [-float('inf')]
-			)
+			selector_model = Lasso(random_state=42)
+			selected_feature_selector = SelectFromModel(estimator=selector_model, threshold=None)
 		elif FEATURESELECTION == 'enSFM':
 			message_feature_selection = "The provided feature selection method was properly recognized: SelectFromModel with ElasticNet (enSFM)"
 			print(message_feature_selection)
-			selector_model = ElasticNet(
-				random_state=42 # reproducibility
-			)
-			selected_feature_selector = SelectFromModel(
-				estimator=selector_model,
-				threshold=None
-			)
+			selector_model = ElasticNet(random_state=42)
+			selected_feature_selector = SelectFromModel(estimator=selector_model, threshold=None)
+		elif FEATURESELECTION == 'riSFM':
+			message_feature_selection = "The provided feature selection method was properly recognized: SelectFromModel with ridge (riSFM)"
+			print(message_feature_selection) 
+			# ridge regression does not produce exact zero coefficients; feature selection is therefore based on coefficient magnitude and should be interpreted as a soft, ranking-based filter
+			selector_model = Ridge(random_state=42)
+			selected_feature_selector = SelectFromModel(estimator=selector_model, threshold=None)
 		elif FEATURESELECTION == 'rfSFM':
 			message_feature_selection = "The provided feature selection method was properly recognized: SelectFromModel with Random Forest (rfSFM)"
 			print(message_feature_selection)
 			selector_model = RandomForestRegressor(
-				random_state=42, # reproducibility
-				n_jobs=1 # enforce single-thread determinism for consistent feature importances
+				random_state=42, # deterministic
+				bootstrap=False # disable bootstrapping to reduce random variability in feature importance computation
 			)
-			selected_feature_selector = SelectFromModel(
-				estimator=selector_model,
-				threshold=None
-			)
+			selected_feature_selector = SelectFromModel(estimator=selector_model, threshold=None)
 		else:
 			message_feature_selection = "The provided feature selection method is not implemented yet"
 			raise Exception(message_feature_selection)
-		## initialize the regressor (without tuning parameters: deterministic and repeatable if possible)
+		## initialize the regressor (without tuning parameters: deterministic randomness (random_state=42) without repeatability for parallel nondeterminism (n_jobs=1 or thread_count=1))
 		if REGRESSOR == 'ADA':
 			message_regressor = "The provided regressor was properly recognized: AdaBoost (ADA)"
 			print(message_regressor)
-			selected_regressor = AdaBoostRegressor(random_state=42)
+			selected_regressor = AdaBoostRegressor(random_state=42) # adaboost (ADA)
 		elif REGRESSOR == 'BRI':
 			message_regressor = "The provided regressor was properly recognized: bayesian ridge (BRI)"
 			print(message_regressor)
-			selected_regressor = BayesianRidge()
+			selected_regressor = BayesianRidge() # bayesian ridge (BRI)
 		elif REGRESSOR == 'CAT':
 			message_regressor = "The provided regressor was properly recognized: CatBoost (CAT)"
 			print(message_regressor)
 			# deterministic configuration for CatBoost
 			# - use random_seed (not random_state) to prevent synonym conflicts
-			# - thread_count=1 avoids nested parallelism with GridSearchCV
 			# - allow_writing_files=False disables CatBoost automatic file outputs
 			# - bootstrap_type='Bayesian' + random_strength=0 ensure reproducible splits
 			# - verbose=False keeps logs clean and avoids stdout clutter
 			selected_regressor = SafeCatBoostRegressor(
 				loss_function="RMSE", # default loss for regression
 				random_seed=42, # deterministic
-				thread_count=1, # avoid nested parallelism
 				verbose=False, # no stdout spam
 				allow_writing_files=False, # prevent auto logging files
 				bootstrap_type="Bayesian", # deterministic bootstrap
 				random_strength=0 # must be 0 for reproducibility
-			)
+			) # catboost (CAT)
 		elif REGRESSOR == 'DT':
 			message_regressor = "The provided regressor was properly recognized: decision tree (DT)"
 			print(message_regressor)
-			selected_regressor = DecisionTreeRegressor(random_state=42)
+			selected_regressor = DecisionTreeRegressor(random_state=42) # decision tree (DT)
 		elif REGRESSOR == 'EN':
 			message_regressor = "The provided regressor was properly recognized: elasticNet (EN)"
 			print(message_regressor)
-			selected_regressor = ElasticNet(random_state=42, selection='random')
+			selected_regressor = ElasticNet(random_state=42, selection='random') # elasticnet (EN)
 		elif REGRESSOR == 'ET':
 			message_regressor = "The provided regressor was properly recognized: extra trees (ET)"
 			print(message_regressor)
-			selected_regressor = ExtraTreesRegressor(
-				random_state=42, # deterministic
-				n_jobs=1 # avoid nested parallelism and ensure reproducible tree construction
-			)
+			selected_regressor = ExtraTreesRegressor(random_state=42) # extra trees (ET)
 		elif REGRESSOR == 'GB':
 			message_regressor = "The provided regressor was properly recognized: gradient boosting (GB)"
 			print(message_regressor)
-			selected_regressor = GradientBoostingRegressor(random_state=42)
+			selected_regressor = GradientBoostingRegressor(random_state=42) # gradient boosting (GB)
 		elif REGRESSOR == 'HGB':
-			message_regressor = "The provided regressor was properly recognized: hist gradient boosting (HGB)"
+			message_regressor = "The provided regressor was properly recognized: histogram-based gradient boosting (HGB)"
 			print(message_regressor)
-			selected_regressor = HistGradientBoostingRegressor(random_state=42)
+			selected_regressor = HistGradientBoostingRegressor(random_state=42) # histogram-based gradient boosting (HGB)
 		elif REGRESSOR == 'HU':
 			message_regressor = "The provided regressor was properly recognized: huber (HU)"
 			print(message_regressor)
-			selected_regressor = HuberRegressor()
+			selected_regressor = HuberRegressor() # huber (HU)
 		elif REGRESSOR == 'KNN':
 			message_regressor = "The provided regressor was properly recognized: k-nearest neighbors (KNN)"
 			print(message_regressor)
-			selected_regressor = KNeighborsRegressor()
+			selected_regressor = KNeighborsRegressor() # k-nearest neighbors (KNN)
 		elif REGRESSOR == 'LA':
 			message_regressor = "The provided regressor was properly recognized: lasso (LA)"
 			print(message_regressor)
-			selected_regressor = Lasso(random_state=42)
+			selected_regressor = Lasso(random_state=42) # lasso (LA)
 		elif REGRESSOR == 'LGBM':
-			message_regressor = "The provided regressor was properly recognized: Light Gradient Boosting Machine (LGBM)"
+			message_regressor = "The provided regressor was properly recognized: light gradient boosting machine (LGBM)"
 			print(message_regressor)
-			selected_regressor = lgbm.LGBMRegressor(random_state=42, verbose=-1)
+			selected_regressor = lgbm.LGBMRegressor(random_state=42, verbose=-1) # light gradient boosting machine (LGBM)
 		elif REGRESSOR == 'MLP':
 			message_regressor = "The provided regressor was properly recognized: multi-layer perceptron (MLP)"
 			print(message_regressor)
-			selected_regressor = MLPRegressor(random_state=42)
+			selected_regressor = MLPRegressor(random_state=42) # multi-layer perceptron (MLP)
 		elif REGRESSOR == 'NSV':
 			message_regressor = "The provided regressor was properly recognized: nu support vector (NSV)"
 			print(message_regressor)
-			selected_regressor = NuSVR()
+			selected_regressor = NuSVR() # nu support vector (NSV)
 		elif REGRESSOR == 'PN':
 			message_regressor = "The provided regressor was properly recognized: polynomial (PN)"
 			print(message_regressor)
-			selected_regressor = LinearRegression()
+			selected_regressor = LinearRegression() # polynomial (PN)
 		elif REGRESSOR == 'RI':
 			message_regressor = "The provided regressor was properly recognized: ridge (RI)"
 			print(message_regressor)
-			selected_regressor = Ridge()
+			selected_regressor = Ridge() # ridge (RI)
 		elif REGRESSOR == 'RF':
 			message_regressor = "The provided regressor was properly recognized: random forest (RF)"
 			print(message_regressor)
-			selected_regressor = RandomForestRegressor(
-				random_state=42, # deterministic
-				n_jobs=1 # avoid nested parallelism and ensure reproducible tree construction
-			)
+			selected_regressor = RandomForestRegressor(random_state=42) # random forest (RF)
 		elif REGRESSOR == 'SVR':
 			message_regressor = "The provided regressor was properly recognized: support vector regression (SVR)"
 			print(message_regressor)
-			selected_regressor = SVR()
+			selected_regressor = SVR() # support vector regression (SVR)
 		elif REGRESSOR == 'XGB':
 			message_regressor = "The provided regressor was properly recognized: extreme gradient boosting (XGB)"
 			print(message_regressor)
-			selected_regressor = xgb.XGBRegressor(objective='reg:squarederror', random_state=42)
+			selected_regressor = xgb.XGBRegressor(objective='reg:squarederror', random_state=42) # extreme gradient boosting (XGB)
 		else: 
 			message_regressor = "The provided regressor is not implemented yet"
 			raise Exception(message_regressor)
@@ -1328,7 +1321,7 @@ def main():
 		### create an empty list
 		steps = []
 		### add feature selection step if specified
-		if FEATURESELECTION in ['SKB', 'laSFM', 'rfSFM', 'enSFM']:
+		if FEATURESELECTION in ['SKB', 'laSFM', 'enSFM', 'riSFM', 'rfSFM']:
 			steps.append(('feature_selection', selected_feature_selector))
 		### add polynomial features if the regressor is polynomial
 		if REGRESSOR == 'PN': # use aggressive feature selection (laSFM or rfSFM) before polynomial expansion to get stable predictions
@@ -1381,20 +1374,21 @@ def main():
 		print(message_metrics_cv)
 
 		# ensure numeric compatibility (astype(np.float32)) with upstream encoding (sparse_output=False) and efficiency (float32 dtype), 
-		# especially for tree-based regressors (e.g., HistGradientBoostingRegressor, XGBRegressor, LightGBM)
+		# especially for tree-based regressors (e.g., DecisionTreeRegressor, RandomForestRegressor, XGBRegressor, HistGradientBoostingRegressor, LightGBM)
 		X_train_encoded_float32 = X_train_encoded.astype(np.float32)
-		X_test_encoded_float32 = X_test_encoded.astype(np.float32)
-		# preserve sample IDs before conversion
+		X_test_encoded_float32  = X_test_encoded.astype(np.float32)
+		# preserve sample IDs
 		train_sample_ids = y_train.index
-		test_sample_ids = y_test.index
-		# convert to float32 NumPy array (avoid object dtype, required by LightGBM and other regressors)
-		y_train_float32 = y_train.astype(np.float32).to_numpy()
-		y_test_float32 = y_test.astype(np.float32).to_numpy()
+		test_sample_ids  = y_test.index
+		# note: explicit astype(np.float32) casting of the target vector is required for LightGBM *regression* only,
+		# because LightGBMRegressor strictly requires numeric labels (int/float/bool) and rejects pandas object dtypes;
+		# this additional casting is not required in the classification workflow, where LightGBMClassifier tolerates
+		# non-numeric or object-typed class labels
+		# reconstruct clean 1-D numeric Series required by LightGBM, CatBoost and sklearn
+		y_train_series = pd.Series(np.ravel(y_train.values).astype(np.float32), index=train_sample_ids)
+		y_test_series = pd.Series(np.ravel(y_test.values).astype(np.float32), index=test_sample_ids)
 
-		# reconstruct a 1-D Series required by CatBoost for importance extraction
-		y_train_series = pd.Series(y_train_float32.ravel(), index=train_sample_ids)
-
-		## check parallelization and print a message
+		# check parallelization and print a message
 		if JOBS == 1:
 			message_parallelization = "The tqdm_joblib progress bars are deactivated when using one job"
 			print(message_parallelization)
@@ -1414,7 +1408,7 @@ def main():
 			with jl.parallel_backend('threading', n_jobs=JOBS):
 				model.fit(
 					X_train_encoded_float32,
-					y_train_float32
+					y_train_series
 				)
 		else:
 			# when using multiple threads, tqdm_joblib correctly hooks into joblib and displays progress updates
@@ -1429,7 +1423,7 @@ def main():
 					with tqjl.tqdm_joblib(progress_bar):
 						model.fit(
 							X_train_encoded_float32,
-							y_train_float32
+							y_train_series
 						)
 
 		## print best parameters
@@ -1467,7 +1461,52 @@ def main():
 
 		# select the best model
 		best_model = model.best_estimator_
-		
+
+		# re-fit only the final estimator (not the entire pipeline)
+		# this is necessary because re-fitting the whole pipeline would overwrite the
+		# feature selection mask learned during GridSearchCV
+		# keeping the original mask ensures consistent selected features between
+		# modeling and prediction subcommands
+		## check if a feature selection step exists inside the pipeline
+		if hasattr(best_model, "named_steps") and ("feature_selection" in best_model.named_steps):
+			# retrieve feature selector and final estimator
+			selector = best_model.named_steps["feature_selection"]
+			final_estimator = best_model.named_steps["model"]
+			# apply the selector to the harmonized one-hot encoded training matrix
+			# keep a pandas DataFrame to preserve feature names and avoid sklearn warnings
+			X_train_selected = selector.transform(
+				X_train_encoded_float32
+				if hasattr(X_train_encoded_float32, "columns")
+				else X_train_encoded_float32.astype(np.float32)
+			)
+			# re-fit only the final estimator on selected features
+			final_estimator.fit(X_train_selected, y_train_series)
+			# rebuild the pipeline WITHOUT re-fitting the selector
+			best_model = Pipeline([
+				("feature_selection", selector),
+				("model", final_estimator)
+			])
+		else:
+			# no feature selection method was used
+			# we directly retrieve the final estimator
+			if hasattr(best_model, "named_steps"):
+				final_estimator = best_model.named_steps["model"]
+			else:
+				final_estimator = best_model
+			# re-fit the final estimator on the full harmonized one-hot encoded training matrix
+			# (no feature selection → the estimator expects full encoded matrices)
+			final_estimator.fit(X_train_encoded_float32, y_train_series)
+			# rebuild the pipeline to maintain a consistent structure
+			best_model = Pipeline([
+				("model", final_estimator)
+			])
+		## refresh final estimator reference (required before feature importances and permutation importance)
+		final_estimator = (
+			best_model.named_steps["model"]
+			if hasattr(best_model, "named_steps")
+			else best_model
+		)
+
 		# count features
 		## count the number of features selected by feature selection actually used by the final regressor
 		selected_features_int = count_selected_features(best_model, X_train_encoded_float32)
@@ -1480,111 +1519,100 @@ def main():
 		print(message_selected_features)
 
 		# output a dataframe of features used by the final model with ranked importance scores
-		# get the final estimator from the pipeline or directly if standalone
-		final_estimator = best_model[-1] if hasattr(best_model, '__getitem__') else best_model
-		# initialize feature name list and selection mask
-		feature_encoded_lst = None
-		support_mask = None
-		try:
-			# check if the model is a pipeline
-			if hasattr(best_model, 'named_steps'):
-				# extract feature names from polynomial expansion if present
-				if 'poly' in best_model.named_steps and hasattr(best_model.named_steps['poly'], 'get_feature_names_out'):
-					input_features = X_train_encoded_float32.columns
-					feature_encoded_lst = best_model.named_steps['poly'].get_feature_names_out(input_features=input_features)
-				# otherwise extract feature names from encoder or encoded dataframe
-				elif 'encoder' in best_model.named_steps and hasattr(best_model.named_steps['encoder'], 'get_feature_names_out'):
-					feature_encoded_lst = best_model.named_steps['encoder'].get_feature_names_out()
-				else:
-					feature_encoded_lst = X_train_encoded_float32.columns
-				# check for an optional feature selection step
-				if 'feature_selection' in best_model.named_steps:
-					selector = best_model.named_steps['feature_selection']
-					if hasattr(selector, 'get_support'):
-						support_mask = selector.get_support()
-						feature_encoded_lst = np.array(feature_encoded_lst)[support_mask]
-					else:
-						support_mask = np.ones(len(feature_encoded_lst), dtype=bool)
-				else:
-					support_mask = np.ones(len(feature_encoded_lst), dtype=bool)
-			# fallback if not a pipeline
+		## recover encoded feature names before feature selection
+		if hasattr(best_model, "named_steps"):
+			# polynomial features take priority
+			if "poly" in best_model.named_steps and hasattr(
+				best_model.named_steps["poly"], "get_feature_names_out"
+			):
+				input_features = X_train_encoded_float32.columns
+				encoded_names = best_model.named_steps["poly"].get_feature_names_out(
+					input_features=input_features
+				)
+			# otherwise recover from encoder
+			elif "encoder" in best_model.named_steps and hasattr(
+				best_model.named_steps["encoder"], "get_feature_names_out"
+			):
+				encoded_names = best_model.named_steps["encoder"].get_feature_names_out()
 			else:
-				feature_encoded_lst = X_train_encoded_float32.columns
-				support_mask = np.ones(len(feature_encoded_lst), dtype=bool)
-			message_importance_encoded_feature_names = "The full one-hot encoded feature names were recovered from the pipeline"
-		except Exception:
-			# fallback on error
-			feature_encoded_lst = X_train_encoded_float32.columns
-			support_mask = np.ones(len(feature_encoded_lst), dtype=bool)
-			message_importance_encoded_feature_names = "The full one-hot encoded feature names were not recovered from the pipeline"
+				encoded_names = X_train_encoded_float32.columns
+		else:
+			encoded_names = X_train_encoded_float32.columns
+		## always convert to a clean Python list
+		if hasattr(encoded_names, "tolist"):
+			feature_encoded_lst_full = encoded_names.tolist()
+		else:
+			feature_encoded_lst_full = list(encoded_names)
+		## determine feature selection mask
+		if hasattr(best_model, "named_steps") and ("feature_selection" in best_model.named_steps):
+			selector = best_model.named_steps["feature_selection"]
+			if hasattr(selector, "get_support"):
+				support_mask = selector.get_support()
+			else:
+				support_mask = np.ones(len(feature_encoded_lst_full), dtype=bool)
+		else:
+			support_mask = np.ones(len(feature_encoded_lst_full), dtype=bool)
+
+		## filtered list for feature importance reporting (not for permutation importance)
+		feature_encoded_lst_filtered = np.array(feature_encoded_lst_full)[support_mask].tolist()
+		## print a message
+		message_importance_encoded_feature_names = (
+			"The one-hot encoded feature names were recovered before feature selection"
+		)
 		print(message_importance_encoded_feature_names)
-		# ensure feature names are a Python list
-		if hasattr(feature_encoded_lst, 'tolist'):
-			feature_encoded_lst = feature_encoded_lst.tolist()
-		# extract feature importance depending on regressor type
+		## extract feature importance depending on regressor type
 		try:
+			# catboost must come first (otherwise feature_importances_ steals the branch)
 			if isinstance(final_estimator, cb.CatBoostRegressor):
 				try:
-					# ensure feature names exactly match the encoded, selected matrix
-					if len(feature_encoded_lst) != X_train_encoded_float32.shape[1]:
-						# hard safety correction: rebuild feature list from encoded data
-						feature_encoded_lst = list(X_train_encoded_float32.columns)
-					# build CatBoost Pool with aligned feature names
 					train_pool = cb.Pool(
 						X_train_encoded_float32,
 						y_train_series,
-						feature_names=feature_encoded_lst
+						feature_names=feature_encoded_lst_full
 					)
-					# extract importance
 					importances = final_estimator.get_feature_importance(
 						train_pool,
 						type="PredictionValuesChange"
 					)
 					importance_type = "catboost's loss-based importance (PredictionValuesChange)"
-				except Exception as e:
-					importances = np.array([np.nan] * len(feature_encoded_lst))
-					importance_type = f"NaN placeholder (CatBoost importance extraction failed: {e})"
+				except Exception:
+					importances = np.array([np.nan] * len(feature_encoded_lst_filtered))
+					importance_type = "NaN placeholder (CatBoost importance extraction failed)"
+			# XGBoost regressor
 			elif isinstance(final_estimator, xgb.XGBRegressor):
-				# XGBRegressor: importance type from parameters or fallback to 'weight'
-				xgb_importance_type = None
-				# check parameters dictionary
-				if 'params' in locals():
-					xgb_importance_type = params.get('model__importance_type', None)
-				# check estimator parameters
-				if xgb_importance_type is None and hasattr(final_estimator, 'get_params'):
-					xgb_importance_type = final_estimator.get_params().get('importance_type', None)
-				# fallback
-				if xgb_importance_type is None:
-					xgb_importance_type = 'weight'
 				booster = final_estimator.get_booster()
 				booster_feature_names = booster.feature_names
-				importances_dict = booster.get_score(importance_type=xgb_importance_type)
-				# align XGB importances with booster feature order
-				importances = np.array([importances_dict.get(f, 0.0) for f in booster_feature_names])
-				feature_encoded_lst = list(booster_feature_names)
+				# enforce a valid importance_type (XGBoost requires it explicitly)
+				xgb_importance_type = final_estimator.get_params().get("importance_type")
+				if xgb_importance_type is None:
+					xgb_importance_type = "gain"
+				importance_dict = booster.get_score(importance_type=xgb_importance_type)
+				importances = np.array([importance_dict.get(f, 0.0) for f in booster_feature_names])
+				feature_encoded_lst_filtered = list(booster_feature_names)
 				importance_type = f"xgboost's {xgb_importance_type}-based importance"
+			# LightGBM regressor
 			elif isinstance(final_estimator, lgbm.LGBMRegressor):
-				# LightGBM supports importance types such as 'gain', 'split', etc.
-				lgbm_importance_type = None
-				if 'params' in locals():
-					lgbm_importance_type = params.get('model__importance_type', None)
-				if lgbm_importance_type is None and hasattr(final_estimator, 'get_params'):
-					lgbm_importance_type = final_estimator.get_params().get('importance_type', None)
-				if lgbm_importance_type is None:
-					lgbm_importance_type = 'gain'
-				importances = final_estimator.booster_.feature_importance(importance_type=lgbm_importance_type)
-				importance_type = f"lightgbm's {lgbm_importance_type}-based importance"
+				try:
+					lgbm_importance_type = final_estimator.get_params().get(
+						"importance_type", "gain"
+					)
+					importances = final_estimator.booster_.feature_importance(
+						importance_type=lgbm_importance_type
+					)
+					importance_type = f"lightgbm's {lgbm_importance_type}-based importance"
+				except Exception:
+					importances = np.array([np.nan] * len(feature_encoded_lst_filtered))
+					importance_type = "NaN placeholder (LightGBM importance extraction failed)"
+			# histogram-based GBDT
 			elif isinstance(final_estimator, HistGradientBoostingRegressor):
-				# histogram-based gradient boosting does not expose feature_importances_ directly
 				try:
 					from sklearn.ensemble._hist_gradient_boosting.utils import get_feature_importances
 					importances = get_feature_importances(final_estimator, normalize=True)
 				except Exception:
 					importances = np.array([])
-				# fallback on HGB internal gains if helper returns empty or zeros
 				if importances is None or len(importances) == 0 or np.all(importances == 0):
 					n_features = X_train_encoded_float32.shape[1]
-					importances = np.zeros(n_features, dtype=np.float64)
+					importances = np.zeros(n_features, dtype=float)
 					for predictors in getattr(final_estimator, "_predictors", []):
 						if predictors is None:
 							continue
@@ -1596,205 +1624,282 @@ def main():
 					total_gain = np.sum(importances)
 					if total_gain > 0:
 						importances /= total_gain
-				importance_type = "histogram-based mean impurity reduction (auto fallback to internal split gains)"
-			elif hasattr(final_estimator, 'feature_importances_'):
-				# most tree-based regressors expose impurity-based importances
+				importance_type = (
+					"histogram-based mean impurity reduction"
+					" (auto fallback to internal split gains)"
+				)
+			# support vector regression (SVR / NuSVR)
+			elif isinstance(final_estimator, (SVR, NuSVR)):
+				kernel_type = getattr(final_estimator, "kernel", "unknown")
+				if kernel_type == "linear" and hasattr(final_estimator, "coef_"):
+					importances = np.abs(final_estimator.coef_.ravel())
+					importance_type = (
+						"absolute coefficient magnitude (linear "
+						+ final_estimator.__class__.__name__ + " coef_)"
+					)
+				else:
+					importances = np.array([np.nan] * len(feature_encoded_lst_filtered))
+					importance_type = (
+						"NaN placeholder (no native importance for "
+						+ kernel_type + " kernel "
+						+ final_estimator.__class__.__name__ + ")"
+					)
+			# tree-based regressors (e.g., ADA, DT, ET, GB, RF)
+			elif hasattr(final_estimator, "feature_importances_"):
 				importances = final_estimator.feature_importances_
 				importance_type = "tree-based impurity reduction (feature_importances_)"
-			elif hasattr(final_estimator, 'coef_'):
-				# linear models expose coefficients
+			# linear models (e.g, BRI, EN, HU, LA, PN, RI)
+			elif hasattr(final_estimator, "coef_"):
 				coef = final_estimator.coef_
-				coef = coef.ravel() if hasattr(coef, 'ravel') else coef
+				coef = coef.ravel() if hasattr(coef, "ravel") else coef
 				importances = np.abs(coef)
 				importance_type = "absolute coefficient magnitude (coef_)"
+			# default
 			else:
-				# fallback if model has no interpretability
-				importances = np.array([np.nan] * len(feature_encoded_lst))
+				importances = np.array([np.nan] * len(feature_encoded_lst_filtered))
 				importance_type = "NaN placeholder (no native importance)"
 		except Exception as e:
-			# final fallback upon error
-			importances = np.array([np.nan] * len(feature_encoded_lst))
+			importances = np.array([np.nan] * len(feature_encoded_lst_filtered))
 			importance_type = "NaN fallback due to extraction error: " + str(e)
-		# align feature names and importance vector lengths
-		if len(importances) != len(feature_encoded_lst):
-			min_len = min(len(importances), len(feature_encoded_lst))
+		## handle mismatch between feature names and importances
+		if len(importances) != len(feature_encoded_lst_filtered):
+			min_len = min(len(importances), len(feature_encoded_lst_filtered))
 			importances = importances[:min_len]
-			feature_encoded_lst = feature_encoded_lst[:min_len]
-		# print model-type-specific message
-		if REGRESSOR in ('HGB', 'KNN', 'MLP', 'NSV', 'SVR'):
+			feature_encoded_lst_filtered = feature_encoded_lst_filtered[:min_len]
+		## print message about extracted importances
+		if importance_type.startswith("NaN"):
 			message_importance_count = (
-				"The selected model regressor did not expose feature importances natively ("
+				"The selected regressor did not expose feature importances natively ("
 				+ importance_type + ")"
 			)
 		else:
 			message_importance_count = (
-				"The best model returned "
-				+ str(len(importances))
-				+ " importance values (" + importance_type + ") for "
-				+ str(len(feature_encoded_lst))
-				+ " one-hot encoded features (potentially selected and/or polynomially expanded)"
+				"The best model returned " + str(len(importances)) + 
+				" importance values (" + importance_type + ") for " + 
+				str(len(feature_encoded_lst_filtered)) + " one-hot encoded features"
 			)
 		print(message_importance_count)
-		# ensure importances array is valid
+		## ensure importances array is valid
 		if importances is None or np.all(np.isnan(importances)):
-			importances = np.full(len(feature_encoded_lst), np.nan, dtype=float)
-		# create dataframe of feature importances and round values
+			importances = np.full(len(feature_encoded_lst_filtered), np.nan)
+		## create feature importance dataframe
 		feature_importance_df = pd.DataFrame({
-			"feature": feature_encoded_lst,
+			"feature": feature_encoded_lst_filtered,
 			"importance": np.round(importances, digits)
-		})
-		# sort by descending importance
-		feature_importance_df = feature_importance_df.sort_values(by="importance",ascending=False).reset_index(drop=True)
+		}).sort_values(by="importance", ascending=False).reset_index(drop=True)
 
-		# check compatibility between permutation importance (detected after argument parsing) and the number of repetitions (detected before argument parsing)
+		# check compatibility between permutation importance and the number of repetitions
 		set_nrepeats = ('-nr' in sys.argv) or ('--nrepeats' in sys.argv)
 		if (PERMUTATIONIMPORTANCE is True) and (set_nrepeats is True):
-			message_compatibility_permutation_nrepeat = "The permutation importance was requested (i.e., " + str(PERMUTATIONIMPORTANCE) + ") and the number of repetitions was explicitly set (i.e., " + str(set_nrepeats) + ") to a specific value (i.e., " + str(NREPEATS) + ")"
-			print(message_compatibility_permutation_nrepeat)
+			message_compatibility_permutation_nrepeat = (
+				"The permutation importance was requested (i.e., " + str(PERMUTATIONIMPORTANCE) +
+				") and the number of repetitions was explicitly set (i.e., " + str(set_nrepeats) +
+				") to a specific value (i.e., " + str(NREPEATS) + ")"
+			)
 		elif (PERMUTATIONIMPORTANCE is True) and (set_nrepeats is False):
-			message_compatibility_permutation_nrepeat = "The permutation importance was requested (i.e., " + str(PERMUTATIONIMPORTANCE) + ") but the number of repetitions was not set (i.e., " + str(set_nrepeats) + "); the default value is therefore used (i.e., " + str(NREPEATS) + ")"
-			print(message_compatibility_permutation_nrepeat)
+			message_compatibility_permutation_nrepeat = (
+				"The permutation importance was requested (i.e., " + str(PERMUTATIONIMPORTANCE) +
+				") but the number of repetitions was not set (i.e., " + str(set_nrepeats) +
+				"); the default value is therefore used (i.e., " + str(NREPEATS) + ")"
+			)
 		elif (PERMUTATIONIMPORTANCE is False) and (set_nrepeats is True):
-			message_compatibility_permutation_nrepeat = "The permutation importance was not requested (i.e., " + str(PERMUTATIONIMPORTANCE) + ") but the number of repetitions was set (i.e., " + str(set_nrepeats) + "); this setting is consequently ignored (i.e., " + str(NREPEATS) + ")"
-			print(message_compatibility_permutation_nrepeat)
-		elif (PERMUTATIONIMPORTANCE is False) and (set_nrepeats is False):
-			message_compatibility_permutation_nrepeat = "The permutation importance was not requested (i.e., " + str(PERMUTATIONIMPORTANCE) + ") and the number of repetitions was not set, as expected (i.e., " + str(set_nrepeats) + ")"
-			print(message_compatibility_permutation_nrepeat)
+			message_compatibility_permutation_nrepeat = (
+				"The permutation importance was not requested (i.e., " + str(PERMUTATIONIMPORTANCE) +
+				") but the number of repetitions was set (i.e., " + str(set_nrepeats) +
+				"); this setting is consequently ignored (i.e., " + str(NREPEATS) + ")"
+			)
+		else:
+			message_compatibility_permutation_nrepeat = (
+				"The permutation importance was not requested (i.e., " + str(PERMUTATIONIMPORTANCE) +
+				") and the number of repetitions was not set, as expected (i.e., " +
+				str(set_nrepeats) + ")"
+			)
+		print(message_compatibility_permutation_nrepeat)
 
-		# fix nested parallelism issues for tree-based models so tqdm_joblib stays accurate
-		# set n_jobs on the *inner* estimator (Pipeline param prefix) instead of the Pipeline itself
-		if REGRESSOR in ['RF', 'GB']:
+		# fix nested parallelism issues for random forest and extra trees so tqdm_joblib stays accurate
+		if REGRESSOR in ['RF', 'ET']:
 			try:
-				best_model.set_params(model__n_jobs=1)  # enforce single-thread inference for inner estimator
+				best_model.set_params(model__n_jobs=1)
 			except Exception:
 				if hasattr(best_model, "n_jobs"):
-					best_model.set_params(n_jobs=1)  # fallback if model__n_jobs is not available (non-pipeline case)
+					best_model.set_params(n_jobs=1)
+
 		# compute permutation importance only if explicitly requested
 		# use tqdm.auto rather than tqdm library because it automatically chooses the best display format (terminal, notebook, etc.)
 		# use a tqdm progress bar from the tqdm_joblib library (compatible with permutation_importance using joblib parallelism)
 		# use threading backend to avoid DeprecationWarning from fork and ChildProcessError from the loky backend
 		# threading is slightly slower but ensures smooth tqdm display and avoids nested multiprocessing issues
 		if PERMUTATIONIMPORTANCE is True:
+			# determine which features to use for permutation importance (selected features only)
+			try:
+				if hasattr(best_model, "named_steps") and 'feature_selection' in best_model.named_steps:
+					selector = best_model.named_steps['feature_selection']
+					if hasattr(selector, "get_support"):
+						# retrieve boolean mask of selected features
+						support_mask_perm = selector.get_support()
+						# apply mask directly on float32 encoded data
+						X_train_perm_df = X_train_encoded_float32.loc[:, support_mask_perm]
+						X_test_perm_df  = X_test_encoded_float32.loc[:, support_mask_perm]
+						feature_encoded_perm_lst = (
+							np.array(feature_encoded_lst_full)[support_mask_perm].tolist()
+						)
+						message_perm_selection = (
+							"The permutation importance was restricted to the features selected upstream (i.e., "
+							+ str(len(feature_encoded_perm_lst))
+							+ ") by the specified feature selection method"
+						)
+					else:
+						# infer selection from transformed dimension
+						X_train_transformed = selector.transform(X_train_encoded_float32)
+						n_in = X_train_encoded_float32.shape[1]
+						n_out = X_train_transformed.shape[1]
+						if n_out < n_in:
+							support_mask_perm = np.zeros(n_in, dtype=bool)
+							support_mask_perm[:n_out] = True
+							# use transformed matrices for permutation importance
+							X_train_perm_df = pd.DataFrame(
+								X_train_transformed,
+								columns=np.array(feature_encoded_lst_full)[support_mask_perm].tolist()
+							)
+							X_test_transformed = selector.transform(X_test_encoded_float32)
+							X_test_perm_df = pd.DataFrame(
+								X_test_transformed,
+								columns=np.array(feature_encoded_lst_full)[support_mask_perm].tolist()
+							)
+							feature_encoded_perm_lst = (
+								np.array(feature_encoded_lst_full)[support_mask_perm].tolist()
+							)
+							message_perm_selection = (
+								"The permutation importance was restricted to the features selected upstream (i.e., "
+								+ str(len(feature_encoded_perm_lst))
+								+ ") using an inferred selection mask because support_ was not available"
+							)
+						else:
+							# no dimensionality reduction performed
+							X_train_perm_df = X_train_encoded_float32.copy()
+							X_test_perm_df  = X_test_encoded_float32.copy()
+							feature_encoded_perm_lst = feature_encoded_lst_full.copy()
+							message_perm_selection = (
+								"The permutation importance was computed on all one-hot encoded features (i.e., "
+								+ str(len(feature_encoded_perm_lst))
+								+ ") because no dimensionality reduction was detected"
+							)
+				else:
+					# no feature selection method was applied
+					X_train_perm_df = X_train_encoded_float32.copy()
+					X_test_perm_df  = X_test_encoded_float32.copy()
+					feature_encoded_perm_lst = feature_encoded_lst_full.copy()
+					message_perm_selection = (
+						"The permutation importance was computed on all one-hot encoded features (i.e., "
+						+ str(len(feature_encoded_perm_lst))
+						+ ") because no feature selection method was used"
+					)
+			except Exception:
+				# fallback if anything unexpected happens
+				X_train_perm_df = X_train_encoded_float32.copy()
+				X_test_perm_df  = X_test_encoded_float32.copy()
+				feature_encoded_perm_lst = feature_encoded_lst_full.copy()
+				message_perm_selection = (
+					"The permutation importance defaulted to all one-hot encoded features (i.e., "
+					+ str(len(feature_encoded_perm_lst))
+					+ ") because selected features could not be recovered from the model"
+				)
+			# print a message
+			print(message_perm_selection)
+			# compute permutation importance
 			try:
 				# compute total number of permutations to estimate progress: one job per feature
-				n_features = X_train_encoded_float32.shape[1]
+				n_features = X_train_perm_df.shape[1]
 				permutation_total = n_features
-				# handle GradientBoostingRegressor separately (no tqdm, no parallelism)
-				if REGRESSOR == 'GB':
-					message_permutation = (
-						"Permutation importance for GradientBoostingRegressor (GB) is being computed without tqdm progress bars and parallel joblib to ensure stability"
-					)
-					print(message_permutation)
-					# compute permutation importance safely in single-thread mode
+				# single-thread execution
+				if JOBS == 1:
+					# when using a single thread, tqdm_joblib does not display intermediate updates
+					# in this case, permutation_importance is executed normally without a progress bar
 					permutation_train = permutation_importance(
-						best_model,
-						X_train_encoded_float32,
-						y_train_float32,
+						final_estimator,
+						X_train_perm_df,
+						y_train_series,
 						n_repeats=NREPEATS,
-						random_state=42, # fixed seed to make permutation shuffling reproducible across runs
-						scoring='neg_root_mean_squared_error',
+						random_state=42,
+						scoring="neg_root_mean_squared_error",
 						n_jobs=1
 					)
 					permutation_test = permutation_importance(
-						best_model,
-						X_test_encoded_float32,
-						y_test_float32,
+						final_estimator,
+						X_test_perm_df,
+						y_test_series,
 						n_repeats=NREPEATS,
-						random_state=42, # fixed seed to make permutation shuffling reproducible across runs
-						scoring='neg_root_mean_squared_error',
+						random_state=42,
+						scoring="neg_root_mean_squared_error",
 						n_jobs=1
 					)
 				else:
-					# single-thread execution (JOBS = 1)
-					# tqdm_joblib does not update dynamically in single-threaded mode; run normally without progress bar
-					if JOBS == 1:
-						permutation_train = permutation_importance(
-							best_model,
-							X_train_encoded_float32,
-							y_train_float32,
-							n_repeats=NREPEATS,
-							random_state=42, # fixed seed to make permutation shuffling reproducible across runs
-							scoring='neg_root_mean_squared_error',
-							n_jobs=1
-						)
-						permutation_test = permutation_importance(
-							best_model,
-							X_test_encoded_float32,
-							y_test_float32,
-							n_repeats=NREPEATS,
-							random_state=42, # fixed seed to make permutation shuffling reproducible across runs
-							scoring='neg_root_mean_squared_error',
-							n_jobs=1
-						)
-					else:
-						# multi-threaded execution (JOBS > 1)
-						# tqdm_joblib correctly displays the progress bar using threading backend
-						# permutation importance on training dataset
-						with tqa.tqdm(
-							total=permutation_total,
-							desc="Permutation importance on the training dataset",
-							position=0,
-							leave=True,
-							dynamic_ncols=True,
-							mininterval=0.2
-						) as progress_bar:
-							with jl.parallel_backend('threading', n_jobs=JOBS):
-								with tqjl.tqdm_joblib(progress_bar):
-									with tpc.threadpool_limits(limits=1):  # prevent nested parallelism
-										with ctl.redirect_stdout(io.StringIO()), ctl.redirect_stderr(io.StringIO()):
-											permutation_train = permutation_importance(
-												best_model,
-												X_train_encoded_float32,
-												y_train_float32,
-												n_repeats=NREPEATS,
-												random_state=42, # fixed seed to make permutation shuffling reproducible across runs
-												scoring='neg_root_mean_squared_error',
-												n_jobs=JOBS
-											)
-						# permutation importance on testing dataset
-						with tqa.tqdm(
-							total=permutation_total,
-							desc="Permutation importance on the testing dataset",
-							position=0,
-							leave=True,
-							dynamic_ncols=True,
-							mininterval=0.2
-						) as progress_bar:
-							with jl.parallel_backend('threading', n_jobs=JOBS):
-								with tqjl.tqdm_joblib(progress_bar):
-									with tpc.threadpool_limits(limits=1):
-										with ctl.redirect_stdout(io.StringIO()), ctl.redirect_stderr(io.StringIO()):
-											permutation_test = permutation_importance(
-												best_model,
-												X_test_encoded_float32,
-												y_test_float32,
-												n_repeats=NREPEATS,
-												random_state=42, # fixed seed to make permutation shuffling reproducible across runs
-												scoring='neg_root_mean_squared_error',
-												n_jobs=JOBS
-											)
-
+					# when using multiple threads, tqdm_joblib correctly displays the progress bar
+					# permutation importance on training dataset
+					with tqa.tqdm(
+						total=permutation_total,
+						desc="Permutation importance on the training dataset",
+						position=0,
+						leave=True,
+						dynamic_ncols=True,
+						mininterval=0.2
+					) as progress_bar:
+						with jl.parallel_backend("threading", n_jobs=JOBS):
+							with tqjl.tqdm_joblib(progress_bar):
+								with tpc.threadpool_limits(limits=1):
+									with ctl.redirect_stdout(io.StringIO()), ctl.redirect_stderr(io.StringIO()):
+										permutation_train = permutation_importance(
+											final_estimator,
+											X_train_perm_df,
+											y_train_series,
+											n_repeats=NREPEATS,
+											random_state=42,
+											scoring="neg_root_mean_squared_error",
+											n_jobs=JOBS
+										)
+					# permutation importance on testing dataset
+					with tqa.tqdm(
+						total=permutation_total,
+						desc="Permutation importance on the testing dataset",
+						position=0,
+						leave=True,
+						dynamic_ncols=True,
+						mininterval=0.2
+					) as progress_bar:
+						with jl.parallel_backend("threading", n_jobs=JOBS):
+							with tqjl.tqdm_joblib(progress_bar):
+								with tpc.threadpool_limits(limits=1):
+									with ctl.redirect_stdout(io.StringIO()), ctl.redirect_stderr(io.StringIO()):
+										permutation_test = permutation_importance(
+											final_estimator,
+											X_test_perm_df,
+											y_test_series,
+											n_repeats=NREPEATS,
+											random_state=42,
+											scoring="neg_root_mean_squared_error",
+											n_jobs=JOBS
+										)
 				# extract average permutation importance and its standard deviation (train)
 				perm_train_mean = np.round(permutation_train.importances_mean, digits)
-				perm_train_std = np.round(permutation_train.importances_std, digits)
+				perm_train_std  = np.round(permutation_train.importances_std, digits)
 				# extract average permutation importance and its standard deviation (test)
 				perm_test_mean = np.round(permutation_test.importances_mean, digits)
-				perm_test_std = np.round(permutation_test.importances_std, digits)
-				# handle potential shape mismatch between names and scores
-				min_len = min(len(feature_encoded_lst), len(perm_train_mean), len(perm_test_mean))
-				feature_encoded_lst = feature_encoded_lst[:min_len]
+				perm_test_std  = np.round(permutation_test.importances_std, digits)
+				# handle shape mismatch between names and scores
+				min_len = min(len(feature_encoded_perm_lst), len(perm_train_mean))
+				feature_encoded_perm_lst = feature_encoded_perm_lst[:min_len]
 				perm_train_mean = perm_train_mean[:min_len]
-				perm_train_std = perm_train_std[:min_len]
-				perm_test_mean = perm_test_mean[:min_len]
-				perm_test_std = perm_test_std[:min_len]
+				perm_train_std  = perm_train_std[:min_len]
+				perm_test_mean  = perm_test_mean[:min_len]
+				perm_test_std   = perm_test_std[:min_len]
 				# combine permutation importances from training and testing
 				permutation_importance_df = pd.DataFrame({
-					'feature': feature_encoded_lst,
-					'train_mean': perm_train_mean,
-					'train_std': perm_train_std,
-					'test_mean': perm_test_mean,
-					'test_std': perm_test_std
-				}).sort_values(by='train_mean', ascending=False).reset_index(drop=True)
+					"feature": feature_encoded_perm_lst,
+					"train_mean": perm_train_mean,
+					"train_std":  perm_train_std,
+					"test_mean":  perm_test_mean,
+					"test_std":   perm_test_std
+				}).sort_values(by="train_mean", ascending=False).reset_index(drop=True)
 				# message to confirm success
 				message_permutation = (
 					"The permutation importance was successfully computed on both training and testing datasets"
@@ -1806,9 +1911,9 @@ def main():
 					"An error occurred while computing permutation importance: " + str(e)
 				)
 		else:
-			# if not requested, return empty DataFrame and skip computation
+			# if not requested, return empty DataFrame
 			permutation_importance_df = pd.DataFrame()
-			message_permutation = "T permutation importance was not computed"
+			message_permutation = "The permutation importance was not computed"
 		# print a message
 		print(message_permutation)
 
@@ -1836,26 +1941,26 @@ def main():
 
 		## compute metrics
 		### RMSE
-		rmse_train = np.sqrt(mean_squared_error(y_train_float32, y_pred_train))
-		rmse_test = np.sqrt(mean_squared_error(y_test_float32, y_pred_test))
+		rmse_train = np.sqrt(mean_squared_error(y_train_series, y_pred_train))
+		rmse_test = np.sqrt(mean_squared_error(y_test_series, y_pred_test))
 		### MSE
-		mse_train = mean_squared_error(y_train_float32, y_pred_train)
-		mse_test = mean_squared_error(y_test_float32, y_pred_test)
+		mse_train = mean_squared_error(y_train_series, y_pred_train)
+		mse_test = mean_squared_error(y_test_series, y_pred_test)
 		### SMAPE
-		smape_train = smape(y_train_float32, y_pred_train, threshold=1e-3)
-		smape_test = smape(y_test_float32, y_pred_test, threshold=1e-3)
+		smape_train = smape(y_train_series, y_pred_train, threshold=1e-3)
+		smape_test = smape(y_test_series, y_pred_test, threshold=1e-3)
 		### MAPE
-		mape_train = mape(y_train_float32, y_pred_train, threshold=1e-3)
-		mape_test = mape(y_test_float32, y_pred_test, threshold=1e-3)
+		mape_train = mape(y_train_series, y_pred_train, threshold=1e-3)
+		mape_test = mape(y_test_series, y_pred_test, threshold=1e-3)
 		### MAE
-		mae_train = mean_absolute_error(y_train_float32, y_pred_train)
-		mae_test = mean_absolute_error(y_test_float32, y_pred_test)	
+		mae_train = mean_absolute_error(y_train_series, y_pred_train)
+		mae_test = mean_absolute_error(y_test_series, y_pred_test)	
 		### R2
-		r2_train = r2_score(y_train_float32, y_pred_train)
-		r2_test = r2_score(y_test_float32, y_pred_test)
+		r2_train = r2_score(y_train_series, y_pred_train)
+		r2_test = r2_score(y_test_series, y_pred_test)
 		### aR2
-		ar2_train = adjusted_r2(y_train_float32, y_pred_train, n_features=X_train.shape[1])
-		ar2_test = adjusted_r2(y_test_float32, y_pred_test, n_features=X_test.shape[1])
+		ar2_train = adjusted_r2(y_train_series, y_pred_train, n_features=X_train.shape[1])
+		ar2_test = adjusted_r2(y_test_series, y_pred_test, n_features=X_test.shape[1])
 
 		## combine in dataframes
 		## from the training dataset
@@ -1880,34 +1985,42 @@ def main():
 			})
 
 		# combine expectation and prediction from the training dataset
+		## convert numpy.ndarray into a dataframe with explicit column name
 		y_pred_train_df = pd.DataFrame(y_pred_train, columns=["prediction"])
+		## rebuild a clean dataframe for expectations using preserved sample IDs
 		y_train_df = pd.DataFrame({
-			"sample": train_sample_ids,
-			"expectation": y_train_float32
+			"sample": train_sample_ids, # explicit sample identifiers
+			"expectation": y_train_series.values # always 1-dimensional
 		})
+		## concatenate horizontally with index resets
 		combined_train_df = pd.concat(
-			[y_train_df.reset_index(drop=True),
-			y_pred_train_df.reset_index(drop=True)],
-			axis=1, join="inner"
+			[y_train_df.reset_index(drop=True), # avoids index misalignment
+			y_pred_train_df.reset_index(drop=True)], # avoids index misalignment
+			axis=1, 
+			join="inner" # safeguards against accidental row misalignment
 		)
 
 		# combine expectation and prediction from the testing dataset
+		## convert numpy.ndarray into a dataframe with explicit column name
 		y_pred_test_df = pd.DataFrame(y_pred_test, columns=["prediction"])
+		## rebuild a clean dataframe for expectations using preserved sample IDs
 		y_test_df = pd.DataFrame({
-			"sample": test_sample_ids,
-			"expectation": y_test_float32
+			"sample": test_sample_ids, # explicit sample identifiers
+			"expectation": y_test_series.values # always 1-dimensional
 		})
+		## concatenate horizontally with index resets
 		combined_test_df = pd.concat(
-			[y_test_df.reset_index(drop=True),
-			y_pred_test_df.reset_index(drop=True)],
-			axis=1, join="inner"
+			[y_test_df.reset_index(drop=True), # avoids index misalignment
+			y_pred_test_df.reset_index(drop=True)], # avoids index misalignment
+			axis=1, 
+			join="inner" # safeguards against accidental row misalignment
 		)
 
 		# retrieve only prediction intervals using a custom ResidualQuantileWrapper independantly of mapie 0.9.2 to be able to manage only one sample
 		## instantiate the residual quantile wrapper with the best trained model and the desired alpha level
 		res_wrapper = ResidualQuantileWrapper(estimator=best_model, alpha=ALPHA)
 		## fit the wrapper: trains the underlying model and calculates residual quantile for prediction intervals
-		res_wrapper.fit(X_train_encoded_float32, y_train_float32)
+		res_wrapper.fit(X_train_encoded_float32, y_train_series)
 		## predict on training data, returning both point predictions and prediction intervals
 		y_pred_train_res_wrapper, y_intervals_train = res_wrapper.predict(X_train_encoded_float32, return_prediction_interval=True)
 		## predict on testing data, returning both point predictions and prediction intervals
@@ -1939,7 +2052,7 @@ def main():
 			axis=1, join="inner" # safeguards against accidental row misalignment down the line
 		)
 
-		# round digits of a dataframe avoid SettingWithCopyWarning with .copy()
+		# round digits of all numeric columns (use .copy() to avoid SettingWithCopyWarning)
 		## from the training dataset
 		combined_train_df = combined_train_df.copy()
 		numeric_cols = combined_train_df.select_dtypes(include='number').columns
@@ -1948,6 +2061,20 @@ def main():
 		combined_test_df = combined_test_df.copy()
 		numeric_cols = combined_test_df.select_dtypes(include='number').columns
 		combined_test_df[numeric_cols] = combined_test_df[numeric_cols].astype(float).round(digits)
+
+		# ensure samples are sorted in alphanumerical order
+		## from the training dataset
+		combined_train_df = (
+			combined_train_df
+			.sort_values(by="sample", key=lambda col: col.astype(str))
+			.reset_index(drop=True)
+		)
+		## from the testing dataset
+		combined_test_df = (
+			combined_test_df
+			.sort_values(by="sample", key=lambda col: col.astype(str))
+			.reset_index(drop=True)
+		)
 
 		# build a clean phenotype/dataset file to reuse later
 		## keep only sample identifiers and the true phenotype value
@@ -2025,7 +2152,7 @@ def main():
 			pi.dump(X_train_encoded_float32, file)
 		## save the calibration targets
 		with open(outpath_calibration_targets, 'wb') as file:
-			pi.dump(y_train_float32, file)
+			pi.dump(y_train_series, file)
 		## save the model
 		with open(outpath_model, 'wb') as file:
 			pi.dump(best_model, file)
@@ -2043,18 +2170,17 @@ def main():
 		log_file.writelines("GenomicBasedRegression: " + __version__ + " (released in " + __release__ + ")" + "\n")
 		log_file.writelines("python: " + str(sys.version_info[0]) + "." + str(sys.version_info[1]) + "\n")
 		log_file.writelines("argparse: " + str(ap.__version__) + "\n")
-		log_file.writelines("catboost: " + str(cb.__version__) + "\n")
-		log_file.writelines("joblib: " + str(jl.__version__) + "\n")
-		log_file.writelines("lightgbm: " + str(lgbm.__version__) + "\n")
-		log_file.writelines("numpy: " + str(np.__version__) + "\n")
-		log_file.writelines("pandas: " + str(pd.__version__) + "\n")
-		log_file.writelines("pickle: " + str(pi.format_version) + "\n")
-		log_file.writelines("re: " + str(re.__version__) + "\n")
 		log_file.writelines("scipy: " + str(sp.__version__) + "\n")
-		log_file.writelines("sklearn: " + str(sk.__version__) + "\n")
+		log_file.writelines("pandas: " + str(pd.__version__) + "\n")
+		log_file.writelines("sklearn: " + str(sk.__version__) + "\n")	
+		log_file.writelines("pickle: " + str(pi.format_version) + "\n")		
+		log_file.writelines("catboost: " + str(cb.__version__) + "\n")
+		log_file.writelines("lightgbm: " + str(lgbm.__version__) + "\n")
+		log_file.writelines("xgboost: " + str(xgb.__version__) + "\n")
+		log_file.writelines("numpy: " + str(np.__version__) + "\n")
+		log_file.writelines("joblib: " + str(jl.__version__) + "\n")
 		log_file.writelines("tqdm: " + str(tq.__version__) + "\n")
 		log_file.writelines("tqdm-joblib: " + str(im.version("tqdm-joblib")) + "\n")	
-		log_file.writelines("xgboost: " + str(xgb.__version__) + "\n")
 		log_file.writelines(["###########################\n######## arguments  #######\n###########################\n"])
 		for key, value in vars(args).items():
 			log_file.write(f"{key}: {value}\n")
@@ -2092,6 +2218,8 @@ def main():
 		log_file.writelines(message_importance_encoded_feature_names + "\n")
 		log_file.writelines(message_importance_count + "\n")
 		log_file.writelines(message_compatibility_permutation_nrepeat + "\n")
+		if PERMUTATIONIMPORTANCE is True:
+			log_file.writelines(message_perm_selection + "\n")
 		log_file.writelines(message_permutation + "\n")
 		log_file.writelines(message_alpha + "\n")
 		log_file.writelines(message_output_directory + "\n")
@@ -2128,7 +2256,7 @@ def main():
 		print(feature_importance_df.head(20).to_string(index=False), file=log_file)
 		log_file.writelines(f"Note: Up to 20 results are displayed in the log for monitoring purposes, while the full set of results is available in the output files. \n")
 		log_file.writelines(f"Note: NaN placeholder in case no native or detectable feature importance is available. \n")
-		log_file.writelines(f"Note: Boosting models, especially Histogram-based Gradient Boosting (HGB), may yield all-zero feature importances when no meaningful split gains are computed—typically due to strong regularization, shallow trees, or low feature variability. \n")
+		log_file.writelines(f"Note: Boosting models, especially histogram-based gradient boosting (HGB), may yield all-zero feature importances when no meaningful split gains are computed—typically due to strong regularization, shallow trees, or low feature variability. \n")
 		log_file.writelines(["###########################\n# permutation  importance #\n###########################\n"])
 		if PERMUTATIONIMPORTANCE is True:
 			print(permutation_importance_df.head(20).to_string(index=False), file=log_file)
@@ -2320,10 +2448,17 @@ def main():
 			axis=1, join="inner"
 		)
 
-		# round digits of a dataframe avoid SettingWithCopyWarning with .copy()
+		# round digits of all numeric columns (use .copy() to avoid SettingWithCopyWarning)
 		combined_mutations_df = combined_mutations_df.copy()
 		numeric_cols = combined_mutations_df.select_dtypes(include='number').columns
 		combined_mutations_df[numeric_cols] = combined_mutations_df[numeric_cols].astype(float).round(digits)
+
+		# ensure samples are sorted in alphanumerical order
+		combined_mutations_df = (
+			combined_mutations_df
+			.sort_values(by="sample", key=lambda col: col.astype(str))
+			.reset_index(drop=True)
+		)
 
 		# check if the output directory does not exists and make it
 		if not os.path.exists(OUTPUTPATH):
@@ -2358,18 +2493,17 @@ def main():
 		log_file.writelines("GenomicBasedRegression: " + __version__ + " (released in " + __release__ + ")" + "\n")
 		log_file.writelines("python: " + str(sys.version_info[0]) + "." + str(sys.version_info[1]) + "\n")
 		log_file.writelines("argparse: " + str(ap.__version__) + "\n")
-		log_file.writelines("catboost: " + str(cb.__version__) + "\n")
-		log_file.writelines("joblib: " + str(jl.__version__) + "\n")
-		log_file.writelines("lightgbm: " + str(lgbm.__version__) + "\n")
-		log_file.writelines("numpy: " + str(np.__version__) + "\n")
-		log_file.writelines("pandas: " + str(pd.__version__) + "\n")
-		log_file.writelines("pickle: " + str(pi.format_version) + "\n")
-		log_file.writelines("re: " + str(re.__version__) + "\n")
 		log_file.writelines("scipy: " + str(sp.__version__) + "\n")
-		log_file.writelines("sklearn: " + str(sk.__version__) + "\n")
-		log_file.writelines("tqdm: " + str(tq.__version__) + "\n")
-		log_file.writelines("tqdm-joblib: " + str(im.version("tqdm-joblib")) + "\n")	
+		log_file.writelines("pandas: " + str(pd.__version__) + "\n")
+		log_file.writelines("sklearn: " + str(sk.__version__) + "\n")	
+		log_file.writelines("pickle: " + str(pi.format_version) + "\n")		
+		log_file.writelines("catboost: " + str(cb.__version__) + "\n")
+		log_file.writelines("lightgbm: " + str(lgbm.__version__) + "\n")
 		log_file.writelines("xgboost: " + str(xgb.__version__) + "\n")
+		log_file.writelines("numpy: " + str(np.__version__) + "\n")
+		log_file.writelines("joblib: " + str(jl.__version__) + "\n")
+		log_file.writelines("tqdm: " + str(tq.__version__) + "\n")
+		log_file.writelines("tqdm-joblib: " + str(im.version("tqdm-joblib")) + "\n")
 		log_file.writelines(["###########################\n######## arguments  #######\n###########################\n"])
 		for key, value in vars(args).items():
 			log_file.write(f"{key}: {value}\n")

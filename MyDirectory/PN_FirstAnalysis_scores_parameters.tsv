@@ -1,7 +1,7 @@
 scores	parameters
--4.2440084457397464	'feature_selection__k': 25, 'feature_selection__score_func': <function mutual_info_regression at 0x7fedeef544a0>, 'poly__degree': 1, 'poly__include_bias': False
--1660.610646343231	'feature_selection__k': 50, 'feature_selection__score_func': <function mutual_info_regression at 0x7fedeef544a0>, 'poly__degree': 1, 'poly__include_bias': False
--5010.1834450244905	'feature_selection__k': 25, 'feature_selection__score_func': <function mutual_info_regression at 0x7fedeef544a0>, 'poly__degree': 2, 'poly__include_bias': False
--6005.829899787903	'feature_selection__k': 25, 'feature_selection__score_func': <function mutual_info_regression at 0x7fedeef544a0>, 'poly__degree': 3, 'poly__include_bias': False
--16217.4224609375	'feature_selection__k': 50, 'feature_selection__score_func': <function mutual_info_regression at 0x7fedeef544a0>, 'poly__degree': 3, 'poly__include_bias': False
--17201.478125	'feature_selection__k': 50, 'feature_selection__score_func': <function mutual_info_regression at 0x7fedeef544a0>, 'poly__degree': 2, 'poly__include_bias': False
+-3.1130661010742187	'feature_selection__k': 25, 'feature_selection__score_func': <function mutual_info_regression at 0x7f606c32c4a0>, 'poly__degree': 2, 'poly__include_bias': False
+-4.261267042160034	'feature_selection__k': 25, 'feature_selection__score_func': <function mutual_info_regression at 0x7f606c32c4a0>, 'poly__degree': 1, 'poly__include_bias': False
+-7423.51097240448	'feature_selection__k': 25, 'feature_selection__score_func': <function mutual_info_regression at 0x7f606c32c4a0>, 'poly__degree': 3, 'poly__include_bias': False
+-9533.47986178398	'feature_selection__k': 50, 'feature_selection__score_func': <function mutual_info_regression at 0x7f606c32c4a0>, 'poly__degree': 1, 'poly__include_bias': False
+-16413.3283203125	'feature_selection__k': 50, 'feature_selection__score_func': <function mutual_info_regression at 0x7f606c32c4a0>, 'poly__degree': 2, 'poly__include_bias': False
+-18455.2076171875	'feature_selection__k': 50, 'feature_selection__score_func': <function mutual_info_regression at 0x7f606c32c4a0>, 'poly__degree': 3, 'poly__include_bias': False

@@ -3,8 +3,8 @@
 
 # --- Feature selection (SelectKBest) ---
 # used only to modify selected SKB behavior
-'feature_selection__k': [25, 50], # number of top features to keep
-'feature_selection__score_func': [mutual_info_regression], # score function (avoid chi2 in a context of regression and f_regression it captures only linear dependancies)
+#'feature_selection__k': [25, 50], # number of top features to keep
+#'feature_selection__score_func': [mutual_info_regression], # score function (avoid chi2 in a context of regression and f_regression it captures only linear dependancies)
 
 # --- Feature selection (SelectFromModel with lasso) ---
 # used only to modify laSFM behavior
@@ -24,12 +24,21 @@
 #'feature_selection__estimator__max_iter': [300], # max iterations for convergence
 #'feature_selection__estimator__tol': [1e-2], # relaxed convergence tolerance
 
+# --- Feature selection (SelectFromModel with ridge) ---
+# used only to modify riSFM behavior
+#'feature_selection__threshold': [-float('inf')], # disable hard thresholding; rank by |coef|
+#'feature_selection__max_features': [25, 50], # keep top-ranked features only
+#'feature_selection__estimator__alpha': [0.1, 1.0, 10.0], # regularization strength
+#'feature_selection__estimator__max_iter': [1000], # ensure convergence for high-dimensional OHE
+#'feature_selection__estimator__tol': [1e-3, 1e-4], # trade-off speed vs numerical precision
+#'feature_selection__estimator__fit_intercept': [True], # center target; recommended for regression
+
 # --- Feature selection (SelectFromModel with random forest) ---
 # used only to modify rfSFM behavior
-#'feature_selection__threshold': [-float('inf')], # rank all features by importance
-#'feature_selection__max_features': [25, 50], # number of top features to keep
-#'feature_selection__estimator__n_estimators': [100], # number of trees
-#'feature_selection__estimator__max_depth': [10], # shallow trees for speed
+'feature_selection__threshold': [-float('inf')], # rank all features by importance
+'feature_selection__max_features': [25, 50], # number of top features to keep
+'feature_selection__estimator__n_estimators': [100], # number of trees
+'feature_selection__estimator__max_depth': [10], # shallow trees for speed
 
 # --- Model tuning (ExtraTreesRegressor) ---
 # used only to modify ExtraTreesRegressor behavior

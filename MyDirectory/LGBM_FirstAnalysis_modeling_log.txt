@@ -1,7 +1,7 @@
 ###########################
 ######### context #########
 ###########################
-The scikit-learn (sklearn)-based Python workflow independently supports both modeling (i.e., training and testing) and prediction (i.e., using a pre-built model), and implements 4 feature selection methods, 19 model regressors, hyperparameter tuning, performance metric computation, feature and permutation importance analyses, prediction interval estimation, execution monitoring via progress bars, and parallel processing.
+The scikit-learn (sklearn)-based Python workflow independently supports both modeling (i.e., training and testing) and prediction (i.e., using a pre-built model), and implements 5 feature selection methods, 19 model regressors, hyperparameter tuning, performance metric computation, feature and permutation importance analyses, prediction interval estimation, execution monitoring via progress bars, and parallel processing.
 ###########################
 ######## reference ########
 ###########################
@@ -20,21 +20,20 @@ Many thanks to Andrea De Ruvo, Adriano Di Pasquale and ChatGPT for the insightfu
 ###########################
 ######## versions  ########
 ###########################
-GenomicBasedRegression: 1.2.0 (released in November 2025)
+GenomicBasedRegression: 1.3.0 (released in December 2025)
 python: 3.12
 argparse: 1.1
-catboost: 1.2.8
-joblib: 1.5.1
-lightgbm: 4.6.0
-numpy: 1.26.4
-pandas: 2.2.2
-pickle: 4.0
-re: 2.2.1
 scipy: 1.16.0
+pandas: 2.2.2
 sklearn: 1.5.2
+pickle: 4.0
+catboost: 1.2.8
+lightgbm: 4.6.0
+xgboost: 2.1.3
+numpy: 1.26.4
+joblib: 1.5.1
 tqdm: 4.67.1
 tqdm-joblib: 0.0.4
-xgboost: 2.1.3
 ###########################
 ######## arguments  #######
 ###########################
@@ -82,28 +81,29 @@ The input tested mutations include all features required by the trained one-hot 
 The input tested mutations contain no unexpected features for one-hot encoding
 The encoded features between training and testing datasets were confirmed as identical
 The one-hot encoded column order was harmonized across training and testing datasets to ensure deterministic feature alignment for feature selection and modeling
-The 10 provided features were one-hot encoded into 78 encoded features
+The 10 provided features were one-hot encoded into 80 encoded features
 The provided feature selection method was properly recognized: SelectKBest (SKB)
-The provided regressor was properly recognized: Light Gradient Boosting Machine (LGBM)
-The pipeline components were properly recognized: Pipeline(steps=[('feature_selection', SelectKBest(score_func=functools.partial(<function mutual_info_regression at 0x7f6b283a44a0>, random_state=42))), ('model', LGBMRegressor(random_state=42, verbose=-1))])
-The provided tuning parameters were properly recognized: [{'feature_selection__k': [25, 50], 'feature_selection__score_func': [<function mutual_info_regression at 0x7f6b283a44a0>], 'model__learning_rate': [0.05, 0.1], 'model__n_estimators': [100, 300], 'model__num_leaves': [31], 'model__max_depth': [-1], 'model__subsample': [1.0], 'model__colsample_bytree': [1.0], 'model__reg_alpha': [0.0, 0.1], 'model__reg_lambda': [0.0, 0.1], 'model__verbose': [-1], 'model__importance_type': ['gain']}]
+The provided regressor was properly recognized: light gradient boosting machine (LGBM)
+The pipeline components were properly recognized: Pipeline(steps=[('feature_selection', SelectKBest(score_func=functools.partial(<function mutual_info_regression at 0x7ff444c784a0>, random_state=42))), ('model', LGBMRegressor(random_state=42, verbose=-1))])
+The provided tuning parameters were properly recognized: [{'feature_selection__k': [25, 50], 'feature_selection__score_func': [<function mutual_info_regression at 0x7ff444c784a0>], 'model__learning_rate': [0.05, 0.1], 'model__n_estimators': [100, 300], 'model__num_leaves': [31], 'model__max_depth': [-1], 'model__subsample': [1.0], 'model__colsample_bytree': [1.0], 'model__reg_alpha': [0.0, 0.1], 'model__reg_lambda': [0.0, 0.1], 'model__verbose': [-1], 'model__importance_type': ['gain']}]
 The cross-validation setting implied: 12 distinct parameter names, 17 parameter value options, 32 parameter combinations, and 160 fits during cross-validation
 The tqdm_joblib progress bars are activated when using two or more jobs
-The best parameters during model cross-validation were: {'feature_selection__k': 50, 'feature_selection__score_func': <function mutual_info_regression at 0x7f6b283a44a0>, 'model__colsample_bytree': 1.0, 'model__importance_type': 'gain', 'model__learning_rate': 0.1, 'model__max_depth': -1, 'model__n_estimators': 300, 'model__num_leaves': 31, 'model__reg_alpha': 0.0, 'model__reg_lambda': 0.0, 'model__subsample': 1.0, 'model__verbose': -1}
-The best negative root mean squared error during model cross-validation was: -3.330686
+The best parameters during model cross-validation were: {'feature_selection__k': 50, 'feature_selection__score_func': <function mutual_info_regression at 0x7ff444c784a0>, 'model__colsample_bytree': 1.0, 'model__importance_type': 'gain', 'model__learning_rate': 0.1, 'model__max_depth': -1, 'model__n_estimators': 300, 'model__num_leaves': 31, 'model__reg_alpha': 0.0, 'model__reg_lambda': 0.0, 'model__subsample': 1.0, 'model__verbose': -1}
+The best negative root mean squared error during model cross-validation was: -2.863672
 The pipeline potentially selected and used 50 one-hot encoded features to train the model
-The full one-hot encoded feature names were recovered from the pipeline
-The best model returned 50 importance values (lightgbm's gain-based importance) for 50 one-hot encoded features (potentially selected and/or polynomially expanded)
+The one-hot encoded feature names were recovered before feature selection
+The best model returned 50 importance values (lightgbm's gain-based importance) for 50 one-hot encoded features
 The permutation importance was requested (i.e., True) but the number of repetitions was not set (i.e., False); the default value is therefore used (i.e., 10)
+The permutation importance was restricted to the features selected upstream (i.e., 50) by the specified feature selection method
 The permutation importance was successfully computed on both training and testing datasets
 The prediction intervals (i.e., 95.0%) were calculated using ResidualQuantileWrapper with alpha = 0.05
 The output directory already existed
 ###########################
 ####### execution  ########
 ###########################
-The script started on 2025-11-19 10:21:45.288850
-The script stoped on 2025-11-19 10:22:09.394489
-The script lasted 0 days, 0 hrs, 0 mins and 24.11 secs (i.e., 24.11 secs in total)
+The script started on 2025-12-16 16:15:54.163427
+The script stoped on 2025-12-16 16:16:15.350619
+The script lasted 0 days, 0 hrs, 0 mins and 21.19 secs (i.e., 21.19 secs in total)
 ###########################
 ###### output  files ######
 ###########################
@@ -125,64 +125,64 @@ MyDirectory/LGBM_FirstAnalysis_modeling_log.txt
 ### feature  importance ###
 ###########################
      feature    importance
- Locus_1_A12 178279.319291
-Locus_10_A19  17880.076138
-Locus_10_A13  12348.162998
-Locus_10_A18   8571.344518
-  Locus_9_A8   7917.740921
-  Locus_1_A4   5944.189052
- Locus_6_A14   4514.984701
-  Locus_7_A7   4278.438447
-  Locus_4_A7   4152.197210
-Locus_10_A10   3659.710490
-  Locus_1_A7   2894.220325
-  Locus_8_A8   2393.568137
-  Locus_6_A6   2032.328743
-  Locus_2_A2   1743.947729
-  Locus_5_A8   1364.994777
- Locus_3_A15   1230.522425
-  Locus_3_A6   1136.853434
-  Locus_2_A5    983.040753
-  Locus_3_A8    811.604005
-  Locus_6_A5    670.402483
+ Locus_1_A12 160636.743123
+Locus_10_A19  16897.554687
+ Locus_6_A14  12583.417527
+  Locus_9_A8   7808.892766
+  Locus_4_A7   7719.324850
+  Locus_7_A7   7400.590031
+  Locus_1_A4   7044.638062
+Locus_10_A18   6290.223486
+Locus_10_A13   4489.070701
+  Locus_1_A7   3667.558959
+  Locus_2_A5   2057.239547
+  Locus_6_A6   1909.101343
+  Locus_8_A8   1575.740642
+  Locus_2_A2   1518.677743
+ Locus_3_A15   1313.207152
+  Locus_3_A6   1276.963784
+  Locus_8_A7   1192.411292
+  Locus_6_A5   1025.430743
+  Locus_3_A3    658.495411
+  Locus_3_A8    438.247518
 Note: Up to 20 results are displayed in the log for monitoring purposes, while the full set of results is available in the output files. 
 Note: NaN placeholder in case no native or detectable feature importance is available. 
-Note: Boosting models, especially Histogram-based Gradient Boosting (HGB), may yield all-zero feature importances when no meaningful split gains are computed—typically due to strong regularization, shallow trees, or low feature variability. 
+Note: Boosting models, especially histogram-based gradient boosting (HGB), may yield all-zero feature importances when no meaningful split gains are computed—typically due to strong regularization, shallow trees, or low feature variability. 
 ###########################
 # permutation  importance #
 ###########################
      feature  train_mean  train_std  test_mean  test_std
- Locus_2_A13   13.476433   0.637937  11.760394  0.589742
- Locus_1_A12    5.590232   0.200320   5.629971  0.759186
-Locus_10_A13    3.110568   0.168446   3.064356  0.619784
-  Locus_2_A8    1.751782   0.216541   1.328528  0.433348
-Locus_10_A10    1.258664   0.123226   1.164194  0.288409
- Locus_3_A15    0.821292   0.051801   0.857020  0.111467
-  Locus_1_A1    0.745976   0.101610   0.178295  0.151159
-  Locus_3_A3    0.638466   0.093154   0.358065  0.080061
-  Locus_2_A5    0.594898   0.131196   0.801735  0.106921
-  Locus_6_A4    0.545329   0.123161  -0.140481  0.058165
-  Locus_5_A5    0.348876   0.081356   0.552375  0.187649
- Locus_4_A17    0.327797   0.085305  -0.178306  0.052087
-  Locus_9_A9    0.263939   0.052394   0.202762  0.104922
-  Locus_7_A6    0.142435   0.056161   0.185289  0.108904
-  Locus_9_A7    0.137087   0.062980   0.100434  0.070877
-  Locus_5_A3    0.091257   0.033123   0.117481  0.046948
-  Locus_4_A4    0.053742   0.019089  -0.044313  0.024900
- Locus_5_A18    0.009931   0.010722   0.023333  0.018848
-  Locus_3_A8    0.005474   0.007543   0.022113  0.012365
- Locus_9_A10    0.000206   0.001081  -0.002309  0.004098
+ Locus_1_A12   13.212901   0.896774  12.470526  1.508376
+Locus_10_A19    6.570665   0.414732   6.357605  0.792616
+  Locus_9_A8    2.805578   0.149076   2.275235  0.559713
+Locus_10_A13    2.562640   0.206282   1.557908  0.280971
+  Locus_1_A7    2.129359   0.251757   0.870520  0.353592
+  Locus_6_A6    1.948108   0.175116   1.536555  0.339661
+  Locus_8_A8    1.526325   0.137289   0.840818  0.316301
+  Locus_7_A7    1.484374   0.178805   1.005165  0.358119
+ Locus_6_A14    1.118477   0.108448   0.291986  0.148767
+Locus_10_A18    1.018932   0.096747   0.722844  0.133195
+  Locus_2_A2    0.827731   0.092220   0.399005  0.142831
+  Locus_6_A5    0.782176   0.111111   0.749319  0.088089
+  Locus_1_A4    0.741358   0.089137   0.412690  0.123118
+  Locus_4_A7    0.626465   0.094808   0.237978  0.306836
+  Locus_2_A5    0.517820   0.101561   0.241634  0.219319
+ Locus_4_A15    0.367802   0.076411   0.553982  0.145413
+Locus_10_A10    0.365052   0.065568   0.074460  0.186632
+  Locus_3_A8    0.345206   0.052293   0.382323  0.207483
+  Locus_3_A6    0.322520   0.086924   0.147119  0.118375
+ Locus_3_A15    0.205279   0.042197   0.067195  0.034602
 Note: Up to 20 results are displayed in the log for monitoring purposes, while the full set of results is available in the output files. 
 Note: Positive permutation importance values indicate features that contribute positively to the model’s performance, while negative values suggest features that degrade performance when included. 
 ###########################
 ### performance metrics ###
 ###########################
 from the training dataset: 
-    RMSE      MSE    SMAPE     MAPE    MAE       R2      aR2
-2.638855 6.963554 0.140234 0.147779 1.5712 0.978316 0.976861
+    RMSE      MSE    SMAPE     MAPE      MAE       R2      aR2
+2.402369 5.771376 0.147231 0.153135 1.550205 0.980937 0.979657
 from the testing dataset: 
-   RMSE       MSE    SMAPE     MAPE      MAE       R2      aR2
-3.56958 12.741905 0.176753 0.230972 2.173281 0.954362 0.938625
+    RMSE       MSE    SMAPE     MAPE      MAE       R2      aR2
+4.150989 17.230711 0.143471 0.137047 2.017429 0.951305 0.934513
 Note: RMSE stands for root mean squared error. 
 Note: MSE stands for mean square error. 
 Note: MAPE stands for mean absolute percentage error. 
@@ -192,51 +192,51 @@ Note: R2 stands for R-squared.
 #### training  dataset ####
 ###########################
  sample  expectation  prediction     lower     upper
-S0.1.02         20.0   25.272939 17.684517 32.949493
-S0.1.03         15.0   17.139199  9.550620 24.815596
-S0.1.04         48.0   48.048856 40.430114 55.695089
-S0.1.05         14.0   15.328237  7.659140 22.924116
-S0.1.06         16.0   16.599159  8.954334 24.219310
-S0.1.07         47.0   44.449811 36.763572 52.028548
-S0.1.08         17.0   16.998984  9.278761 24.543736
-S0.1.09         58.0   61.312525 53.493069 68.758045
-S0.1.10         46.0   45.953240 38.379161 53.644136
-S0.1.11         15.0   14.075991  6.544659 21.809634
-S0.1.12         47.0   47.970025 40.353653 55.618628
-S0.1.13         13.0   15.205085  7.621652 22.886627
-S0.1.14          5.0    4.782471 -2.858294 12.406682
-S0.1.15          6.0    6.357703 -1.286532 13.978444
-S0.1.18          2.0    3.210765 -4.311349 10.953627
-S0.1.19          2.0    2.560817 -5.102448 10.162528
-S0.1.20          4.0    3.210765 -4.311349 10.953627
-S1.1.01         24.0   25.745111 17.977546 33.242522
-S1.1.03         16.0   17.139199  9.550620 24.815596
-S1.1.04         48.0   48.048856 40.430114 55.695089
+S0.1.01         20.0   23.866250 15.947966 32.019325
+S0.1.02         20.0   25.443005 17.283010 33.354369
+S0.1.04         48.0   48.444794 40.248264 56.319624
+S0.1.05         14.0   15.549249  7.463996 23.535356
+S0.1.06         16.0   16.585426  8.537808 24.609168
+S0.1.07         47.0   44.891808 36.922396 52.993756
+S0.1.08         17.0   17.346552  9.364683 25.436043
+S0.1.12         47.0   47.964414 39.901000 55.972360
+S0.1.15          6.0    6.115886 -1.866201 14.205159
+S0.1.17          8.0    6.964768 -1.087010 14.984350
+S0.1.18          2.0    2.833363 -5.173049 10.898311
+S0.1.20          4.0    2.833363 -5.173049 10.898311
+S1.1.02         26.0   25.443005 17.283010 33.354369
+S1.1.05         15.0   15.549249  7.463996 23.535356
+S1.1.06         16.0   16.585426  8.537808 24.609168
+S1.1.07         43.0   44.891808 36.922396 52.993756
+S1.1.08         17.0   17.346552  9.364683 25.436043
+S1.1.09         58.0   55.879382 47.976800 64.048160
+S1.1.10         46.0   46.043557 38.022875 54.094234
+S1.1.11         15.0   14.519233  6.449145 22.520505
 Note: Up to 20 results are displayed in the log for monitoring purposes, while the full set of results is available in the output files. 
 Note: Lower and upper correspond to the range of the prediction intervals. 
 ###########################
 ##### testing dataset #####
 ###########################
  sample  expectation  prediction     lower     upper
-S0.1.01         20.0   25.745111 17.977546 33.242522
-S0.1.16          6.0    6.506937 -1.057191 14.207785
-S0.1.17          8.0    6.969404 -0.655055 14.609921
-S1.1.02         26.0   25.272939 17.684517 32.949493
-S1.1.11         15.0   14.075991  6.544659 21.809634
-S1.1.17          8.0    6.969404 -0.655055 14.609921
-S1.1.18          5.0    3.210765 -4.311349 10.953627
-S1.1.20          4.0    3.210765 -4.311349 10.953627
-S2.1.07         50.0   44.449811 36.763572 52.028548
-S2.1.08         20.0   16.998984  9.278761 24.543736
-S2.1.20          4.0    5.197296 -4.537279 10.727696
-S3.1.11         15.0   14.075991  6.544659 21.809634
-S3.1.12         50.0   47.970025 40.353653 55.618628
-S3.1.19          2.0    2.560817 -5.102448 10.162528
-S4.1.05         14.0   15.328237  7.659140 22.924116
-S4.1.08         17.0   16.998984  9.278761 24.543736
-S4.1.10         46.0   45.953240 38.379161 53.644136
-S4.1.18          4.0    7.648502 -0.468759 14.796217
-S4.1.19          2.0    2.560817 -5.102448 10.162528
-S5.1.02         25.0   25.272939 17.684517 32.949493
+S0.1.03         15.0   17.014606  8.970936 25.042296
+S0.1.09         58.0   55.879382 47.976800 64.048160
+S0.1.10         46.0   46.043557 38.022875 54.094234
+S0.1.11         15.0   14.519233  6.449145 22.520505
+S0.1.13         13.0   15.269102  7.174950 23.246310
+S0.1.14          5.0    5.024214 -3.207830 12.863529
+S0.1.16          6.0    6.358024 -1.423875 14.647485
+S0.1.19          2.0    2.678880 -5.274289 10.797071
+S1.1.01         24.0   23.866250 15.947966 32.019325
+S1.1.03         16.0   17.014606  8.970936 25.042296
+S1.1.04         48.0   48.444794 40.248264 56.319624
+S1.1.18          5.0    2.833363 -5.173049 10.898311
+S2.1.06         16.0   16.585426  8.537808 24.609168
+S2.1.16          4.0    6.358024 -1.423875 14.647485
+S2.1.18          4.0    2.833363 -5.173049 10.898311
+S3.1.01         24.0   23.866250 15.947966 32.019325
+S3.1.20          4.0    2.833363 -5.173049 10.898311
+S4.1.05         14.0   15.549249  7.463996 23.535356
+S4.1.08         17.0   17.346552  9.364683 25.436043
+S4.1.15          6.0    6.115886 -1.866201 14.205159
 Note: Up to 20 results are displayed in the log for monitoring purposes, while the full set of results is available in the output files. 
 Note: Lower and upper correspond to the range of the prediction intervals. 

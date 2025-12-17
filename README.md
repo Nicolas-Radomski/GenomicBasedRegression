@@ -1,17 +1,17 @@
 # Usage
 The repository GenomicBasedRegression provides a Python (recommended version 3.12) script called GenomicBasedRegression.py to perform regression-based modeling or prediction from binary (e.g., presence/absence of genes) or categorical (e.g., allele profiles) genomic data.
 # Context
-The scikit-learn (sklearn)-based Python workflow independently supports both modeling (i.e., training and testing) and prediction (i.e., using a pre-built model), and implements 4 feature selection methods, 19 model regressors, hyperparameter tuning, performance metric computation, feature and permutation importance analyses, prediction interval estimation, execution monitoring via progress bars, and parallel processing.
+The scikit-learn (sklearn)-based Python workflow independently supports both modeling (i.e., training and testing) and prediction (i.e., using a pre-built model), and implements 5 feature selection methods, 19 model regressors, hyperparameter tuning, performance metric computation, feature and permutation importance analyses, prediction interval estimation, execution monitoring via progress bars, and parallel processing.
 # Version (release)
-1.2.0 (November 2025)
+1.3.0 (December 2025)
 # Dependencies
 The Python script GenomicBasedRegression.py was prepared and tested with the Python version 3.12 and Ubuntu 20.04 LTS Focal Fossa.
-- catboost==1.2.8
 - pandas==2.2.2
-- xgboost==2.1.3
-- lightgbm==4.6.0
 - scipy==1.16.0
 - scikit-learn==1.5.2
+- catboost==1.2.8
+- lightgbm==4.6.0
+- xgboost==2.1.3
 - numpy==1.26.4
 - joblib==1.5.1
 - tqdm==4.67.1
@@ -20,6 +20,7 @@ The Python script GenomicBasedRegression.py was prepared and tested with the Pyt
 - SelectKBest (SKB): https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SelectKBest.html
 - SelectFromModel with Lasso (laSFM): https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SelectFromModel.html
 - SelectFromModel with ElasticNet (enSFM): https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SelectFromModel.html
+- SelectFromModel with ridge (riSFM): https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SelectFromModel.html
 - SelectFromModel with Random Forest (rfSFM): https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SelectFromModel.html
 # Implemented model regressors
 - adaboost (ADA): https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostRegressor.html
@@ -29,7 +30,7 @@ The Python script GenomicBasedRegression.py was prepared and tested with the Pyt
 - elasticnet (EN): https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ElasticNet.html
 - extra trees (ET): https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.ExtraTreesRegressor.html
 - gradient boosting (GB): https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html
-- hist gradient boosting (HGB): https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html
+- histogram-based gradient boosting (HGB): https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html
 - huber (HU): https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.HuberRegressor.html
 - k-nearest neighbors (KNN): https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsRegressor.html
 - lassa (LA): https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Lasso.html
@@ -37,19 +38,19 @@ The Python script GenomicBasedRegression.py was prepared and tested with the Pyt
 - multi-layer perceptron (MLP): https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPRegressor.html
 - nu support vector (NSV): https://scikit-learn.org/stable/modules/generated/sklearn.svm.NuSVR.html
 - polynomial (PN): https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html
-- ridge (RI): https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html
 - random forest (RF): https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html
+- ridge (RI): https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html
 - support vector regressor (SVR): https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html
 - extreme gradient boosting (XGB): https://xgboost.readthedocs.io/en/stable/python/python_api.html#xgboost.XGBRFRegressor
 # Recommended environments
 ## install Python libraries with pip
 ```
-pip3.12 install catboost==1.2.8
 pip3.12 install pandas==2.2.2
-pip3.12 install xgboost==2.1.3
-pip3.12 install lightgbm==4.6.0
 pip3.12 install scipy==1.15.3
 pip3.12 install scikit-learn==1.5.2
+pip3.12 install catboost==1.2.8
+pip3.12 install lightgbm==4.6.0
+pip3.12 install xgboost==2.1.3
 pip3.12 install numpy==1.26.4
 pip3.12 install joblib==1.5.1
 pip3.12 install tqdm==4.67.1
@@ -57,136 +58,129 @@ pip3.12 install tqdm-joblib==0.0.4
 ```
 ## or install a Docker image
 ```
-docker pull nicolasradomski/genomicbasedregression:1.2.0
+docker pull nicolasradomski/genomicbasedregression:1.3.0
 ```
 ## or install a Conda environment
 ```
 conda update --all
 conda --version # conda 25.7.0
-conda create --name env_conda_GenomicBasedRegression_1.2.0 python=3.12
-conda activate env_conda_GenomicBasedRegression_1.2.0
+conda create --name env_conda_GenomicBasedRegression_1.3.0 python=3.12
+conda activate env_conda_GenomicBasedRegression_1.3.0
 python --version # Python 3.12.12
 conda install -c conda-forge mamba=2.0.5
-mamba install -c conda-forge catboost==1.2.8
 mamba install -c conda-forge pandas==2.2.2
-mamba install -c conda-forge xgboost==2.1.3
-mamba install -c conda-forge lightgbm==4.6.0
 mamba install -c conda-forge scipy==1.16.0
 mamba install -c conda-forge scikit-learn==1.5.2
+mamba install -c conda-forge catboost==1.2.8
+mamba install -c conda-forge lightgbm==4.6.0
+mamba install -c conda-forge xgboost==2.1.3
 mamba install -c conda-forge numpy==1.26.4
 mamba install -c conda-forge joblib==1.5.1
 mamba install -c conda-forge tqdm==4.67.1
 mamba install -c nicolasradomski tqdm-joblib=0.0.4
-conda list -n env_conda_GenomicBasedRegression_1.2.0
+conda list -n env_conda_GenomicBasedRegression_1.3.0
 conda deactivate # after usage
 ```
 ## or install a Conda package
 ```
 conda update --all
-conda create -n env_anaconda_GenomicBasedRegression_1.2.0 -c nicolasradomski -c conda-forge -c defaults genomicbasedregression=1.2.0
-conda activate env_anaconda_GenomicBasedRegression_1.2.0
+conda create -n env_anaconda_GenomicBasedRegression_1.3.0 -c nicolasradomski -c conda-forge -c defaults genomicbasedregression=1.3.0
+conda activate env_anaconda_GenomicBasedRegression_1.3.0
 conda deactivate # after usage
 ```
 # Helps
 ## modeling
 ```
-usage: GenomicBasedRegression.py modeling [-h] -m INPUTPATH_MUTATIONS -ph INPUTPATH_PHENOTYPES [-da {random,manual}] [-sp SPLITTING] [-q QUANTILES]
-                                          [-l LIMIT] [-fs FEATURESELECTION] [-r REGRESSOR] [-k FOLD] [-pa PARAMETERS] [-j JOBS] [-pi] [-nr NREPEATS]
-                                          [-a ALPHA] [-o OUTPUTPATH] [-x PREFIX] [-di DIGITS] [-de DEBUG] [-w] [-nc]
+usage: GenomicBasedRegression.py modeling [-h] -m INPUTPATH_MUTATIONS -ph INPUTPATH_PHENOTYPES [-da {random,manual}] [-sp SPLITTING] 
+                                          [-q QUANTILES] [-l LIMIT] [-fs FEATURESELECTION] [-r REGRESSOR] [-k FOLD] [-pa PARAMETERS] 
+                                          [-j JOBS] [-pi] [-nr NREPEATS] [-a ALPHA] [-o OUTPUTPATH] [-x PREFIX] [-di DIGITS] [-de DEBUG] [-w] [-nc]
 options:
   -h, --help            show this help message and exit
   -m INPUTPATH_MUTATIONS, --mutations INPUTPATH_MUTATIONS
-                        Absolute or relative input path of tab-separated values (tsv) file including profiles of mutations. First column: sample
-                        identifiers identical to those in the input file of phenotypes and datasets (header: e.g., sample). Other columns: profiles
-                        of mutations (header: labels of mutations). [MANDATORY]
+                        Absolute or relative input path of tab-separated values (tsv) file including profiles of mutations. First column: sample identifiers identical
+                        to those in the input file of phenotypes and datasets (header: e.g., sample). Other columns: profiles of mutations (header: labels of
+                        mutations). [MANDATORY]
   -ph INPUTPATH_PHENOTYPES, --phenotypes INPUTPATH_PHENOTYPES
-                        Absolute or relative input path of tab-separated values (tsv) file including profiles of phenotypes and datasets. First
-                        column: sample identifiers identical to those in the input file of mutations (header: e.g., sample). Second column:
-                        categorical phenotype (header: e.g., phenotype). Third column: 'training' or 'testing' dataset (header: e.g., dataset).
-                        [MANDATORY]
+                        Absolute or relative input path of tab-separated values (tsv) file including profiles of phenotypes and datasets. First column: sample
+                        identifiers identical to those in the input file of mutations (header: e.g., sample). Second column: categorical phenotype (header: e.g.,
+                        phenotype). Third column: 'training' or 'testing' dataset (header: e.g., dataset). [MANDATORY]
   -da {random,manual}, --dataset {random,manual}
-                        Perform random (i.e., 'random') or manual (i.e., 'manual') splitting of training and testing datasets through the holdout
-                        method. [OPTIONAL, DEFAULT: 'random']
+                        Perform random (i.e., 'random') or manual (i.e., 'manual') splitting of training and testing datasets through the holdout method. [OPTIONAL,
+                        DEFAULT: 'random']
   -sp SPLITTING, --split SPLITTING
                         Percentage of random splitting when preparing the training dataset using the holdout method. [OPTIONAL, DEFAULT: None]
   -q QUANTILES, --quantiles QUANTILES
-                        Number of quantiles used to discretize the phenotype values when preparing the training dataset using the holdout method.
-                        [OPTIONAL, DEFAULT: None]
+                        Number of quantiles used to discretize the phenotype values when preparing the training dataset using the holdout method. [OPTIONAL, DEFAULT:
+                        None]
   -l LIMIT, --limit LIMIT
-                        Recommended minimum number of samples in both the training and testing datasets to reliably estimate performance metrics.
-                        [OPTIONAL, DEFAULT: 10]
+                        Recommended minimum number of samples in both the training and testing datasets to reliably estimate performance metrics. [OPTIONAL, DEFAULT:
+                        10]
   -fs FEATURESELECTION, --featureselection FEATURESELECTION
-                        Acronym of the feature selection method to use: SelectKBest (SKB), SelectFromModel with Lasso (laSFM), SelectFromModel with
-                        ElasticNet (enSFM), or SelectFromModel with Random Forest (rfSFM). These methods are suitable for high-dimensional binary or
-                        categorical-encoded features. [OPTIONAL, DEFAULT: None]
+                        Acronym of the regression-compatible feature selection method to use: SelectKBest (SKB), SelectFromModel with lasso (laSFM), SelectFromModel
+                        with elasticnet (enSFM), or SelectFromModel with ridge (riSFM), or SelectFromModel with random forest (rfSFM). These methods are suitable for
+                        high-dimensional binary or categorical-encoded features. [OPTIONAL, DEFAULT: None]
   -r REGRESSOR, --regressor REGRESSOR
-                        Acronym of the regressor to use among adaboost (ADA), bayesian bidge (BRI), catboost (CAT), decision tree (DT), elasticnet
-                        (EN), extra trees (ET), gradient boosting (GB), hist gradient boosting (HGB), huber (HU), k-nearest neighbors (KNN), lassa
-                        (LA), light gradient goosting machine (LGBM), multi-layer perceptron (MLP), nu support vector (NSV), polynomial (PN), ridge
-                        (RI), random forest (RF), support vector regressor (SVR) or extreme gradient boosting (XGB). [OPTIONAL, DEFAULT: XGB]
-  -k FOLD, --fold FOLD  Value defining k-1 groups of samples used to train against one group of validation through the repeated k-fold cross-
-                        validation method. [OPTIONAL, DEFAULT: 5]
+                        Acronym of the regressor to use among adaboost (ADA), bayesian ridge (BRI), catboost (CAT), decision tree (DT), elasticnet (EN), extra trees
+                        (ET), gradient boosting (GB), histogram-based gradient boosting (HGB), huber (HU), k-nearest neighbors (KNN), lassa (LA), light gradient
+                        boosting machine (LGBM), multi-layer perceptron (MLP), nu support vector (NSV), polynomial (PN), ridge (RI), random forest (RF), support
+                        vector regressor (SVR) or extreme gradient boosting (XGB). [OPTIONAL, DEFAULT: XGB]
+  -k FOLD, --fold FOLD  Value defining k-1 groups of samples used to train against one group of validation through the repeated k-fold cross-validation method.
+                        [OPTIONAL, DEFAULT: 5]
   -pa PARAMETERS, --parameters PARAMETERS
-                        Absolute or relative input path of a text (txt) file including tuning parameters compatible with the param_grid argument of
-                        the GridSearchCV function. (OPTIONAL)
-  -j JOBS, --jobs JOBS  Value defining the number of jobs to run in parallel compatible with the n_jobs argument of the GridSearchCV function.
-                        [OPTIONAL, DEFAULT: -1]
+                        Absolute or relative input path of a text (txt) file including tuning parameters compatible with the param_grid argument of the GridSearchCV
+                        function. (OPTIONAL)
+  -j JOBS, --jobs JOBS  Value defining the number of jobs to run in parallel compatible with the n_jobs argument of the GridSearchCV function. [OPTIONAL, DEFAULT: -1]
   -pi, --permutationimportance
-                        Compute permutation importance, which can be computationally expensive, especially with many features and/or high repetition
-                        counts. [OPTIONAL, DEFAULT: False]
+                        Compute permutation importance, which can be computationally expensive, especially with many features and/or high repetition counts.
+                        [OPTIONAL, DEFAULT: False]
   -nr NREPEATS, --nrepeats NREPEATS
-                        Number of repetitions per feature for permutation importance; higher values provide more stable estimates but increase
-                        runtime. [OPTIONAL, DEFAULT: 10]
+                        Number of repetitions per feature for permutation importance; higher values provide more stable estimates but increase runtime. [OPTIONAL,
+                        DEFAULT: 10]
   -a ALPHA, --alpha ALPHA
-                        Significance level alpha (a float between 0 and 1) used to compute prediction intervals corresponding to a [(1 − alpha) ×
-                        100]% coverage. [OPTIONAL, DEFAULT: 0.05]
+                        Significance level alpha (a float between 0 and 1) used to compute prediction intervals corresponding to a [(1 − alpha) × 100]% coverage.
+                        [OPTIONAL, DEFAULT: 0.05]
   -o OUTPUTPATH, --output OUTPUTPATH
                         Output path. [OPTIONAL, DEFAULT: .]
   -x PREFIX, --prefix PREFIX
                         Prefix of output files. [OPTIONAL, DEFAULT: output]
   -di DIGITS, --digits DIGITS
-                        Number of decimal digits to round numerical results (e.g., root mean squared error, importance, metrics). [OPTIONAL,
-                        DEFAULT: 6]
+                        Number of decimal digits to round numerical results (e.g., root mean squared error, importance, metrics). [OPTIONAL, DEFAULT: 6]
   -de DEBUG, --debug DEBUG
-                        Traceback level when an error occurs. (DEFAULT: 0)
+                        Traceback level when an error occurs. [OPTIONAL, DEFAULT: 0]
   -w, --warnings        Do not ignore warnings if you want to improve the script. [OPTIONAL, DEFAULT: False]
   -nc, --no-check       Do not check versions of Python and packages. [OPTIONAL, DEFAULT: False]
 ```
 ## prediction
 ```
-usage: GenomicBasedRegression.py prediction [-h] -m INPUTPATH_MUTATIONS -f INPUTPATH_FEATURES -fe INPUTPATH_FEATURE_ENCODER -cf
-                                            INPUTPATH_CALIBRATION_FEATURES -ct INPUTPATH_CALIBRATION_TARGETS -t INPUTPATH_MODEL [-a ALPHA]
-                                            [-o OUTPUTPATH] [-x PREFIX] [-di DIGITS] [-de DEBUG] [-w] [-nc]
+usage: GenomicBasedRegression.py prediction [-h] -m INPUTPATH_MUTATIONS -f INPUTPATH_FEATURES -fe INPUTPATH_FEATURE_ENCODER 
+                                            -cf INPUTPATH_CALIBRATION_FEATURES -ct INPUTPATH_CALIBRATION_TARGETS -t INPUTPATH_MODEL 
+                                            [-a ALPHA] [-o OUTPUTPATH] [-x PREFIX] [-di DIGITS] [-de DEBUG] [-w] [-nc]
 options:
   -h, --help            show this help message and exit
   -m INPUTPATH_MUTATIONS, --mutations INPUTPATH_MUTATIONS
-                        Absolute or relative input path of a tab-separated values (tsv) file including profiles of mutations. First column: sample
-                        identifiers identical to those in the input file of phenotypes and datasets (header: e.g., sample). Other columns: profiles
-                        of mutations (header: labels of mutations). [MANDATORY]
+                        Absolute or relative input path of a tab-separated values (tsv) file including profiles of mutations. First column: sample identifiers
+                        identical to those in the input file of phenotypes and datasets (header: e.g., sample). Other columns: profiles of mutations (header: labels
+                        of mutations). [MANDATORY]
   -f INPUTPATH_FEATURES, --features INPUTPATH_FEATURES
-                        Absolute or relative input path of an object (obj) file including features from the training dataset (i.e., mutations).
-                        [MANDATORY]
+                        Absolute or relative input path of an object (obj) file including features from the training dataset (i.e., mutations). [MANDATORY]
   -fe INPUTPATH_FEATURE_ENCODER, --featureencoder INPUTPATH_FEATURE_ENCODER
-                        Absolute or relative input path of an object (obj) file including encoder from the training dataset (i.e., mutations).
-                        [MANDATORY]
+                        Absolute or relative input path of an object (obj) file including encoder from the training dataset (i.e., mutations). [MANDATORY]
   -cf INPUTPATH_CALIBRATION_FEATURES, --calibrationfeatures INPUTPATH_CALIBRATION_FEATURES
-                        Absolute or relative input path of an object (obj) file including calibration features from the training dataset (i.e.,
-                        mutations). [MANDATORY]
+                        Absolute or relative input path of an object (obj) file including calibration features from the training dataset (i.e., mutations).
+                        [MANDATORY]
   -ct INPUTPATH_CALIBRATION_TARGETS, --calibrationtargets INPUTPATH_CALIBRATION_TARGETS
-                        Absolute or relative input path of an object (obj) file including calibration targets from the training dataset (i.e.,
-                        mutations). [MANDATORY]
+                        Absolute or relative input path of an object (obj) file including calibration targets from the training dataset (i.e., mutations). [MANDATORY]
   -t INPUTPATH_MODEL, --model INPUTPATH_MODEL
                         Absolute or relative input path of an object (obj) file including a trained scikit-learn model. [MANDATORY]
   -a ALPHA, --alpha ALPHA
-                        Significance level alpha (a float between 0 and 1) used to compute prediction intervals corresponding to a [(1 − alpha) ×
-                        100]% coverage. [OPTIONAL, DEFAULT: 0.05]
+                        Significance level alpha (a float between 0 and 1) used to compute prediction intervals corresponding to a [(1 − alpha) × 100]% coverage.
+                        [OPTIONAL, DEFAULT: 0.05]
   -o OUTPUTPATH, --output OUTPUTPATH
                         Absolute or relative output path. [OPTIONAL, DEFAULT: .]
   -x PREFIX, --prefix PREFIX
                         Prefix of output files. [OPTIONAL, DEFAULT: output_]
   -di DIGITS, --digits DIGITS
-                        Number of decimal digits to round numerical results (e.g., root mean squared error, importance, metrics). [OPTIONAL,
-                        DEFAULT: 6]
+                        Number of decimal digits to round numerical results (e.g., root mean squared error, importance, metrics). [OPTIONAL, DEFAULT: 6]
   -de DEBUG, --debug DEBUG
                         Traceback level when an error occurs. [OPTIONAL, DEFAULT: 0]
   -w, --warnings        Do not ignore warnings if you want to improve the script. [OPTIONAL, DEFAULT: False]
@@ -278,7 +272,7 @@ S2.1.10 	A12	A13	A14	A15	A16	A4	A5	A6	A8	A1	A8
 # Examples of commands
 ## import the GitHub repository
 ```
-git clone --branch v1.2.0 --single-branch https://github.com/Nicolas-Radomski/GenomicBasedRegression.git
+git clone --branch v1.3.0 --single-branch https://github.com/Nicolas-Radomski/GenomicBasedRegression.git
 cd GenomicBasedRegression
 ```
 ## using Python libraries from pip
@@ -302,14 +296,14 @@ python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_predictio
 python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x DT_FirstAnalysis -da manual -fs enSFM -r DT -k 5 -pa tuning_parameters_DT.txt -pi
 python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/DT_FirstAnalysis_features.obj -fe MyDirectory/DT_FirstAnalysis_feature_encoder.obj -cf MyDirectory/DT_FirstAnalysis_calibration_features.obj -ct MyDirectory/DT_FirstAnalysis_calibration_targets.obj -t MyDirectory/DT_FirstAnalysis_model.obj -o MyDirectory -x DT_SecondAnalysis
 ```
-### with the rfSFM feature selection and the EN model regressor
+### with the riSFM feature selection and the EN model regressor
 ```
-python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x EN_FirstAnalysis -da manual -fs rfSFM -r EN -k 5 -pa tuning_parameters_EN.txt -pi
+python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x EN_FirstAnalysis -da manual -fs riSFM -r EN -k 5 -pa tuning_parameters_EN.txt -pi
 python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/EN_FirstAnalysis_features.obj -fe MyDirectory/EN_FirstAnalysis_feature_encoder.obj -cf MyDirectory/EN_FirstAnalysis_calibration_features.obj -ct MyDirectory/EN_FirstAnalysis_calibration_targets.obj -t MyDirectory/EN_FirstAnalysis_model.obj -o MyDirectory -x EN_SecondAnalysis
 ```
-### with the SKB feature selection and the ET model regressor
+### with the rfSFM feature selection and the ET model regressor
 ```
-python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x ET_FirstAnalysis -da manual -fs SKB -r ET -k 5 -pa tuning_parameters_ET.txt -pi
+python3.12 GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectory/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectory -x ET_FirstAnalysis -da manual -fs rfSFM -r ET -k 5 -pa tuning_parameters_ET.txt -pi
 python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectory/ET_FirstAnalysis_features.obj -fe MyDirectory/ET_FirstAnalysis_feature_encoder.obj -cf MyDirectory/ET_FirstAnalysis_calibration_features.obj -ct MyDirectory/ET_FirstAnalysis_calibration_targets.obj -t MyDirectory/ET_FirstAnalysis_model.obj -o MyDirectory -x ET_SecondAnalysis
 ```
 ### with the SKB feature selection and the GB model regressor
@@ -380,98 +374,98 @@ python3.12 GenomicBasedRegression.py prediction -m genomic_profils_for_predictio
 ## using a Docker image
 ### without feature selection and with the ADA model regressor
 ```
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 modeling -m genomic_profils_for_modeling.tsv -ph phenotype_dataset.tsv -o MyDirectoryDockerHub -x ADA_FirstAnalysis -da random -sp 80 -q 10 -r ADA -k 5 -pa tuning_parameters_ADA.txt -pi
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/ADA_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/ADA_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/ADA_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/ADA_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/ADA_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x ADA_SecondAnalysis
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 modeling -m genomic_profils_for_modeling.tsv -ph phenotype_dataset.tsv -o MyDirectoryDockerHub -x ADA_FirstAnalysis -da random -sp 80 -q 10 -r ADA -k 5 -pa tuning_parameters_ADA.txt -pi
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/ADA_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/ADA_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/ADA_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/ADA_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/ADA_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x ADA_SecondAnalysis
 ```
 ### with the SKB feature selection and the BRI model regressor
 ```
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x BRI_FirstAnalysis -da manual -fs SKB -r BRI -k 5 -pa tuning_parameters_BRI.txt -pi
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/BRI_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/BRI_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/BRI_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/BRI_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/BRI_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x BRI_SecondAnalysis
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x BRI_FirstAnalysis -da manual -fs SKB -r BRI -k 5 -pa tuning_parameters_BRI.txt -pi
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/BRI_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/BRI_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/BRI_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/BRI_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/BRI_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x BRI_SecondAnalysis
 ```
 ### with the laSFM feature selection and the CAT model regressor
 ```
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x CAT_FirstAnalysis -da manual -fs laSFM -r CAT -k 5 -pa tuning_parameters_CAT.txt -pi
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/CAT_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/CAT_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/CAT_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/CAT_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/CAT_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x CAT_SecondAnalysis
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x CAT_FirstAnalysis -da manual -fs laSFM -r CAT -k 5 -pa tuning_parameters_CAT.txt -pi
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/CAT_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/CAT_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/CAT_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/CAT_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/CAT_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x CAT_SecondAnalysis
 ```
 ### with the enSFM feature selection and the DT model regressor
 ```
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x DT_FirstAnalysis -da manual -fs enSFM -r DT -k 5 -pa tuning_parameters_DT.txt -pi
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/DT_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/DT_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/DT_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/DT_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/DT_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x DT_SecondAnalysis
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x DT_FirstAnalysis -da manual -fs enSFM -r DT -k 5 -pa tuning_parameters_DT.txt -pi
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/DT_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/DT_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/DT_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/DT_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/DT_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x DT_SecondAnalysis
 ```
-### with the rfSFM feature selection and the EN model regressor
+### with the riSFM feature selection and the EN model regressor
 ```
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x EN_FirstAnalysis -da manual -fs rfSFM -r EN -k 5 -pa tuning_parameters_EN.txt -pi
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/EN_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/EN_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/EN_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/EN_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/EN_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x EN_SecondAnalysis
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x EN_FirstAnalysis -da manual -fs riSFM -r EN -k 5 -pa tuning_parameters_EN.txt -pi
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/EN_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/EN_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/EN_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/EN_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/EN_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x EN_SecondAnalysis
 ```
-### with the SKB feature selection and the ET model regressor
+### with the rfSFM feature selection and the ET model regressor
 ```
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x ET_FirstAnalysis -da manual -fs SKB -r ET -k 5 -pa tuning_parameters_ET.txt -pi
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/ET_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/ET_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/ET_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/ET_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/ET_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x ET_SecondAnalysis
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x ET_FirstAnalysis -da manual -fs rfSFM -r ET -k 5 -pa tuning_parameters_ET.txt -pi
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/ET_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/ET_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/ET_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/ET_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/ET_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x ET_SecondAnalysis
 ```
 ### with the SKB feature selection and the GB model regressor
 ```
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x GB_FirstAnalysis -da manual -fs SKB -r GB -k 5 -pa tuning_parameters_GB.txt -pi
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/GB_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/GB_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/GB_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/GB_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/GB_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x GB_SecondAnalysis
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x GB_FirstAnalysis -da manual -fs SKB -r GB -k 5 -pa tuning_parameters_GB.txt -pi
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/GB_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/GB_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/GB_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/GB_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/GB_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x GB_SecondAnalysis
 ```
 ### with the SKB feature selection and the HGB model regressor
 ```
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x HGB_FirstAnalysis -da manual -fs SKB -r HGB -k 5 -pa tuning_parameters_HGB.txt -pi
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/HGB_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/HGB_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/HGB_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/HGB_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/HGB_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x HGB_SecondAnalysis
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x HGB_FirstAnalysis -da manual -fs SKB -r HGB -k 5 -pa tuning_parameters_HGB.txt -pi
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/HGB_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/HGB_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/HGB_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/HGB_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/HGB_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x HGB_SecondAnalysis
 ```
 ### with the SKB feature selection and the HU model regressor
 ```
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x HU_FirstAnalysis -da manual -fs SKB -r HU -k 5 -pa tuning_parameters_HU.txt -pi
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/HU_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/HU_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/HU_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/HU_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/HU_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x HU_SecondAnalysis
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x HU_FirstAnalysis -da manual -fs SKB -r HU -k 5 -pa tuning_parameters_HU.txt -pi
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/HU_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/HU_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/HU_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/HU_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/HU_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x HU_SecondAnalysis
 ```
 ### with the SKB feature selection and the KNN model regressor
 ```
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x KNN_FirstAnalysis -da manual -fs SKB -r KNN -k 5 -pa tuning_parameters_KNN.txt -pi
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/KNN_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/KNN_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/KNN_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/KNN_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/KNN_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x KNN_SecondAnalysis
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x KNN_FirstAnalysis -da manual -fs SKB -r KNN -k 5 -pa tuning_parameters_KNN.txt -pi
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/KNN_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/KNN_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/KNN_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/KNN_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/KNN_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x KNN_SecondAnalysis
 ```
 ### with the SKB feature selection and the LA model regressor
 ```
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x LA_FirstAnalysis -da manual -fs SKB -r LA -k 5 -pa tuning_parameters_LA.txt -pi
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/LA_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/LA_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/LA_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/LA_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/LA_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x LA_SecondAnalysis
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x LA_FirstAnalysis -da manual -fs SKB -r LA -k 5 -pa tuning_parameters_LA.txt -pi
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/LA_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/LA_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/LA_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/LA_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/LA_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x LA_SecondAnalysis
 ```
 ### with the SKB feature selection and the LGBM model regressor
 ```
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x LGBM_FirstAnalysis -da manual -fs SKB -r LGBM -k 5 -pa tuning_parameters_LGBM.txt -pi
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/LGBM_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/LGBM_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/LGBM_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/LGBM_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/LGBM_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x LGBM_SecondAnalysis
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x LGBM_FirstAnalysis -da manual -fs SKB -r LGBM -k 5 -pa tuning_parameters_LGBM.txt -pi
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/LGBM_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/LGBM_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/LGBM_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/LGBM_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/LGBM_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x LGBM_SecondAnalysis
 ```
 ### with the SKB feature selection and the MLP model regressor
 ```
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x MLP_FirstAnalysis -da manual -fs SKB -r MLP -k 5 -pa tuning_parameters_MLP.txt -pi
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/MLP_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/MLP_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/MLP_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/MLP_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/MLP_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x MLP_SecondAnalysis
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x MLP_FirstAnalysis -da manual -fs SKB -r MLP -k 5 -pa tuning_parameters_MLP.txt -pi
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/MLP_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/MLP_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/MLP_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/MLP_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/MLP_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x MLP_SecondAnalysis
 ```
 ### with the SKB feature selection and the NSV model regressor
 ```
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x NSV_FirstAnalysis -da manual -fs SKB -r NSV -k 5 -pa tuning_parameters_NSV.txt -pi
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/NSV_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/NSV_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/NSV_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/NSV_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/NSV_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x NSV_SecondAnalysis
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x NSV_FirstAnalysis -da manual -fs SKB -r NSV -k 5 -pa tuning_parameters_NSV.txt -pi
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/NSV_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/NSV_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/NSV_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/NSV_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/NSV_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x NSV_SecondAnalysis
 ```
 ### with the SKB feature selection and the PN model regressor
 ```
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x PN_FirstAnalysis -da manual -fs SKB -r PN -k 5 -pa tuning_parameters_PN.txt -pi
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/PN_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/PN_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/PN_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/PN_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/PN_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x PN_SecondAnalysis
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x PN_FirstAnalysis -da manual -fs SKB -r PN -k 5 -pa tuning_parameters_PN.txt -pi
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/PN_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/PN_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/PN_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/PN_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/PN_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x PN_SecondAnalysis
 ```
 ### with the SKB feature selection and the RF model regressor
 ```
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x RF_FirstAnalysis -da manual -fs SKB -r RF -k 5 -pa tuning_parameters_RF.txt -pi
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/RF_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/RF_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/RF_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/RF_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/RF_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x RF_SecondAnalysis
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x RF_FirstAnalysis -da manual -fs SKB -r RF -k 5 -pa tuning_parameters_RF.txt -pi
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/RF_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/RF_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/RF_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/RF_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/RF_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x RF_SecondAnalysis
 ```
 ### with the SKB feature selection and the RI model regressor
 ```
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x RI_FirstAnalysis -da manual -fs SKB -r RI -k 5 -pa tuning_parameters_RI.txt -pi
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/RI_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/RI_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/RI_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/RI_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/RI_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x RI_SecondAnalysis
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x RI_FirstAnalysis -da manual -fs SKB -r RI -k 5 -pa tuning_parameters_RI.txt -pi
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/RI_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/RI_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/RI_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/RI_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/RI_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x RI_SecondAnalysis
 ```
 ### with the SKB feature selection and the SVR model regressor
 ```
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x SVR_FirstAnalysis -da manual -fs SKB -r SVR -k 5 -pa tuning_parameters_SVR.txt -pi
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/SVR_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/SVR_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/SVR_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/SVR_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/SVR_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x SVR_SecondAnalysis
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x SVR_FirstAnalysis -da manual -fs SKB -r SVR -k 5 -pa tuning_parameters_SVR.txt -pi
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/SVR_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/SVR_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/SVR_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/SVR_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/SVR_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x SVR_SecondAnalysis
 ```
 ### with the SKB feature selection and the XGB model regressor
 ```
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x XGB_FirstAnalysis -da manual -fs SKB -r XGB -k 5 -pa tuning_parameters_XGB.txt -pi
-docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.2.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/XGB_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/XGB_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/XGB_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/XGB_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/XGB_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x XGB_SecondAnalysis
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryDockerHub/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryDockerHub -x XGB_FirstAnalysis -da manual -fs SKB -r XGB -k 5 -pa tuning_parameters_XGB.txt -pi
+docker run --rm --name nicolas -u $(id -u):$(id -g) -v $(pwd):/wd nicolasradomski/genomicbasedregression:1.3.0 prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryDockerHub/XGB_FirstAnalysis_features.obj -fe MyDirectoryDockerHub/XGB_FirstAnalysis_feature_encoder.obj -cf MyDirectoryDockerHub/XGB_FirstAnalysis_calibration_features.obj -ct MyDirectoryDockerHub/XGB_FirstAnalysis_calibration_targets.obj -t MyDirectoryDockerHub/XGB_FirstAnalysis_model.obj -o MyDirectoryDockerHub -x XGB_SecondAnalysis
 ```
 ## using a Conda environment
 ### without feature selection and with the ADA model regressor
@@ -494,14 +488,14 @@ python GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.ts
 python GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryConda/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryConda -x DT_FirstAnalysis -da manual -fs enSFM -r DT -k 5 -pa tuning_parameters_DT.txt -pi
 python GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryConda/DT_FirstAnalysis_features.obj -fe MyDirectoryConda/DT_FirstAnalysis_feature_encoder.obj -cf MyDirectoryConda/DT_FirstAnalysis_calibration_features.obj -ct MyDirectoryConda/DT_FirstAnalysis_calibration_targets.obj -t MyDirectoryConda/DT_FirstAnalysis_model.obj -o MyDirectoryConda -x DT_SecondAnalysis
 ```
-### with the rfSFM feature selection and the EN model regressor
+### with the riSFM feature selection and the EN model regressor
 ```
-python GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryConda/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryConda -x EN_FirstAnalysis -da manual -fs rfSFM -r EN -k 5 -pa tuning_parameters_EN.txt -pi
+python GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryConda/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryConda -x EN_FirstAnalysis -da manual -fs riSFM -r EN -k 5 -pa tuning_parameters_EN.txt -pi
 python GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryConda/EN_FirstAnalysis_features.obj -fe MyDirectoryConda/EN_FirstAnalysis_feature_encoder.obj -cf MyDirectoryConda/EN_FirstAnalysis_calibration_features.obj -ct MyDirectoryConda/EN_FirstAnalysis_calibration_targets.obj -t MyDirectoryConda/EN_FirstAnalysis_model.obj -o MyDirectoryConda -x EN_SecondAnalysis
 ```
-### with the SKB feature selection and the ET model regressor
+### with the rfSFM feature selection and the ET model regressor
 ```
-python GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryConda/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryConda -x ET_FirstAnalysis -da manual -fs SKB -r ET -k 5 -pa tuning_parameters_ET.txt -pi
+python GenomicBasedRegression.py modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryConda/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryConda -x ET_FirstAnalysis -da manual -fs rfSFM -r ET -k 5 -pa tuning_parameters_ET.txt -pi
 python GenomicBasedRegression.py prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryConda/ET_FirstAnalysis_features.obj -fe MyDirectoryConda/ET_FirstAnalysis_feature_encoder.obj -cf MyDirectoryConda/ET_FirstAnalysis_calibration_features.obj -ct MyDirectoryConda/ET_FirstAnalysis_calibration_targets.obj -t MyDirectoryConda/ET_FirstAnalysis_model.obj -o MyDirectoryConda -x ET_SecondAnalysis
 ```
 ### with the SKB feature selection and the GB model regressor
@@ -590,14 +584,14 @@ genomicbasedregression prediction -m genomic_profils_for_prediction.tsv -f MyDir
 genomicbasedregression modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryAnaconda/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryAnaconda -x DT_FirstAnalysis -da manual -fs enSFM -r DT -k 5 -pa tuning_parameters_DT.txt -pi
 genomicbasedregression prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryAnaconda/DT_FirstAnalysis_features.obj -fe MyDirectoryAnaconda/DT_FirstAnalysis_feature_encoder.obj -cf MyDirectoryAnaconda/DT_FirstAnalysis_calibration_features.obj -ct MyDirectoryAnaconda/DT_FirstAnalysis_calibration_targets.obj -t MyDirectoryAnaconda/DT_FirstAnalysis_model.obj -o MyDirectoryAnaconda -x DT_SecondAnalysis
 ```
-### with the rfSFM feature selection and the EN model regressor
+### with the riSFM feature selection and the EN model regressor
 ```
-genomicbasedregression modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryAnaconda/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryAnaconda -x EN_FirstAnalysis -da manual -fs rfSFM -r EN -k 5 -pa tuning_parameters_EN.txt -pi
+genomicbasedregression modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryAnaconda/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryAnaconda -x EN_FirstAnalysis -da manual -fs riSFM -r EN -k 5 -pa tuning_parameters_EN.txt -pi
 genomicbasedregression prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryAnaconda/EN_FirstAnalysis_features.obj -fe MyDirectoryAnaconda/EN_FirstAnalysis_feature_encoder.obj -cf MyDirectoryAnaconda/EN_FirstAnalysis_calibration_features.obj -ct MyDirectoryAnaconda/EN_FirstAnalysis_calibration_targets.obj -t MyDirectoryAnaconda/EN_FirstAnalysis_model.obj -o MyDirectoryAnaconda -x EN_SecondAnalysis
 ```
-### with the SKB feature selection and the ET model regressor
+### with the rfSFM feature selection and the ET model regressor
 ```
-genomicbasedregression modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryAnaconda/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryAnaconda -x ET_FirstAnalysis -da manual -fs SKB -r ET -k 5 -pa tuning_parameters_ET.txt -pi
+genomicbasedregression modeling -m genomic_profils_for_modeling.tsv -ph MyDirectoryAnaconda/ADA_FirstAnalysis_phenotype_dataset.tsv -o MyDirectoryAnaconda -x ET_FirstAnalysis -da manual -fs rfSFM -r ET -k 5 -pa tuning_parameters_ET.txt -pi
 genomicbasedregression prediction -m genomic_profils_for_prediction.tsv -f MyDirectoryAnaconda/ET_FirstAnalysis_features.obj -fe MyDirectoryAnaconda/ET_FirstAnalysis_feature_encoder.obj -cf MyDirectoryAnaconda/ET_FirstAnalysis_calibration_features.obj -ct MyDirectoryAnaconda/ET_FirstAnalysis_calibration_targets.obj -t MyDirectoryAnaconda/ET_FirstAnalysis_model.obj -o MyDirectoryAnaconda -x ET_SecondAnalysis
 ```
 ### with the SKB feature selection and the GB model regressor

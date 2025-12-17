@@ -1,51 +1,51 @@
 feature	importance
-Locus_10_A10	
-Locus_10_A13	
-Locus_10_A17	
-Locus_10_A18	
-Locus_10_A19	
-Locus_1_A12	
-Locus_1_A4	
-Locus_1_A6	
-Locus_1_A7	
-Locus_2_A13	
-Locus_2_A2	
-Locus_2_A5	
-Locus_2_A7	
-Locus_2_A8	
-Locus_2_missing	
-Locus_3_A14	
-Locus_3_A15	
-Locus_3_A3	
-Locus_3_A8	
-Locus_4_A15	
-Locus_4_A16	
-Locus_4_A17	
-Locus_4_A4	
-Locus_4_A5	
-Locus_4_A7	
-Locus_5_A11	
-Locus_5_A15	
-Locus_5_A16	
-Locus_5_A18	
-Locus_5_A5	
-Locus_5_A8	
-Locus_6_A14	
-Locus_6_A4	
-Locus_6_A5	
-Locus_6_A6	
-Locus_6_A9	
-Locus_7_A10	
-Locus_7_A5	
-Locus_7_A6	
-Locus_7_A7	
-Locus_8_A13	
-Locus_8_A2	
-Locus_8_A3	
-Locus_8_A6	
-Locus_8_A7	
-Locus_8_A8	
-Locus_9_A4	
-Locus_9_A7	
-Locus_9_A8	
-Locus_9_A9	
+Locus_9_A9	12.931113
+Locus_10_A19	12.931113
+Locus_9_A8	11.791258
+Locus_3_A8	6.907115
+Locus_1_A7	6.746861
+Locus_4_A10	6.563847
+Locus_8_A8	5.816707
+Locus_5_A18	5.774977
+Locus_7_A5	5.76448
+Locus_5_A5	5.354027
+Locus_1_A4	5.311934
+Locus_8_A13	4.84341
+Locus_6_A9	4.84341
+Locus_10_A13	4.84341
+Locus_9_A7	4.84341
+Locus_5_A16	4.749348
+Locus_6_A4	4.749348
+Locus_2_A13	4.749348
+Locus_1_A12	4.749348
+Locus_8_A5	3.565578
+Locus_8_A3	3.330152
+Locus_9_A4	3.330152
+Locus_10_A10	3.330152
+Locus_4_A4	3.330152
+Locus_3_A6	3.176346
+Locus_6_A6	2.999466
+Locus_7_A10	2.787019
+Locus_6_A14	2.451107
+Locus_4_A15	2.41603
+Locus_8_A7	1.976297
+Locus_3_A15	1.875584
+Locus_4_A16	1.875584
+Locus_2_A2	1.466007
+Locus_4_A7	1.314737
+Locus_7_A3	0.813452
+Locus_8_A2	0.813452
+Locus_5_A17	0.517753
+Locus_6_A5	0.454297
+Locus_4_A5	0.435788
+Locus_2_A5	0.250309
+Locus_8_A6	0.234167
+Locus_3_A3	0.225551
+Locus_2_A7	0.20852
+Locus_1_A6	0.20852
+Locus_10_A18	0.20852
+Locus_2_A8	0.122899
+Locus_7_A6	0.088566
+Locus_5_A8	0.018779
+Locus_3_A14	0.015741
+Locus_7_A7	0.006572

@@ -24,6 +24,15 @@
 #'feature_selection__estimator__max_iter': [300], # max iterations for convergence
 #'feature_selection__estimator__tol': [1e-2], # relaxed convergence tolerance
 
+# --- Feature selection (SelectFromModel with ridge) ---
+# used only to modify riSFM behavior
+#'feature_selection__threshold': [-float('inf')], # disable hard thresholding; rank by |coef|
+#'feature_selection__max_features': [25, 50], # keep top-ranked features only
+#'feature_selection__estimator__alpha': [0.1, 1.0, 10.0], # regularization strength
+#'feature_selection__estimator__max_iter': [1000], # ensure convergence for high-dimensional OHE
+#'feature_selection__estimator__tol': [1e-3, 1e-4], # trade-off speed vs numerical precision
+#'feature_selection__estimator__fit_intercept': [True], # center target; recommended for regression
+
 # --- Feature selection (SelectFromModel with random forest) ---
 # used only to modify rfSFM behavior
 #'feature_selection__threshold': [-float('inf')], # rank all features by importance
